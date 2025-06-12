@@ -1,0 +1,174 @@
+; taken from https://wiki.megadrive.org/index.php?title=IO_Registers
+REG_VERSION	EQU	$a10001
+REG_DATA1	EQU	$a10003
+REG_DATA2	EQU	$a10005
+REG_DATA3	EQU	$a10007
+REG_CTRL1	EQU	$a10009
+REG_CTRL2	EQU	$a1000b
+REG_CTRL3	EQU	$a1000d
+REG_TXDATA1	EQU	$a1000f
+REG_RXDATA1	EQU	$a10011
+REG_S_CTRL1	EQU	$a10013
+REG_TXDATA2	EQU	$a10015
+REG_RXDATA2	EQU	$a10017
+REG_S_CTRL2	EQU	$a10019
+REG_TXDATA3	EQU	$a1001b
+REG_RXDATA3	EQU	$a1001d
+REG_S_CTRL3	EQU	$a1001f
+REG_LOCK	EQU	$a14000
+REG_TMSS	EQU	$a14101
+
+z80busreq	EQU	$a11100		; z80 bus rEQUest
+z80reset	EQU	$a11200		; z80 reset
+
+VDP_DATA	EQU	$c00000
+VDP_CTRL	EQU	$c00004
+
+; ram addresses
+playerwk	EQU	$ffffd000
+gmmode		EQU	$fffff600
+swdata1		EQU	$fffff604
+pauseflag	EQU	$fffff63a
+hintflag	EQU	$fffff644
+scra_h_posit	EQU	$fffff700
+scra_v_posit	EQU	$fffff704
+scrb_h_posit	EQU	$fffff708
+scrb_v_posit	EQU	$fffff70c
+scrc_v_posit	EQU	$fffff710
+scrc_h_posit	EQU	$fffff714
+;scrz_h_posit
+;scrz_v_posit
+;scrz_h_count
+;scrz_v_count
+;scrh_flag
+scralim_n_down	EQU	$fffff726
+scralim_up	EQU	$fffff72c
+rotdir		EQU	$fffff780
+rotspd		EQU	$fffff782
+editno		EQU	$fffffe06
+editmode	EQU	$fffffe08
+edittimer	EQU	$fffffe0A
+stageno		EQU	$fffffe10
+ring_counter	EQU	$fffffe20
+;scrv_flag
+editstack	EQU	$fffffef0
+editstack2	EQU	$fffffef2
+demoflag	EQU	$fffffff0
+;demono
+;enddemono
+
+; misc equates
+word		EQU	$02
+
+; player object bit equates
+cd_jump		EQU	$01
+cd_ball		EQU	$02
+cd_walk		EQU	$03
+
+; player control bit equates
+cd_up		EQU	%00000001
+cd_down		EQU	%00000010
+cd_left		EQU	%00000100
+cd_right	EQU	%00001000
+cd_b		EQU	%00010000
+cd_c		EQU	%00100000
+cd_a		EQU	%01000000
+cd_start	EQU	%10000000
+
+; game mode equates
+spgamemd	EQU	$10
+
+; obj equates
+actno		EQU	$00
+actflg		EQU	$01
+sproffset	EQU	$02
+patbase		EQU	$04
+xposi		EQU	$08
+yposi		EQU	$0c
+xspeed		EQU	$10
+yspeed		EQU	$12
+mspeed		EQU	$14
+sprvsize	EQU	$16
+sprhsize	EQU	$17
+sprpri		EQU	$18
+sprhs		EQU	$19
+patno		EQU	$1a
+patcnt		EQU	$1b
+mstno		EQU	$1c
+pattim		EQU	$1e
+pattimm		EQU	$1f
+colino		EQU	$20
+colicnt		EQU	$21
+cddat		EQU	$22
+cdsts		EQU	$23
+r_no0		EQU	$24
+r_no1		EQU	$25
+direc		EQU	$26
+userflag	EQU	$28
+;actfree
+
+; actor equates
+; format: name_act
+bou_act		EQU	$0b	; 棒 (pole)
+ben_act		EQU	$0c	; 弁 (valve)
+signal_act	EQU	$12
+mfire_act	EQU	$13
+buranko_act	EQU	$15 ; 鞦韆 (swing)
+yari_act	EQU	$16	; 槍 (spear)
+shima_act	EQU	$18 ; 島 (island)
+break_act	EQU	$1a
+bgspr_act	EQU	$1c
+buta_act	EQU	$1e
+kani_act	EQU	$1f	; カニ (crab)
+hachi_act	EQU	$22	; 蜂 (bee)
+ring_act	EQU	$25
+item_act	EQU	$26
+usagi_act	EQU $28	; 兎 (rabbit)
+door_act	EQU	$2a
+fish_act	EQU	$2b
+fish2_act	EQU	$2c
+mogura_act	EQU	$2d	; 土竜 (mole)
+switch2_act	EQU	$32
+box_act		EQU	$33
+toge_act	EQU	$36	; 峠 (difficult part)
+jyama_act	EQU	$3b ; 邪魔 (obstacle)
+musi_act	EQU	$40	; 虫 (insect)
+sjump_act	EQU	$41
+kamere_act	EQU	$42	; カメレオン (chameleon)
+aruma_act	EQU	$43	; アルマジロ (armadillo)
+kageb_act	EQU	$44	; 陰 (shadow)
+fblock_act	EQU	$46
+bobin_act	EQU	$47	; ボビン (bobbin)
+myogan_act	EQU	$4c
+yogan2_act	EQU	$4e
+yado_act	EQU	$50	; 宿借り (hermit crab)
+bryuka_act	EQU	$51	; 床 (floor)
+dai_act		EQU	$52 ; 台 (platform)
+break2_act	EQU	$53
+yoganc_act	EQU	$54
+bat_act		EQU	$55
+dai2_act	EQU	$56 ; 台 (platform)
+elev_act	EQU	$59
+pedal_act	EQU	$5a
+step_act	EQU	$5b
+fun_act		EQU	$5d	; (fan)
+sisoo_act	EQU	$5e	; シーソー (seesaw)
+brobo_act	EQU	$5f
+uni_act		EQU	$60	; 海胆 (sea urchin)
+dai3_act	EQU	$61	; 台 (platform)
+kazari_act	EQU	$62	; 飾り (decoration)
+kassya_act	EQU	$63	; 滑車 (pulley)
+awa_act		EQU	$64	; 泡 (bubble)
+mizu_act	EQU	$65	; 水 (water)
+mawaru_act	EQU	$66 ; 回る (rotate)
+haguruma_act	EQU	$67 ; 歯車 (cogwheel)
+pata_act	EQU	$69
+noko_act	EQU	$6a ; 鋸 (saw)
+dai4_act	EQU	$6b ; 台 (platform)
+yukae_act	EQU	$6c
+fire6_act	EQU	$6d
+ele_act		EQU	$6e
+yukai_act	EQU	$70
+scoli_act	EQU	$71
+imo_act		EQU	$78 ; 芋虫 (caterpillar)
+save_act	EQU	$79

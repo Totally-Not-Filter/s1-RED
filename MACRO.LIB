@@ -37,3 +37,9 @@ dcblw	macro	val1,val2,val3,val4,val5
 	dc.w	(val4)+(val5)*$100
 	dc.w	(val3)
 	endm
+
+dma68k	macro	length,source
+	move.l	#($9400+((length>>1)&$ff00)>>8)<<16+$9300+(length>>1)&$ff,(a5)
+	move.l	#($9600+((source>>1)&$ff00)>>8)<<16+$9500+(source>>1)&$ff,(a5)
+	move.w	#$9700+((source>>1)&$7f0000)>>16,(a5)
+	endm

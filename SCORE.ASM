@@ -411,7 +411,7 @@ loc_1CACE:
 ;Big counters used for Scor/Time/Rings
 ;---------------------------------------------------------------------------------------
 ArtUnc_BigCounters:
-		incbin	"art/uncompressed/HUD Numbers.bin"
+		incbin	"cg/uncompressed/HUD Numbers.bin"
 		even
 ;---------------------------------------------------------------------------------------
 ;Uncompressed art
@@ -419,5 +419,5 @@ ArtUnc_BigCounters:
 ;Small counters	used in	lives counter
 ;---------------------------------------------------------------------------------------
 ArtUnc_SmallCounters:
-		incbin	"art/uncompressed/Lives Counter Numbers.bin"
+		incbin	"cg/uncompressed/Lives Counter Numbers.bin"
 		even

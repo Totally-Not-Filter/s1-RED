@@ -61,11 +61,13 @@ demoflag	EQU	$fffffff0
 word		EQU	$02
 
 ; player object bit equates
+; todo: understand cd in these equates
 cd_jump		EQU	$01
 cd_ball		EQU	$02
 cd_walk		EQU	$03
 
 ; player control bit equates
+; cd = control data?
 cd_up		EQU	%00000001
 cd_down		EQU	%00000010
 cd_left		EQU	%00000100
@@ -76,6 +78,7 @@ cd_a		EQU	%01000000
 cd_start	EQU	%10000000
 
 ; game mode equates
+logogamemd	EQU	$00
 spgamemd	EQU	$10
 
 ; obj equates

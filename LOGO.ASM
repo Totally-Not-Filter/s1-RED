@@ -1,4 +1,4 @@
-SegaScreen:
+logo:
 		move.b	#$e4,d0		; Stop all music
 		bsr.w	sfxset
 		bsr.w	sub_15DE
@@ -60,5 +60,5 @@ loc_2F02:
 		andi.b	#$80,swdata1+1
 		beq.b	loc_2EF8
 loc_2F10:
-		move.b	#4,gmmode ; Go to Title Screen
+		move.b	#titlegamemd,gmmode ; Go to Title Screen
 		rts

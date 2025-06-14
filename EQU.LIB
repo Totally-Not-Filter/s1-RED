@@ -79,35 +79,36 @@ cd_start	EQU	%10000000
 
 ; game mode equates
 logogamemd	EQU	$00
+titlegamemd	EQU	$04
 spgamemd	EQU	$10
 
 ; obj equates
-actno		EQU	$00
-actflg		EQU	$01
-sproffset	EQU	$02
-patbase		EQU	$04
-xposi		EQU	$08
-yposi		EQU	$0c
-xspeed		EQU	$10
-yspeed		EQU	$12
+actno		EQU	$00	; actor number
+actflg		EQU	$01	; actor flag
+sproffset	EQU	$02	; sprite offset
+patbase		EQU	$04	; pattern base
+xposi		EQU	$08	; x position
+yposi		EQU	$0c	; y position
+xspeed		EQU	$10	; x speed (velocity)
+yspeed		EQU	$12	; y speed (velocity)
 mspeed		EQU	$14
-sprvsize	EQU	$16
-sprhsize	EQU	$17
-sprpri		EQU	$18
-sprhs		EQU	$19
-patno		EQU	$1a
-patcnt		EQU	$1b
+sprvsize	EQU	$16	; sprite vertical size
+sprhsize	EQU	$17	; sprite horizontal size
+sprpri		EQU	$18	; sprite priority
+sprhs		EQU	$19	; sprite horizontal
+patno		EQU	$1a ; pattern number
+patcnt		EQU	$1b	; pattern count
 mstno		EQU	$1c
-pattim		EQU	$1e
-pattimm		EQU	$1f
-colino		EQU	$20
-colicnt		EQU	$21
-cddat		EQU	$22
-cdsts		EQU	$23
-r_no0		EQU	$24
-r_no1		EQU	$25
+pattim		EQU	$1e	; pattern time
+pattimm		EQU	$1f	; pattern timer
+colino		EQU	$20	; collision number
+colicnt		EQU	$21	; collision count
+cddat		EQU	$22	; control data
+cdsts		EQU	$23	; control
+r_no0		EQU	$24	; routine number 0
+r_no1		EQU	$25	; routine number 1
 direc		EQU	$26
-userflag	EQU	$28
+userflag	EQU	$28	; user flag
 ;actfree
 
 ; actor equates

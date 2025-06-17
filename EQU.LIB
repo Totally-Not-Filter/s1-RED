@@ -25,26 +25,53 @@ VDP_DATA	EQU	$c00000
 VDP_CTRL	EQU	$c00004
 
 ; ram addresses
+mapwk		EQU	$ff0000
+mapwka		EQU	$ffffa400
+mapwkb		EQU	$ffffa440
+pbuffer		EQU	$ffffa800
+blkwk		EQU	$ffffb000
+actwk		EQU	$ffffd000
 playerwk	EQU	$ffffd000
 gmmode		EQU	$fffff600
+swdata		EQU	$fffff602
 swdata1		EQU	$fffff604
+vscroll		EQU	$fffff616
+hscroll		EQU	$fffff618
+hintposi	EQU	$fffff624
+startcolor	EQU	$fffff626
+colorcnt	EQU	$fffff627
+clchgcnt	EQU	$fffff632
+clchgtim	EQU	$fffff634
+ranum		EQU	$fffff636
 pauseflag	EQU	$fffff63a
 hintflag	EQU	$fffff644
+waterposi	EQU	$fffff646
+waterposi_m	EQU	$fffff648
+watermoveposi	EQU	$fffff64a
+waterspeed	EQU	$fffff64c
+water_flag	EQU	$fffff64d
+waterflag	EQU	$fffff64e
+waterflag2	EQU	$fffff64f
 scra_h_posit	EQU	$fffff700
 scra_v_posit	EQU	$fffff704
 scrb_h_posit	EQU	$fffff708
 scrb_v_posit	EQU	$fffff70c
 scrc_v_posit	EQU	$fffff710
 scrc_h_posit	EQU	$fffff714
-;scrz_h_posit
-;scrz_v_posit
+scrz_h_posit	EQU	$fffff718
+scrz_v_posit	EQU	$fffff71c
 ;scrz_h_count
 ;scrz_v_count
 ;scrh_flag
 scralim_n_down	EQU	$fffff726
 scralim_up	EQU	$fffff72c
+plpatno		EQU	$fffff766
+playwrtflag	EQU	$fffff767
+actset_rno	EQU	$fffff76c
 rotdir		EQU	$fffff780
 rotspd		EQU	$fffff782
+sekichyuflag	EQU	$fffff7cb
+edplayflag	EQU	$fffff7d7
 editno		EQU	$fffffe06
 editmode	EQU	$fffffe08
 edittimer	EQU	$fffffe0A
@@ -54,17 +81,20 @@ ring_counter	EQU	$fffffe20
 editstack	EQU	$fffffef0
 editstack2	EQU	$fffffef2
 demoflag	EQU	$fffffff0
-;demono
-;enddemono
+demono		EQU	$fffffff2
+enddemono	EQU	$fffffff4
+mdstatus	EQU	$fffffff8
+debugflag	EQU	$fffffffa
 
 ; misc equates
 word		EQU	$02
 
 ; player object bit equates
 ; todo: understand cd in these equates
+cd_walk		EQU	$01
 cd_jump		EQU	$01
 cd_ball		EQU	$02
-cd_walk		EQU	$03
+cd_ballj	EQU	$04
 
 ; player control bit equates
 ; cd = control data?
@@ -72,10 +102,6 @@ cd_up		EQU	%00000001
 cd_down		EQU	%00000010
 cd_left		EQU	%00000100
 cd_right	EQU	%00001000
-cd_b		EQU	%00010000
-cd_c		EQU	%00100000
-cd_a		EQU	%01000000
-cd_start	EQU	%10000000
 
 ; game mode equates
 logogamemd	EQU	$00
@@ -109,17 +135,23 @@ r_no0		EQU	$24	; routine number 0
 r_no1		EQU	$25	; routine number 1
 direc		EQU	$26
 userflag	EQU	$28	; user flag
+speeduptimer	EQU	$30
+footdir		EQU	$36
 ;actfree
 
 ; actor equates
 ; format: name_act
+play_act	EQU	$01
 bou_act		EQU	$0b	; 棒 (pole)
 ben_act		EQU	$0c	; 弁 (valve)
+play02_act	EQU	$10
 signal_act	EQU	$12
 mfire_act	EQU	$13
 buranko_act	EQU	$15 ; 鞦韆 (swing)
 yari_act	EQU	$16	; 槍 (spear)
+thashi_act	EQU	$17 ; 橋 (bridge)
 shima_act	EQU	$18 ; 島 (island)
+ball_act	EQU	$19
 break_act	EQU	$1a
 bgspr_act	EQU	$1c
 buta_act	EQU	$1e
@@ -132,10 +164,14 @@ door_act	EQU	$2a
 fish_act	EQU	$2b
 fish2_act	EQU	$2c
 mogura_act	EQU	$2d	; 土竜 (mole)
+yuka_act	EQU	$2f	; 床 (floor)
+ochi_act	EQU	$30
+turi_act	EQU	$31 ; 吊り (hanging)
 switch2_act	EQU	$32
 box_act		EQU	$33
 toge_act	EQU	$36	; 峠 (difficult part)
 jyama_act	EQU	$3b ; 邪魔 (obstacle)
+boss1_act	EQU	$3d
 musi_act	EQU	$40	; 虫 (insect)
 sjump_act	EQU	$41
 kamere_act	EQU	$42	; カメレオン (chameleon)
@@ -143,8 +179,12 @@ aruma_act	EQU	$43	; アルマジロ (armadillo)
 kageb_act	EQU	$44	; 陰 (shadow)
 fblock_act	EQU	$46
 bobin_act	EQU	$47	; ボビン (bobbin)
+btama_act	EQU	$48	; 玉 (ball)
+taki_act	EQU	$49	; 滝 (waterfall)
 myogan_act	EQU	$4c
+yogan_act	EQU	$4d
 yogan2_act	EQU	$4e
+usa_act		EQU	$4f	; 兎 (rabbit)
 yado_act	EQU	$50	; 宿借り (hermit crab)
 bryuka_act	EQU	$51	; 床 (floor)
 dai_act		EQU	$52 ; 台 (platform)
@@ -166,13 +206,18 @@ awa_act		EQU	$64	; 泡 (bubble)
 mizu_act	EQU	$65	; 水 (water)
 mawaru_act	EQU	$66 ; 回る (rotate)
 haguruma_act	EQU	$67 ; 歯車 (cogwheel)
+beltcon_act	EQU	$68
 pata_act	EQU	$69
 noko_act	EQU	$6a ; 鋸 (saw)
 dai4_act	EQU	$6b ; 台 (platform)
 yukae_act	EQU	$6c
 fire6_act	EQU	$6d
 ele_act		EQU	$6e
+beltc_act	EQU	$6f
 yukai_act	EQU	$70
 scoli_act	EQU	$71
 imo_act		EQU	$78 ; 芋虫 (caterpillar)
 save_act	EQU	$79
+bten_act	EQU	$7d
+boss6_act	EQU	$85
+staff_act	EQU	$8a

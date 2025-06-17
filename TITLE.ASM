@@ -3,7 +3,7 @@
 ;---------------------------------------------------------------------------------------
 title:
 		move.b	#$e4,d0		; Stop all music
-		bsr.w	sfxset
+		bsr.w	soundset
 		bsr.w	sub_15DE
 		bsr.w	sub_1E52
 		move.w	#$2700,sr
@@ -17,7 +17,7 @@ title:
 		move.w	#$8B00+3,(a6)
 		move.w	#$8700+$20,(a6)
 		clr.b	$FFFFF64E
-		bsr.w	loc_12C4
+		bsr.w	scrinit
 		lea	$ffffd000,a1
 		moveq	#0,d0
 		move.w	#$2000/4-1,d1
@@ -26,14 +26,14 @@ loc_2F64:
 		dbf	d1,loc_2F64	; Fill FFD000 -	FFEFFF with 00
 		move.l	#$40000000,VDP_CTRL ; RAM location to load Japanese Credits into
 		lea	ArtNem_JapCredits,a0 ; Load	Japanese Credits
-		bsr.w	NemesisDec_1440	; Decompress Japanese Credits
+		bsr.w	bitdevr	; Decompress Japanese Credits
 		move.l	#$54C00000,VDP_CTRL ; RAM location to load Alphabet into
 		lea	ArtNem_Alphabet,a0 ; Load Alphabet
-		bsr.w	NemesisDec_1440	; Decompress Alphabet
+		bsr.w	bitdevr	; Decompress Alphabet
 		lea	$FF0000,a1
 		lea	Eni_HiddenJapCreditsMappings,a0
 		move.w	#$000,d0
-		bsr.w	EnigmaDec
+		bsr.w	mapdevr
 		lea	$FF0000,a1
 		move.l	#$40000003,d0
 		moveq	#40-1,d1
@@ -54,49 +54,49 @@ loc_2FC4:
 		move.w	#$2700,sr
 		move.l	#$40000001,VDP_CTRL
 		lea	titlecg,a0
-		bsr.w	NemesisDec_1440
+		bsr.w	bitdevr
 		move.l	#$60000001,VDP_CTRL
 		lea	titlespcg,a0
-		bsr.w	NemesisDec_1440
+		bsr.w	bitdevr
 		move.l	#$62000002,VDP_CTRL
 		lea	ArtNem_TitleTM,a0
-		bsr.w	NemesisDec_1440
+		bsr.w	bitdevr
 		lea	VDP_DATA,a6
 		move.l	#$50000003,4(a6)
-		lea	ArtUnc_Text.l,a5
-		move.w	#$520/2-1,d1
+		lea	ascii.l,a5
+		move.w	#$0520/2-1,d1
 loc_303E:
 		move.w	(a5)+,(a6)
 		dbf	d1,loc_303E
 		move.b	#0,$FFFFFE30
-		move.w	#0,$FFFFFE08
+		move.w	#0,editmode
 		move.w	#0,demoflag
 		move.w	#0,$FFFFFFEA
 		move.w	#0,stageno
-		move.w	#0,$FFFFF634
+		move.w	#0,clchgtim
 		bsr.w	sub_5EBE
 		bsr.w	sub_6286
-		lea	$FFFFB000,a1
-		lea	Eni_Ghz16,a0
+		lea	blkwk,a1
+		lea	zone00blk,a0
 		move.w	#$000,d0
-		bsr.w	EnigmaDec
-		lea	Kos_Ghz256,a0
-		lea	$FF0000,a1
-		bsr.w	KosinskiDec
+		bsr.w	mapdevr
+		lea	zone00map,a0
+		lea	mapwk,a1
+		bsr.w	unlze
 		bsr.w	sub_6D12
 		bsr.w	sub_1E52
 		move.w	#$2700,sr
-		bsr.w	loc_12C4
+		bsr.w	scrinit
 		lea	VDP_CTRL,a5
 		lea	VDP_DATA,a6
 		lea	$FFFFF708,a3
-		lea	$FFFFA400+$40,a4
+		lea	mapwkb,a4
 		move.w	#$6000,d2
 		bsr.w	sub_6C7E
 		lea	$FF0000,a1
 		lea	titlemap,a0
 		move.w	#$000,d0
-		bsr.w	EnigmaDec
+		bsr.w	mapdevr
 		lea	$FF0000,a1
 		move.l	#$42060003,d0
 		moveq	#$22-1,d1
@@ -104,16 +104,16 @@ loc_303E:
 		bsr.w	sub_1420
 		move.l	#$40000000,VDP_CTRL
 		lea	ArtNem_Ghz8_1,a0
-		bsr.w	NemesisDec_1440
+		bsr.w	bitdevr
 		moveq	#1,d0
 		bsr.w	PalLoad_Unk1
 		move.b	#$8A,d0
-		bsr.w	sfxset
-		move.b	#0,$FFFFFFFA
+		bsr.w	soundset
+		move.b	#0,debugflag
 		move.w	#376,$FFFFF614
 		lea	$FFFFD000+$80,a1
 		moveq	#0,d0
-		move.w	#$20/4-1,d1	; This line has a slight error to it, the base value should be $40 instead of $20, resulting in the PRESS START BUTTON text not appearing in-game.
+		move.w	#$0200/$40-1,d1	; This line has a slight error to it, the base value should be $0400 instead of $0200, resulting in the PRESS START BUTTON text not appearing in-game.
 loc_311E:
 		move.l	d0,(a1)+
 		dbf	d1,loc_311E
@@ -136,7 +136,7 @@ loc_311E:
 		bsr.w	sub_1DAC
 loc_317C:
 		move.b	#4,$FFFFF62A
-		bsr.w	sub_29A8
+		bsr.w	sync
 		jsr	Sonic_Load
 		bsr.w	sub_6286
 		jsr	sub_D65E
@@ -150,7 +150,7 @@ loc_317C:
 		move.b	#logogamemd,gmmode ; Set screen mode to 00 (sega screen)
 		rts
 loc_31B6:
-		tst.b	$FFFFFFF8	; Check	if the machine is US or	Japanese
+		tst.b	mdstatus	; Check	if the machine is US or	Japanese
 		bpl.b	loc_31C4	; If Japanese, branch
 		lea	LevelSelectCode_US,a0 ; Load US code
 sub_31C2:
@@ -179,7 +179,7 @@ loc_31CA:
 loc_3200:
 		move.b	#1,(a0,d1.w)
 		move.b	#$B5,d0		; Set ring sound
-		bsr.w	sfxset	; Play ring sound
+		bsr.w	soundset	; Play ring sound
 		bra.b	loc_3222
 loc_3210:
 		tst.b	d0
@@ -200,13 +200,13 @@ loc_3230:
 loc_3242:
 		tst.b	$FFFFFFE0	; Check	if level select	code is	on
 		beq.w	PlayLevel	; If not, play level
-		btst	#6,swdata1 ; Check if A is pressed
+		btst.b	#6,swdata1 ; Check if A is pressed
 		beq.w	PlayLevel	; If not, play level
 		moveq	#2,d0		; Set level select palette
 		bsr.w	PalLoad		; Load level select palette
 		lea	$FFFFCC00,a1
 		moveq	#0,d0
-		move.w	#$380/4-1,d1
+		move.w	#$0380/4-1,d1
 loc_3264:
 		move.l	d0,(a1)+
 		dbf	d1,loc_3264
@@ -221,12 +221,12 @@ loc_3286:
 		bsr.w	sub_34E6
 loc_3290:
 		move.b	#4,$FFFFF62A
-		bsr.w	sub_29A8
+		bsr.w	sync
 		bsr.w	sub_3460
 		bsr.w	sub_15EC
 		tst.l	$FFFFF680
 		bne.b	loc_3290
-		andi.b	#cd_a+cd_b+cd_c+cd_start,swdata1+1 ; Check if A, B, C, or Start	is pressed
+		andi.b	#$f0,swdata1+1 ; Check if A, B, C, or Start	is pressed
 		beq.b	loc_3290	; If not, branch
 		move.w	$FFFFFF82,d0 ; Move	selected option	to D0
 		cmpi.w	#$14,d0		; Check	if the option is 14
@@ -245,7 +245,7 @@ loc_32D4:
 		cmpi.w	#$a0,d0
 		bcs.b	loc_3290	; If d0	is smaller than	A0, branch
 loc_32E0:
-		bsr.w	sfxset	; Play selected	sound
+		bsr.w	soundset	; Play selected	sound
 		bra.b	loc_3290	; Go back
 LSelect_EndingSequence:
 		move.b	#$18,gmmode ; Set screen	mode to	18 (ending sequence)
@@ -254,8 +254,8 @@ LSelect_EndingSequence:
 LSelect_Credits:
 		move.b	#$1c,gmmode ; Set screen	mode to	1C (credits)
 		move.b	#$91,d0		; Load credits music
-		bsr.w	sfxset	; Play credits music
-		move.w	#0,$FFFFFFF4 ; Reset $FFF4
+		bsr.w	soundset	; Play credits music
+		move.w	#0,enddemono ; Reset $FFF4
 		rts
 LSelect_LevelOrSS:
 		add.w	d0,d0		; Multiply selected level by 2
@@ -288,7 +288,7 @@ PlayLevel:
 		move.l	d0,$FFFFFE5C
 		move.b	d0,$FFFFFE18 ; Clear continues
 		move.b	#$e0,d0		; Fade out title screen	music
-		bsr.w	sfxset
+		bsr.w	soundset
 		rts
 ;----------------------------------------------------------------------------------
 ;Level select array
@@ -340,9 +340,9 @@ loc_33B0:
 		move.w	#30,$FFFFF614
 loc_33B6:
 		move.b	#4,$FFFFF62A
-		bsr.w	sub_29A8
+		bsr.w	sync
 		bsr.w	sub_6286
-		bsr.w	AnimatedPal
+		bsr.w	clchgctr
 		bsr.w	sub_15EC
 		move.w	playerwk+xposi,d0
 		addq.w	#2,d0
@@ -357,16 +357,16 @@ loc_33E4:
 		tst.w	$FFFFF614
 		bne.w	loc_33B6
 		move.b	#$e0,d0		; Fade out all sounds
-		bsr.w	sfxset
-		move.w	$FFFFFFF2,d0 ; Move	demo level to d0
+		bsr.w	soundset
+		move.w	demono,d0 ; Move	demo level to d0
 		andi.w	#7,d0		; d0 AND 7
 		add.w	d0,d0		; d0 * 2
 		move.w	DemoLevels(pc,d0.w),d0 ; Load level from demo levels array to d0
 		move.w	d0,stageno ; Load	d0 to level
-		addq.w	#1,$FFFFFFF2 ; Increment demo level
-		cmpi.w	#4,$FFFFFFF2
+		addq.w	#1,demono ; Increment demo level
+		cmpi.w	#4,demono
 		bcs.b	loc_3422	; If demo level	is 4, branch
-		move.w	#0,$FFFFFFF2 ; Clear demo level
+		move.w	#0,demono ; Clear demo level
 loc_3422:
 		move.w	#1,demoflag ; Turn	demo mode on
 		move.b	#8,gmmode ; Set screen mode to 08 (demo)

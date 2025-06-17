@@ -1,29 +1,29 @@
-sub_1C6B8:
-		tst.w	($FFFFFFFA).w
+scoreset:
+		tst.w	$FFFFFFFA
 		bne.w	loc_1C7A2
-		tst.b	($FFFFFE1F).w
+		tst.b	$FFFFFE1F
 		beq.b	loc_1C6D8
-		clr.b	($FFFFFE1F).w
+		clr.b	$FFFFFE1F
 		move.l	#$5C800003,d0
-		move.l	($FFFFFE26).w,d1
+		move.l	$FFFFFE26,d1
 		bsr.w	sub_1C8DA
 loc_1C6D8:
-		tst.b	($FFFFFE1D).w
+		tst.b	$FFFFFE1D
 		beq.b	loc_1C6F8
 		bpl.b	loc_1C6E4
 		bsr.w	sub_1C80E
 loc_1C6E4:
-		clr.b	($FFFFFE1D).w
+		clr.b	$FFFFFE1D
 		move.l	#$5F400003,d0
 		moveq	#0,d1
-		move.w	($FFFFFE20).w,d1
+		move.w	$FFFFFE20,d1
 		bsr.w	sub_1C8D0
 loc_1C6F8:
-		tst.b	($FFFFFE1E).w
+		tst.b	$FFFFFE1E
 		beq.b	loc_1C754
 		tst.w	pauseflag
 		bne.b	loc_1C754
-		lea	($FFFFFE22).w,a1
+		lea	$FFFFFE22,a1
 		cmpi.l	#9<<16+59<<8+59,(a1)+
 		beq.b	loc_1C78C
 		addq.b	#1,-(a1)
@@ -41,68 +41,68 @@ loc_1C6F8:
 loc_1C734:
 		move.l	#$5E400003,d0
 		moveq	#0,d1
-		move.b	($FFFFFE23).w,d1
+		move.b	$FFFFFE23,d1
 		bsr.w	sub_1C9A8
 		move.l	#$5EC00003,d0
 		moveq	#0,d1
-		move.b	($FFFFFE24).w,d1
+		move.b	$FFFFFE24,d1
 		bsr.w	sub_1C9B2
 loc_1C754:
-		tst.b	($FFFFFE1C).w
+		tst.b	$FFFFFE1C
 		beq.b	loc_1C762
-		clr.b	($FFFFFE1C).w
+		clr.b	$FFFFFE1C
 		bsr.w	sub_1CA6E
 loc_1C762:
-		tst.b	($FFFFF7D6).w
+		tst.b	$FFFFF7D6
 		beq.b	locret_1C78A
-		clr.b	($FFFFF7D6).w
+		clr.b	$FFFFF7D6
 		move.l	#$6E000002,VDP_CTRL
 		moveq	#0,d1
-		move.w	($FFFFF7D2).w,d1
+		move.w	$FFFFF7D2,d1
 		bsr.w	sub_1CA0C
 		moveq	#0,d1
-		move.w	($FFFFF7D4).w,d1
+		move.w	$FFFFF7D4,d1
 		bsr.w	sub_1CA0C
 locret_1C78A:
 		rts
 loc_1C78C:
-		clr.b	($FFFFFE1E).w
-		lea	($FFFFD000).w,a0
+		clr.b	$FFFFFE1E
+		lea	$FFFFD000,a0
 		movea.l	a0,a2
 		bsr.w	sub_1B098
-		move.b	#1,($FFFFFE1A).w
+		move.b	#1,$FFFFFE1A
 		rts
 loc_1C7A2:
 		bsr.w	sub_1C87A
-		tst.b	($FFFFFE1D).w
+		tst.b	$FFFFFE1D
 		beq.b	loc_1C7C6
 		bpl.b	loc_1C7B2
 		bsr.w	sub_1C80E
 loc_1C7B2:
-		clr.b	($FFFFFE1D).w
+		clr.b	$FFFFFE1D
 		move.l	#$5F400003,d0
 		moveq	#0,d1
-		move.w	($FFFFFE20).w,d1
+		move.w	$FFFFFE20,d1
 		bsr.w	sub_1C8D0
 loc_1C7C6:
 		move.l	#$5EC00003,d0
 		moveq	#0,d1
-		move.b	($FFFFF62C).w,d1
+		move.b	$FFFFF62C,d1
 		bsr.w	sub_1C9B2
-		tst.b	($FFFFFE1C).w
+		tst.b	$FFFFFE1C
 		beq.b	loc_1C7E4
-		clr.b	($FFFFFE1C).w
+		clr.b	$FFFFFE1C
 		bsr.w	sub_1CA6E
 loc_1C7E4:
-		tst.b	($FFFFF7D6).w
+		tst.b	$FFFFF7D6
 		beq.b	locret_1C80C
-		clr.b	($FFFFF7D6).w
+		clr.b	$FFFFF7D6
 		move.l	#$6E000002,VDP_CTRL
 		moveq	#0,d1
-		move.w	($FFFFF7D2).w,d1
+		move.w	$FFFFF7D2,d1
 		bsr.w	sub_1CA0C
 		moveq	#0,d1
-		move.w	($FFFFF7D4).w,d1
+		move.w	$FFFFF7D4,d1
 		bsr.w	sub_1CA0C
 locret_1C80C:
 		rts
@@ -118,7 +118,7 @@ sub_1C822:
 		lea	byte_1C86A(pc),a2
 		move.w	#15-1,d2
 loc_1C83E:
-		lea	ArtUnc_BigCounters(pc),a1
+		lea	scorewrtcg(pc),a1
 loc_1C842:
 		move.w	#16-1,d1
 		move.b	(a2)+,d0
@@ -149,7 +149,7 @@ sub_1C87A:
 		move.w	playerwk+yposi,d1
 sub_1C89A:
 		moveq	#8-1,d6
-		lea	ArtUnc_Text.l,a1
+		lea	ascii.l,a1
 loc_1C8A2:
 		rol.w	#4,d1
 		move.w	d1,d2
@@ -180,7 +180,7 @@ sub_1C8DA:
 		moveq	#6-1,d6
 loc_1C8E2:
 		moveq	#0,d4
-		lea	ArtUnc_BigCounters(pc),a1
+		lea	scorewrtcg(pc),a1
 loc_1C8E8:
 		moveq	#0,d2
 		move.l	(a2)+,d3
@@ -226,7 +226,7 @@ sub_1C938:
 		lea	dword_1C9A0,a2
 		moveq	#2-1,d6
 		moveq	#0,d4
-		lea	ArtUnc_BigCounters(pc),a1
+		lea	scorewrtcg(pc),a1
 loc_1C956:
 		moveq	#0,d2
 		move.l	(a2)+,d3
@@ -272,7 +272,7 @@ sub_1C9B2:
 		moveq	#1,d6
 loc_1C9BA:
 		moveq	#0,d4
-		lea	ArtUnc_BigCounters(pc),a1
+		lea	scorewrtcg(pc),a1
 loc_1C9C0:
 		moveq	#0,d2
 		move.l	(a2)+,d3
@@ -313,7 +313,7 @@ sub_1CA0C:
 		lea	dword_1C998,a2
 		moveq	#4-1,d6
 		moveq	#0,d4
-		lea	ArtUnc_BigCounters(pc),a1
+		lea	scorewrtcg(pc),a1
 loc_1CA1A:
 		moveq	#0,d2
 		move.l	(a2)+,d3
@@ -364,7 +364,7 @@ sub_1CA6E:
 		lea	dword_1C9A0,a2
 		moveq	#2-1,d6
 		moveq	#0,d4
-		lea	ArtUnc_SmallCounters(pc),a1
+		lea	playsuucg(pc),a1
 loc_1CA88:
 		move.l	d0,4(a6)
 		moveq	#0,d2
@@ -405,19 +405,3 @@ loc_1CACE:
 		move.l	#0,(a6)
 		dbf	d5,loc_1CACE
 		bra.b	loc_1CABC
-;---------------------------------------------------------------------------------------
-;Uncompressed art
-;
-;Big counters used for Scor/Time/Rings
-;---------------------------------------------------------------------------------------
-ArtUnc_BigCounters:
-		incbin	"cg/uncompressed/HUD Numbers.bin"
-		even
-;---------------------------------------------------------------------------------------
-;Uncompressed art
-;
-;Small counters	used in	lives counter
-;---------------------------------------------------------------------------------------
-ArtUnc_SmallCounters:
-		incbin	"cg/uncompressed/Lives Counter Numbers.bin"
-		even

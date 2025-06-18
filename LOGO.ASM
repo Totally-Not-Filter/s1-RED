@@ -12,7 +12,7 @@ logo:
 		clr.b	waterflag
 		move.w	#$2700,sr
 		move.w	$FFFFF60C,d0
-		andi.b	#$BF,d0
+		andi.b	#$bf,d0
 		move.w	d0,VDP_CTRL
 		bsr.w	scrinit
 		move.l	#$40000000,VDP_CTRL

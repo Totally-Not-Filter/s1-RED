@@ -16,9 +16,9 @@ title:
 		move.w	#$9200,(a6)
 		move.w	#$8B00+3,(a6)
 		move.w	#$8700+$20,(a6)
-		clr.b	$FFFFF64E
+		clr.b	waterflag
 		bsr.w	scrinit
-		lea	$ffffd000,a1
+		lea	actwk,a1
 		moveq	#0,d0
 		move.w	#$2000/4-1,d1
 loc_2F64:

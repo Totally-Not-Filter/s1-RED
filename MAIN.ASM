@@ -42946,7 +42946,7 @@ ArtNem_Ghz8_2:
 ;GHZ 256x256 block mappings (Kosinski compression)
 ;----------------------------------------------------------------------------------
 zone00map:
-		incbin	"map/zone00.kos"
+		incbin	"map/256x256/zone00.kos"
 		even
 ;----------------------------------------------------------------------------------
 ;LZ 16x16 block	mappings (Enigma compression)

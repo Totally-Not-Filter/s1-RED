@@ -1,5 +1,5 @@
-		include	"equ.lib"
-		include	"macro.lib"
+		include	equ.lib
+		include	macro.lib
 ;-----------------------------------------
 ;
 ; Sonic 1 Disassembly by drx
@@ -42,7 +42,7 @@ ErrorTrap:
 		nop
 		nop
 		bra.b	ErrorTrap
-		include	"source/icd_blk4.prg"
+		include	source/icd_blk4.prg
 		btst.b	#6,REG_CTRL3
 		beq.b	ChecksumCheck
 		cmpi.l	#"init",$fffffffc
@@ -250,7 +250,7 @@ sub_5E0:
 ;They're used for errors and level select
 ;---------------------------------------------------------------------------------------
 ascii:
-		incbin	"cg/menutext.bin"
+		incbin	cg/menutext.bin
 		even
 v_int:	
 		movem.l	d0-a6,-(sp)
@@ -2682,8 +2682,8 @@ byte_2D0E:
 		dc.b	$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F,$1F
 		dc.b	$20,$20,$20,$20,$20,$20,$20
 		even
-		include	"logo.asm"
-		include	"title.asm"
+		include	logo.asm
+		include	title.asm
 ;----------------------------------------------------------------------------
 ;Music playing array
 ;----------------------------------------------------------------------------
@@ -39178,7 +39178,7 @@ scoreup:
 		move.l	d0,(a2)
 ?jump0:
 		rts
-		include	"score.asm"
+		include	score.asm
 ;---------------------------------------------------------------------------------------
 ;Uncompressed art
 ;
@@ -50169,26 +50169,10 @@ Sprites_Null:	dc.w $FFFF,    0,    0	; 0 ; DATA XREF: ROM:0006B000o
 ;Filler	(free space)
 ;--------------------------------------------------------------------------------------
 		dcb.b $62A,$FF
-;		include	"sound/main.asm"
-		include	"sound/ver11/mdtb11.asm"
-		include	"sound/ver11/mdcnt11.asm"
-		include	"sound/ver11/mdpsg11.asm"
-		include	"sound/ver11/mdcmd11.asm"
-;		include	"sound/ver11/mdsng111.s"
-;		include	"sound/ver11/mdsng211.s"
-;		include	"sound/ver11/mdsng311.s"
-;		include	"sound/ver11/mdsng411.s"
-;		include	"sound/ver11/mdsng511.s"
-;		include	"sound/ver11/mdsng611.s"
-;		include	"sound/ver11/mdsng711.s"
-;		include	"sound/ver11/mdsng811.s"
-;		include	"sound/ver11/mdsng911.s"
-;		include	"sound/ver11/mdsnga11.s"
-;		include	"sound/ver11/mdsngb11.s"
-;		include	"sound/ver11/mdsngc11.s"
-;		include	"sound/ver11/mdsngd11.s"
-;		include	"sound/ver11/mdsnge11.s"
-;		include	"sound/ver11/mdsngf11.s"
+		include	sound/ver11/mdtb11.asm
+		include	sound/ver11/mdcnt11.asm
+		include	sound/ver11/mdpsg11.asm
+		include	sound/ver11/mdcmd11.asm
 ;----------------------------------------------------------------------------------
 ; Unknown (Sound driver?) (Kosinski compression)
 ;----------------------------------------------------------------------------------
@@ -50594,7 +50578,7 @@ s93:	dc.b   0,$9C,  7,  3,  1,  6,  0,$99,  0,  0,  0,$36,$F4,  8,  0,$42,$F4,  
 		dc.b $2A,$F2,$EF,  0,$BD,  6,$C1,$C4,$C9, $C,$C6,$CB,$2A,$F2,$EF,  1,$C1, $C,$C1,  6,$C4,  6,$80,$C4,$80,$C9,$2A,$F2,$EF,  1,$C9, $C,$C9,  6,$CD,  6,$80,$CD,$80,$D0,$2A,$F2,$EF,  1,$C4, $C,$C4,  6,$C9,  6,$80,$C9,$80,$CD,$2A,$F2,$80,$2D,$C4,  6,$C2,$C1,$BF,$EC; 64
 		dc.b   3,$F7,  0,  4,$FF,$F5,$F2,$E2,  1,$80,  2,$80,$2D,$C4,  6,$C2,$C1,$BF,$EC,  3,$F7,  0,  4,$FF,$F5,$E2,  1,$F2,  4,$35,$72,$54,$46,$1F,$1F,$1F,$1F,  7, $A,  7, $D,  0, $B,  0, $B,$1F, $F,$1F, $F,$23,$14,$1D,$80,$3C,$31,$52,$50,$30,$52,$53,$52,$53,  8,  0; 128
 		dc.b   8,  0,  4,  0,  4,  0,$10,  7,$10,  7,$1A,$80,$16,$80; 192
-		include	"sound/ver11/mdsetb11.asm"
+		include	sound/ver11/mdsetb11.asm
 sa0:	dc.b   0,$16,  1,  1,$80,$80,  0, $A,$F4,  0,$F5,  0,$9E,  5,$F0,  2,  1,$F8,$65,$A3,$15,$F2; 0
 					; DATA XREF: ROM:00078B44o
 sa1:	dc.b   0,$11,  1,  1,$80,  5,  0, $A,  0,  1,$EF,  0,$BD,  6,$BA,$16,$F2,$3C,  5,  1, $A,  1,$56,$5C,$5C,$5C, $E,$11,$11,$11,  9, $A,  6, $A,$4F,$3F,$3F,$3F,$17,$80,$20,$80; 0
@@ -50712,5 +50696,5 @@ sd0:	dc.b   0,$21,  1,  1,$80,  4,  0, $A,  0,$10,$EF,  0,$D0,  2,$E7,  1,$F7,  
 ; 8-bit	unsigned raw audio at 16Khz
 ;-------------------------------------------------------------------------------
 Snd_Sega:
-		incbin	"sound/ver11/pcm/sega.pcm"
+		incbin	sound/ver11/pcm/sega.pcm
 		even

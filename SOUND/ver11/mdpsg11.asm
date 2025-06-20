@@ -7,21 +7,11 @@
 ;				      By  H.Kubota	;
 ;=======================================================;
 
-	list off
-	include mdEQ11.lib
-	include mdMCR11.lib
-	list on
-
-	extern	flag_set,leng_set	; $$$CNT.ASM
-	extern	gate_chk,vibr_chk	; $$$CNT.ASM
-	extern	command			; $$$CMD.ASM
-
 ;=======================================;
 ;					;
 ;	       PSG CONTROL		;
 ;					;
 ;=======================================;
-	public	psg_cnt
 psg_cnt:
 	subq.b	#1,lcont(a5)		; if length = 0 then jump
 	bne.s	psg_cnt1
@@ -39,7 +29,6 @@ psg_cnt1:
 ;---------------------------------------;
 ;	    PSG NEXT DATA SCAN		;
 ;---------------------------------------;
-	public	psg_nextd
 psg_nextd:
 	bclr.b	#_nl,(a5)		; null flag clear
 ;---------< table pointer get >---------;
@@ -86,7 +75,6 @@ psg_frq:
 ;---------------------------------------;
 ;	      PSG NULL SET		;
 ;---------------------------------------;
-	public	psg_null
 psg_null:
 	bset.b	#_nl,(a5)		; null flag set
 	move.w	#$ffff,freqb(a5)	; freq null set
@@ -132,7 +120,6 @@ psg_null_set:
 ;	    PSG ENVELOPE SET		;
 ;					;
 ;=======================================;
-	public	enve_chk,enve_set
 enve_chk:
 	tst.b	enve(a5)		; if enve = 0
 	beq	enve_end		; then end
@@ -155,10 +142,10 @@ enve_set:
 	beq.s	?jump1			; then jump (not command)
 	cmpi.b	#TBEND,d0
 	beq.s	etbend
-	cmpi.b	#TBBAK,d0
-	beq.s	etbbak
-	cmpi.b	#TBREPT,d0
-	beq.s	etbrept
+*	cmpi.b	#TBBAK,d0
+*	beq.s	etbbak
+*	cmpi.b	#TBREPT,d0
+*	beq.s	etbrept
 ;--------< envelope data make >---------;
 ?jump1:
 	add.w	d0,d6			; d6 = new enve data
@@ -170,7 +157,6 @@ enve_set:
 ;	    PSG attenation set		;
 ;=======================================;
 ;  in d6 : volm data
-	public	psg_att_set
 psg_att_set:
 	btst.b	#_nl,(a5)		; if null flag on
 	bne.s	enve_end		; then end
@@ -197,20 +183,19 @@ etbend:
 	subq.b	#1,econt(a5)		; enve counter -1
 	rts
 ;===============< TBBAK >===============;
-etbbak:
-	move.b	1(a0,d0.w),econt(a5)	; next enve table data set
-	bra	enve_set		; enve set
+*etbbak:
+*	move.b	1(a0,d0.w),econt(a5)	; next enve table data set
+*	bra	enve_set		; enve set
 ;===============< TBREPT >==============;
-etbrept:
-	clr.b	econt(a5)		; enve counter clear
-	bra	enve_set		; enve set
+*etbrept:
+*	clr.b	econt(a5)		; enve counter clear
+*	bra	enve_set		; enve set
 
 ;=======================================;
 ;					;
 ;	        PSG OFF			;
 ;					;
 ;=======================================;
-	public	psg_off,psg_off0
 psg_off:
 	btst.b	#_wr,(a5)		; if write protect on
 	bne.s	psg_off_end		; then end
@@ -226,7 +211,6 @@ psg_off_end:
 ;	      PSG ALL CLEAR		;
 ;					;
 ;=======================================;
-	public	psg_clear
 psg_clear:
 	lea	psg68k,a0
 	move.b	#$9f,(a0)
@@ -239,7 +223,6 @@ psg_clear:
 ;	        PSG SCALE		;
 ;					;
 ;=======================================;
-	public	psg_scale
 psg_scale:
 ;	dc.w	1015,958,904
 	dc.w	854,806,761,718,677,640

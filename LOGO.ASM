@@ -4,11 +4,11 @@ logo:
 		bsr.w	sub_15DE
 		bsr.w	sub_1E52
 		lea	VDP_CTRL,a6
-		move.w	#$8000+4,(a6)
-		move.w	#$8200+$30,(a6)
-		move.w	#$8400+7,(a6)
-		move.w	#$8700,(a6)
-		move.w	#$8B00,(a6)
+		move.w	#$8000+%00000100,(a6)
+		move.w	#$8200+%00110000,(a6)
+		move.w	#$8400+%00000111,(a6)
+		move.w	#$8700+%00000000,(a6)
+		move.w	#$8B00+%00000000,(a6)
 		clr.b	waterflag
 		move.w	#$2700,sr
 		move.w	$FFFFF60C,d0

@@ -6,23 +6,6 @@
 ;			Ver  1.1 / 1990.9.1		;
 ;				      By  H.Kubota	;
 ;=======================================================;
-
-	list off
-	include mdEQ11.LIB
-	include mdMCR11.LIB
-	list on
-
-	if	prg
-	extern	bgmtb,setb,backtb
-	extern	envetb,pltb
-	else
-	org	control_top
-	endif
-
-	extern	command,vol_set,jfenv0	; $$$CMD.ASM
-	extern	psg_cnt,psg_att_set	; $$$PSG.ASM
-	extern	psg_off,psg_off0	; $$$PSG.ASM
-	extern	psg_clear		; $$$PSG.ASM
 	
 ;=======================================;
 ;					;
@@ -30,7 +13,6 @@
 ;					;
 ;=======================================;
 ;	if z80 writing z80_flg = 80h
-	public	z80opn_chk
 z80opn_chk:
 	z80bus_on
 	nop
@@ -58,17 +40,33 @@ z80_chk_end:
 ;=======================================;
 ; use registor
 ;     a6 : sound ram top
-	public	sound
 sound:
-	lea	sound_ram,a6		; a6 = sound ram top
+	lea	sound_ram&$ffffff,a6		; a6 = sound ram top
 	clr.b	seflag(a6)		; se flag clear
 
 	tst.b	pause_flg(a6)		; pause flag check
 	bne	pause_chk		; pause check
 
+	subq.b	#1,rcunt(a6)		; rcunt -1
+	bne.s	?end			; if rcunt � 0 then end
 	jsr	delcont(pc)		; delay counter check
+?end:
+	move.b	foutfl(a6),d0		; if foutfl = 0
+	beq.s	?end1			; then end
 	jsr	fout_chk(pc)		; faid out check
+?end1:
+	tst.b	finfl(a6)
+	beq.s	?end2
+	jsr	fin_chk(pc)
+?end2:
+	tst.w	kyflag(a6)
+	beq.s	?jump
 	jsr	bufscan(pc)		; buffer scan & key scan
+?jump:
+	cmpi.b	#$80,kyflag0(a6)
+	beq.s	?jump1
+	jsr	buf_end(pc)
+?jump1:
 
 ;=======================================;
 ;					;
@@ -79,8 +77,6 @@ sound:
 ;     a6 : sound ram top
 ;     a5 : channel ram top
 ;     a4 : table pointer
-	public	rythm_scan,fm_scan,psg_scan
-	public	fm_se_scan,psg_se_scan
 sound_scan:
 ;---------------------------------------;
 ;	       RYTHM SCAN		;
@@ -145,19 +141,18 @@ psg_se_scan:
 ;---------------------------------------;
 fm_back_scan:
 	move.b	#$40,seflag(a6)		; s.e flag set (back s.e)
-	moveq	#back_se-1,d7		; back s.e total
-?loop:
+	adda.w	#flgvol,a5		; next channel ram
+	tst.b	(a5)			; if _en = 0
+	bpl.s	?psg			; then pass
+	jsr	fm_cnt(pc)		; FM control
+?psg:
 	adda.w	#flgvol,a5		; next channel ram
 	tst.b	(a5)			; if _en = 0
 	bpl.s	?jump			; then pass
-	tst.b	chian(a5)		; if channel = minus
-	bmi.s	?psg			; then psg
-	jsr	fm_cnt(pc)		; FM control
-	bra.s	?jump			; jump
-?psg:
 	jsr	psg_cnt(pc)		; PSG control
 ?jump:
-	dbra	d7,?loop		; loop
+	
+z80bus_off_global:
 	z80bus_off			; z80 bus req off
 	rts
 ;=======================================;
@@ -169,7 +164,6 @@ fm_back_scan:
 ;     a6 : sound ram top
 ;     a5 : channel ram top
 ;     a4 : table pointer
-	public	fm_rythm_cnt,rythm_nextd,rythm_cmdchk,rythm_set
 fm_rythm_cnt:
 	subq.b	#1,lcont(a5)		; length counter -1
 	bne.s	rythm_end		; if lcont = 0 then next data
@@ -197,6 +191,8 @@ rythm_leng:
 rythm_flg_set:
 	move.l	a4,tbpon(a5)		; table pointer store tbpon
 rythm_set:
+	btst.b	#_wr,(a5)		; if write protect on
+	bne.s	rythm_end		; then end
 	moveq	#0,d0			; d0 clear
 	move.b	freqb(a5),d0		; data restore
 	cmpi.b	#$80,d0			; if data = 'NL'
@@ -240,7 +236,6 @@ tom_dl_tb:
 ;  a4 : table pointer
 ;  a5 : channel ram top address
 ;  d5 : table data
-	public	fm_cnt
 fm_cnt:
 	subq.b	#1,lcont(a5)		; length counter -1
 	bne.s	fm_cnt1			; if lcont � 0 then jump
@@ -258,7 +253,6 @@ fm_cnt1:
 ;---------------------------------------;
 ;	    FM NEXT DATA SCAN		;
 ;---------------------------------------;
-	public	fm_nextd
 fm_nextd:
 	movea.l	tbpon(a5),a4		; a4 = table pointer
 	bclr.b	#_nl,(a5)		; null flag clear
@@ -288,7 +282,6 @@ fm_nextd1:
 ;=======================================;
 ; in  d5 : table data
 ; out d6 : frequency
-	public	fm_frq_get
 fm_frq_get:
 	subi.b	#$80,d5			; table data -80h
 	beq.s	nul_flg_set		; if data = 80h then null
@@ -317,7 +310,6 @@ fm_frq_get:
 ;  in a5 = channel ram top
 ;     d5 = length data
 ; use d0,d1
-	public	leng_set
 leng_set:
 	move.b	d5,d0			; length store ecstr
 	move.b	cbase(a5),d1		; d1 = base
@@ -337,7 +329,6 @@ leng_set:
 ;					;
 ;=======================================;
 ;	a5 = channel ram top
-	public	nul_flg_set,flag_set
 ;---------------------------------------;
 ;	    FLAG SET (IF 'NL')		;
 ;---------------------------------------;
@@ -377,7 +368,6 @@ flag_set0:
 ;	       GATE CHECK		;
 ;					;
 ;=======================================;
-	public	gate_chk
 gate_chk:
 	tst.b	gate(a5)		; if gate = 0
 	beq.s	?end			; then end
@@ -404,7 +394,6 @@ gate_chk:
 ;					;
 ;=======================================;
 ; out d6 : frequency
-	public	vibr_chk,vibr_delay,vibr_count,vibr_limit,vibr_add
 vibr_chk:
 	addq.w	#4,sp			; stack push
 					; (for cansel freq set)
@@ -457,7 +446,6 @@ vibr_end:
 ;					;
 ;=======================================;
 ;  in d6 : frequency
-	public	fm_frq_wrt,vibr_frq_set,vibr_frq_wrt
 fm_frq_wrt:				; from nextd
 	btst.b	#_nl,(a5)		; if null flag = on
 	bne.s	fm_frq_end		; then end
@@ -638,37 +626,37 @@ nl_set:
 ;	      PAUSE CHECK		;
 ;					;
 ;=======================================;
-	public	pause_chk
 pause_chk:
 	bmi.s	pause_chk_off		; if pause flag = minus then pause off
 ;=======================================;
 ;		PAUSE ON		;
 ;=======================================;
-	public	pause_chk_on
 pause_chk_on:
 ;============< all tone off >===========;
 ;---------------< LR off >--------------;
-	moveq	#3-1,d2			; channel no.
+	cmpi.b	#2,pause_flg(a6)
+	beq	pause_exit
+	move.b	#2,pause_flg(a6)
+	moveq	#3-1,d3			; channel no.
 	move.b	#lr_mod,d0		; LR registor
 	moveq	#0,d1			; LR off data = 0
-	jsr	z80opn_chk(pc)		; z80 bus req on
 ?loop1:
 	jsr	opn1_wrt(pc)
 	jsr	opn2_wrt(pc)
 	addq.b	#1,d0			; registor change
-	dbra	d2,?loop1
+	dbra	d3,?loop1
 ;--------------< key off >--------------;
-	moveq	#3-1,d2			; channel no. total /2
+	moveq	#3-1,d3			; channel no. total /2
 	moveq	#key_cont,d0		; d0 = key on/off registor
 ?loop2:
-	move.b	d2,d1			; d1 clear
+	move.b	d3,d1			; d1 clear
 	jsr	opn1_wrt(pc)		; channel 2->1->0
 	addq.b	#4,d1			; key off channel add
 	jsr	opn1_wrt(pc)		; channel 6->5->4
-	dbra	d2,?loop2
-	z80bus_off			; bus off
+	dbra	d3,?loop2
 ;--------------< PSG off >--------------;
-	bra	psg_clear
+	jsr	psg_clear(pc)
+	bra	z80bus_off_global			; bus off
 ;=======================================;
 ;		PAUSE OFF		;
 ;=======================================;
@@ -681,7 +669,6 @@ pause_chk_off:
 ;--------------< FM song >--------------;
 	lea	wk_top(a6),a5		; a5 = ch 0 ram top address
 	moveq	#fm_no+pcm_no-1,d4	; d4 = channel total
-	jsr	z80opn_chk(pc)		; z80 bus req on
 ?loop1:
 	btst.b	#_en,(a5)		; if enable off
 	beq.s	?pass1			; then jump
@@ -720,15 +707,14 @@ pause_chk_off:
 	jsr	opn_wrt(pc)		; LR write (don't look _wr)
 ?pass3:
 
-	z80bus_off			; bus off
-	rts
+pause_exit:
+	bra	z80bus_off_global			; bus off
 
 ;=======================================;
 ;					;
 ;	      BUFFER SCAN		;
 ;					;
 ;=======================================;
-	public	bufscan
 bufscan:
 	movea.l	sound_top+hd_prtb*4,a0	; a1 = priority address
 	lea	kyflag(a6),a1		; a0 = kyflag addr (=buf1)
@@ -757,6 +743,7 @@ buf_loop:
 	bmi.s	?jump2			; then don't set
 	move.b	d3,prfl(a6)		; new priority set
 ?jump2:
+	rts
 buf_end:
 
 ;==============< key scan >=============;
@@ -774,10 +761,8 @@ buf_end:
 	bls	sescan			; then seend
 	cmpi.b	#bkstrt,d7		; if no. < backse start
 	bcs	?end			; then end
-	cmpi.b	#vostrt,d7		; if no. < vostrt
-	bcs	backscan		; then back s.e
 	cmpi.b	#utlst,d7		; if no. < utlst
-	bcs.s	z80_voice_set		; then z80 voice set
+	bcs	backscan		; then back s.e
 	cmpi.b	#lstno,d7		; if no. < lstno
 	bls.s	utlset			; then utility set
 ?end:
@@ -794,24 +779,27 @@ utlset:
 	jmp	utltb(pc,d7.w)		; table addr rutine call
 utltb:
 	bra	fout			; $E0
-	bra	secut			; $E1
-	bra	backcut			; $E2
+	bra	z80_voice_set	; $E1
+	bra	speedupmus		; $E2
+	bra	slowdownmus		; $E3
+	bra	chamus			; $E4
 
 ;=======================================;
 ;					;
 ;	  Z80 VOICE NUMBER SET		;
 ;					;
 ;=======================================;
-	public	z80_voice_set
 z80_voice_set:
-	move.b	#$88,d7		; voice request no.($88~)
-	jsr	z80opn_chk(pc)		; bus on
-	move.b	d7,z80kyflag		; rythm req no. set
+	move.b	#$88,z80kyflag		; voice request no.($88~)
+	z80bus_off		; bus off
+	move.w	#$12-1,d1
+?loop1:
+	move.w	#0-1,d0
+?loop:
 	nop
-	nop
-	nop
-	z80bus_off			; bus off
-	clr.b	(a0)+			; buffer clear
+	dbf	d0,?loop
+	dbf	d1,?loop1
+	addq.w	#4,sp			; 2 return
 	rts
 
 ;=======================================;
@@ -820,22 +808,60 @@ z80_voice_set:
 ;					;
 ;=======================================;
 ; in d7 = key no.
-	public	songscan
 songscan:
+	cmpi.b	#$88,d7
+	bne.s	?jump
+	tst.b	oneupfl(a6)
+	bne	?jump4
+	lea	wk_top(a6),a5
+	moveq	#song_no-1,d0
+?loopsong:
+	bclr.b	#2,(a5)
+	adda.w	#flgvol,a5
+	dbra	d0,?loopsong
+	lea	fm_se_wk_top(a6),a5
+	moveq	#se_no-1,d0
+?loopsound:
+	bclr.b	#7,(a5)
+	adda.w	#flgvol,a5
+	dbra	d0,?loopsound
+	clr.b	prfl(a6)
+	movea.l	a6,a0
+	lea	oneupwk(a6),a1
+	move.w	#fm_se_wk_top/4-1,d0
+?loopbk:
+	move.l	(a0)+,(a1)+
+	dbra	d0,?loopbk
+	move.b	#$80,oneupfl(a6)
+	clr.b	prfl(a6)
+	bra.s	?jump0
+?jump:
+	clr.b	oneupfl(a6)
+	clr.b	fintm(a6)
+?jump0:
 ;-----< chip initial & ram clear >------;
-	jsr	chamus2			; song ram clear
+	jsr	chamus2(pc)			; song ram clear
 ;--------< headder address get >--------;
-	movea.l	sound_top+hd_bgmtb*4,a4	; a4 = bgmtb address
+	movea.l	sound_top+hd_speedup*4,a4
 	subi.b	#songstrt,d7		; 81->0,82->1,83->2,...
+	move.b	(a4,d7.w),sptempo(a6)
+	movea.l	sound_top+hd_bgmtb*4,a4	; a4 = bgmtb address
 	lsl.w	#2,d7			; long word table
 	movea.l	(a4,d7.w),a4		; a4 = S?? bgm top
 ;--------< voice table top get >--------;
+	moveq	#0,d0
 	move.w	(a4),d0			; rel. voice address (word)
 	add.l	a4,d0			; bgmtop address + rel. voice address
 	move.l	d0,sng_voice_addr(a6)	; voice address store
 ;----------< delay counter set >---------;
-	move.b	hd_delay(a4),cuntst(a6)
-	move.b	hd_delay(a4),rcunt(a6)
+	move.b	hd_delay(a4),d0
+	move.b	d0,tempo(a6)
+	tst.b	speedup(a6)
+	beq.s	?nospeedup
+	move.b	sptempo(a6),d0
+?nospeedup:
+	move.b	d0,cuntst(a6)
+	move.b	d0,rcunt(a6)
 ;=======================================;
 ;	headder set to channel ram	;
 ;=======================================;
@@ -845,17 +871,16 @@ songscan:
 	addq.w	#hd_fmdt_top,a4		; a4 = header pointer
 	moveq	#0,d7			; d7 clear
 	move.b	hd_fmch_no(a3),d7	; d7 = FM use channel total
-	beq.s	?psg_headder		; if channel total = 0 then jump
+	beq	?psg_headder		; if channel total = 0 then jump
 	subq.b	#1,d7
 	move.b	#$c0,d1			; d1 = pan data
-	move.b	#$80,d3			; d3 = flag data
 	move.b	hd_base(a3),d4		; d4 = tempo base
 	moveq	#flgvol,d6		; d6 = flag size (stac)
 	move.b	#1,d5			; d5 = lcont data
 	lea	wk_top(a6),a1		; a1 = ram addr
 	lea	fm_chan_tb(pc),a2	; a2 = channel table
 ?loop_fm:
-	move.b	d3,(a1)			; flag set
+	bset.b	#7,(a1)			; flag set
 	move.b	(a2)+,chian(a1)		; channel set
 	move.b	d4,cbase(a1)		; base set
 	move.b	d6,stac(a1)
@@ -878,19 +903,33 @@ songscan:
 ;--------------< ch6 = FM >-------------;
 	moveq	#dsel,d0		; d0 = 6ch d/a or FM select registor
 	moveq	#0,d1			; d1 = 6ch FM select data
-	jsr	opn1_wrt_chk(pc)	; write
-	bra.s	?psg_headder		; jump
+	jsr	opn1_wrt(pc)	; write
+	bra	?psg_headder		; jump
 ;--------------< ch6 = pcm >------------;
 ?pcm_use:
 	moveq	#key_cont,d0		; d0 = key on/off
 	moveq	#$06,d1			; d1 = 6ch key off
-	jsr	opn1_wrt_chk(pc)	; write
+	jsr	opn1_wrt(pc)	; write
+	
+	move.b	#t_lvl+2,d0		; LR registor
+	moveq	#$7f,d1			; LR data
+	jsr	opn2_wrt(pc)		; ch6 direct write
+	
+	move.b	#t_lvl+10,d0		; LR registor
+	moveq	#$7f,d1			; LR data
+	jsr	opn2_wrt(pc)		; ch6 direct write
+	
+	move.b	#t_lvl+6,d0		; LR registor
+	moveq	#$7f,d1			; LR data
+	jsr	opn2_wrt(pc)		; ch6 direct write
+	
+	move.b	#t_lvl+14,d0		; LR registor
+	moveq	#$7f,d1			; LR data
+	jsr	opn2_wrt(pc)		; ch6 direct write
 
 	move.b	#lr_mod+2,d0		; LR registor
 	move.b	#$c0,d1			; LR data
-	jsr	z80opn_chk(pc)		; z80 bus on
 	jsr	opn2_wrt(pc)		; ch6 direct write
-	z80bus_off			; z80 bus off
 
 ;================< PSG >================;
 ?psg_headder:
@@ -901,7 +940,7 @@ songscan:
 	lea	psg_wk_top(a6),a1	; a1 = ram addr
 	lea	psg_chan_tb(pc),a2	; a2 = channel table
 ?loop_psg:
-	move.b	d3,(a1)			; flag set
+	bset.b	#7,(a1)			; flag set
 	move.b	(a2)+,chian(a1)		; channel set
 	move.b	d4,cbase(a1)		; base set
 	move.b	d6,stac(a1)
@@ -972,13 +1011,16 @@ songscan:
 	adda.w	d6,a5
 	dbra	d4,?loop_psg2
 
+?jump4:
 	addq.w	#4,sp			; 2 return
 	rts
 
 fm_chan_tb:
 	dc.b	6,0,1,2,4,5,6		; FM channel data
+	even
 psg_chan_tb:
 	dc.b	$80,$a0,$c0		; PSG channel data
+	even
 
 ;=======================================;
 ;					;
@@ -986,17 +1028,36 @@ psg_chan_tb:
 ;					;
 ;=======================================;
 ; in d7 = key no.
-	public	sescan
 sescan:
+	tst.b	oneupfl(a6)
+	bne	?clrpri
+	tst.b	foutfl(a6)
+	bne	?clrpri
+	tst.b	finfl(a6)
+	bne	?clrpri
+	cmpi.b	#$b5,d7
+	bne.s	?jumpnring
+	tst.b	ringfl(a6)
+	bne.s	?jump
+	move.b	#$ce,d7
+?jump:
+	bchg.b	#0,ringfl(a6)
+?jumpnring:
+	cmpi.b	#$a7,d7
+	bne.s	?jumpnpush
+	tst.b	pushfl(a6)
+	bne	?jump2
+	move.b	#$80,pushfl(a6)
+?jumpnpush:
 	movea.l	sound_top+hd_setb*4,a0	; a0 = setb address
 	subi.b	#sestrt,d7		; d7 = key no. - se start no.
 	lsl.w	#2,d7			; *4 (for long word)
 	movea.l	(a0,d7.w),a3		; a3 = S?? se top
 	movea.l	a3,a1			; a1 = S?? se top
 ;--------< voice table top get >--------;
-	move.w	(a1)+,d0		; rel. voice address (word)
-	add.l	a3,d0			; abs. voice address (long word)
-	move.l	d0,se_voice_addr(a6)	; voice address store
+	moveq	#0,d1
+	move.w	(a1)+,d1		; rel. voice address (word)
+	add.l	a3,d1			; abs. voice address (long word)
 ;-------< base,use channel total >------;
 	move.b	(a1)+,d5		; d5 = base
 	move.b	(a1)+,d7		; d7 = use channel total
@@ -1021,7 +1082,8 @@ sescan:
 	bra.s	?header
 ?psg:
 	lsr.w	#3,d3			; $80->$10 $A0->$14 $C0->$18
-	movea.l	se_song_tb(pc,d3.w),a5	; song channel off ram
+	lea	se_song_tb(pc),a5	; song channel off ram
+	movea.l	(a5,d3.w),a5		; song channel off ram
 	bset.b	#_wr,(a5)		; write protect on
 	cmpi.b	#$c0,d4			; if channel � $c0
 	bne.s	?header			; then jump
@@ -1053,6 +1115,7 @@ sescan:
 	tst.b	d4			; if channel = PSG
 	bmi.s	?pass1			; then pass
 	move.b	#$c0,panstr(a5)		; FM pan store
+	move.l	d1,fm_voice(a5)
 ?pass1:
 	dbra	d7,?loop
 
@@ -1065,27 +1128,29 @@ sescan:
 	bset.b	#_wr,back_se2_wk(a6)	; back s.e2 write protect on
 ?jump2:
 	rts
+?clrpri:
+	clr.b	prfl(a6)
+	rts
 
-	public	se_song_tb
 se_song_tb:
-	dc.l	fm2_wk+sound_ram	; FM 2ch
+	dc.l	fm2_wk+sound_ram&$ffffff	; FM 2ch
 	dc.l	0			; dummy
-	dc.l	fm4_wk+sound_ram	; FM 4ch
-	dc.l	fm5_wk+sound_ram	; FM 5ch
-	dc.l	psg0_wk+sound_ram	; PSG 80ch
-	dc.l	psg1_wk+sound_ram	; PSG A0ch
-	dc.l	psg2_wk+sound_ram	; PSG C0ch
-	dc.l	psg2_wk+sound_ram	; PSG E0ch (for CMEND)
+	dc.l	fm4_wk+sound_ram&$ffffff	; FM 4ch
+	dc.l	fm5_wk+sound_ram&$ffffff	; FM 5ch
+	dc.l	psg0_wk+sound_ram&$ffffff	; PSG 80ch
+	dc.l	psg1_wk+sound_ram&$ffffff	; PSG A0ch
+	dc.l	psg2_wk+sound_ram&$ffffff	; PSG C0ch
+	dc.l	psg2_wk+sound_ram&$ffffff	; PSG E0ch (for CMEND)
 
 se_ram_tb:
-	dc.l	fm_se1_wk+sound_ram	; FM 2ch
+	dc.l	fm_se1_wk+sound_ram&$ffffff	; FM 2ch
 	dc.l	0			; dummy
-	dc.l	fm_se2_wk+sound_ram	; FM 4ch
-	dc.l	fm_se3_wk+sound_ram	; FM 5ch
-	dc.l	psg_se1_wk+sound_ram	; PSG 80ch
-	dc.l	psg_se2_wk+sound_ram	; PSG A0ch
-	dc.l	psg_se3_wk+sound_ram	; PSG C0ch
-	dc.l	psg_se3_wk+sound_ram	; PSG E0ch (for CMEND)
+	dc.l	fm_se2_wk+sound_ram&$ffffff	; FM 4ch
+	dc.l	fm_se3_wk+sound_ram&$ffffff	; FM 5ch
+	dc.l	psg_se1_wk+sound_ram&$ffffff	; PSG 80ch
+	dc.l	psg_se2_wk+sound_ram&$ffffff	; PSG A0ch
+	dc.l	psg_se3_wk+sound_ram&$ffffff	; PSG C0ch
+	dc.l	psg_se3_wk+sound_ram&$ffffff	; PSG E0ch (for CMEND)
 
 
 ;=======================================;
@@ -1094,14 +1159,20 @@ se_ram_tb:
 ;					;
 ;=======================================;
 ; in d7 = key no.
-	public	backscan
 backscan:
+	tst.b	oneupfl(a6)
+	bne	?jump2
+	tst.b	foutfl(a6)
+	bne	?jump2
+	tst.b	finfl(a6)
+	bne	?jump2
 	movea.l	sound_top+hd_backtb*4,a0 ; a0 = backtb address
 	subi.b	#bkstrt,d7
 	lsl.w	#2,d7			; long word table
 	movea.l	(a0,d7.w),a3		; a3 = back se header address
 	movea.l	a3,a1			; a1 = back se header address
 ;--------< voice table top get >--------;
+	moveq	#0,d0
 	move.w	(a1)+,d0		; rel. voice address (word)
 	add.l	a3,d0			; abs. voice address (long word)
 	move.l	d0,back_voice_addr(a6)	; back se voice address store
@@ -1165,27 +1236,26 @@ backscan:
 	rts
 
 bse_song_tb:
-	dc.l	fm4_wk+sound_ram	; FM 4ch
-	dc.l	psg2_wk+sound_ram	; PSG C0ch
+	dc.l	fm4_wk+sound_ram&$ffffff	; FM 4ch
+	dc.l	psg2_wk+sound_ram&$ffffff	; PSG C0ch
 bse_se_tb:
-	dc.l	fm_se2_wk+sound_ram	; FM 4ch
-	dc.l	psg_se3_wk+sound_ram	; PSG E0ch (NOISE MODE USE)
+	dc.l	fm_se2_wk+sound_ram&$ffffff	; FM 4ch
+	dc.l	psg_se3_wk+sound_ram&$ffffff	; PSG E0ch (NOISE MODE USE)
 bse_ram_tb:
-	dc.l	back_se_wk+sound_ram	; FM 4ch
-	dc.l	back_se2_wk+sound_ram	; PSG E0ch (NOISE MODE USE)
+	dc.l	back_se_wk+sound_ram&$ffffff	; FM 4ch
+	dc.l	back_se2_wk+sound_ram&$ffffff	; PSG E0ch (NOISE MODE USE)
 
 ;=======================================;
 ;					;
 ;		 SE CUT			;
 ;					;
 ;=======================================;
-	public	secut
 secut:
 	clr.b	prfl(a6)		; priority flag reset
 
-	moveq	#mode_tim,d0
-	moveq	#nomal_mode,d1
-	jsr	opn1_wrt_chk(pc)
+*	moveq	#mode_tim,d0
+*	moveq	#nomal_mode,d1
+*	jsr	opn1_wrt(pc)
 
 	lea	fm_se_wk_top(a6),a5	; a5 = se work ram top
 	moveq	#se_no-1,d7		; d7 = counter
@@ -1253,7 +1323,6 @@ secut:
 ;     BACK SE CUT & SONG VOICE SET	;
 ;					;
 ;=======================================;
-	public	backcut
 backcut:
 ;==========< back s.e 1 (FM) >==========;
 	lea	back_se_wk(a6),a5	; back s.e wk
@@ -1295,24 +1364,20 @@ backcut:
 ;	   FAID OUT SET (REQUEST)	;
 ;					;
 ;=======================================;
-	public	fout
 fout:
 	jsr	secut(pc)		; se cut
 	jsr	backcut(pc)		; backse cut
 	move.b	#fout_ct0,fouttm(a6)	; fout timer
 	move.b	#fout_ct1,foutfl(a6)	; interrupt
 	clr.b	pcm_rythm_wk(a6)	; rythm off(flag set 0)
+	clr.b	speedup(a6)
 	rts
 ;=======================================;
 ;					;
 ;	     FAID OUT CHECK		;
 ;					;
 ;=======================================;
-	public	fout_chk,fout_fm,fout_psg
 fout_chk:
-	moveq	#0,d0
-	move.b	foutfl(a6),d0		; if foutfl = 0
-	beq.s	?end			; then end
 	move.b	fouttm(a6),d0		; if fout timer =0
 	beq.s	fout_cnt		; then jump
 	subq.b	#1,fouttm(a6)		; not 0 then fouttm -1
@@ -1374,80 +1439,75 @@ fout_psg:				; a5 = PSG ram top
 ;     TOTAL LEVEL & RELEASE OFF (1ch)	;
 ;					;
 ;=======================================;
-	public	tl_rr_off
-tl_rr_off:
-	jsr	z80opn_chk(pc)		; z80 bus on
+*tl_rr_off:
+*	jsr	z80opn_chk(pc)		; z80 bus on
 ;==========< total level off >==========;
-	moveq	#4-1,d4
-	moveq	#TL1,d3			; TL registor
-	moveq	#$7f,d1			; total level off data
-?loop:
-	move.b	d3,d0			; d0 = TL? registor
-	jsr	opn_wrt(pc)
-	addq.b	#4,d3			; registor add
-	dbra	d4,?loop
+*	moveq	#4-1,d4
+*	moveq	#TL1,d3			; TL registor
+*	moveq	#$7f,d1			; total level off data
+*?loop:
+*	move.b	d3,d0			; d0 = TL? registor
+*	jsr	opn_wrt(pc)
+*	addq.b	#4,d3			; registor add
+*	dbra	d4,?loop
 ;=========< release level off >=========;
-	moveq	#4-1,d4
-	move.b	#RR1,d3			; RR registor
-	moveq	#$0f,d1			; RR off data
-?loop1:
-	move.b	d3,d0			; d0 = FM registor
-	jsr	opn_wrt(pc)
-	addq.b	#4,d3
-	dbra	d4,?loop1
-	z80bus_off
-	rts
+*	moveq	#4-1,d4
+*	move.b	#RR1,d3			; RR registor
+*	moveq	#$0f,d1			; RR off data
+*?loop1:
+*	move.b	d3,d0			; d0 = FM registor
+*	jsr	opn_wrt(pc)
+*	addq.b	#4,d3
+*	dbra	d4,?loop1
+*	z80bus_off
+*	rts
 
 ;=======================================;
 ;					;
 ;		 FM OFF			;
 ;					;
 ;=======================================;
-	public	fm_clear
 fm_clear:
 ;============< all key off >============:
-	moveq	#3-1,d2			; channel no. total /2
+	moveq	#3-1,d3			; channel no. total /2
 	moveq	#key_cont,d0		; d0 = key on/off registor
-	jsr	z80opn_chk(pc)		; z80 bus req on
 ?loop0:
-	move.b	d2,d1			; d1 clear
+	move.b	d3,d1			; d1 clear
 	jsr	opn1_wrt(pc)		; channel 2->1->0
 	addq.b	#4,d1			; key off channel add
 	jsr	opn1_wrt(pc)		; channel 6->5->4
-	dbra	d2,?loop0
+	dbra	d3,?loop0
 
 ;========< all total level off >========:
 	moveq	#$40,d0			; registor
 	moveq	#$7f,d1			; total level off data
-	moveq	#3-1,d3			; channel total /2
+	moveq	#3-1,d4			; channel total /2
 ?loop1:
-	moveq	#4-1,d2			; slot no.
+	moveq	#4-1,d3			; slot no.
 ?loop2:
 	jsr	opn1_wrt(pc)
 	jsr	opn2_wrt(pc)
 	addq.w	#4,d0			; next slot making
-	dbra	d2,?loop2
+	dbra	d3,?loop2
 
 	subi.b	#15,d0			; next channel reg no. making
-	dbra	d3,?loop1
+	dbra	d4,?loop1
 
-	z80bus_off
 	rts
 ;=======================================;
 ;					;
 ;	   SOUND RAM CLEAR (ALL)	;
 ;					;
 ;=======================================;
-	public	chamus
 chamus:
 ;------------< D/A mode set >-----------;
 	moveq	#dsel,d0
 	move.b	#$80,d1			; d/a mode set
-	jsr	opn1_wrt_chk(pc)
+	jsr	opn1_wrt(pc)
 ;----------< normal mode set >----------;
 	moveq	#mode_tim,d0
 	moveq	#nomal_mode,d1
-	jsr	opn1_wrt_chk(pc)
+	jsr	opn1_wrt(pc)
 ;-------------< ram clear >-------------;
 	movea.l	a6,a0			; a0 = sound ram
 	move.w	#(chian_no*flgvol+$30)/4-1,d0
@@ -1463,51 +1523,138 @@ chamus:
 ;	SOUND RAM CLEAR (SONG ONLY)	;
 ;					;
 ;=======================================;
-	public	chamus2
 chamus2:
 	movea.l	a6,a0			; a0 = sound ram
 	move.b	prfl(a6),d1		; priority store
+	move.b	oneupfl(a6),d2
+	move.b	speedup(a6),d3
+	move.b	fintm(a6),d4
+	move.w	kyflag(a6),d5
 	move.w	#((7+3)*flgvol+$40)/4-1,d0
 ?loop:
 	clr.l	(a0)+
 	dbra	d0,?loop
 	move.b	d1,prfl(a6)		; priority set
+	move.b	d2,oneupfl(a6)
+	move.b	d3,speedup(a6)
+	move.b	d4,fintm(a6)
+	move.w	d5,kyflag(a6)
 	move.b	#$80,kyflag0(a6)	; ky no.set
 
-;	jsr	fm_clear(pc)
-;	bra	psg_clear
-	rts
+	jsr	fm_clear(pc)
+	bra	psg_clear
+*	rts
 ;=======================================;
 ;					;
 ;	  DELAY CONTROL (SONG ONLY)	;
 ;					;
 ;=======================================;
-	public	delcont
 delcont:
-	tst.b	cuntst(a6)		; if cuntst = 0
-	beq.s	?end			; then end
-	subq.b	#1,rcunt(a6)		; rcunt -1
-	bne.s	?end			; if rcunt � 0 then end
-
 	move.b	cuntst(a6),rcunt(a6)	; counter set
-	lea	wk_top(a6),a0		; work ram top
+	lea	wk_top+lcont(a6),a0		; work ram top
 	moveq	#flgvol,d0
 	moveq	#song_no-1,d1
 ?loop:
-	tst.b	(a0)			; if enable flag off
-	bpl.s	?next
-	addq.b	#1,lcont(a0)		; lcont +1
-?next:
+*	tst.b	(a0)			; if enable flag off
+*	bpl.s	?next
+	addq.b	#1,(a0)		; lcont +1
+*?next:
 	adda.w	d0,a0			; channel ram add
 	dbra	d1,?loop
 ?end:
+	rts
+	
+speedupmus:
+	tst.b	oneupfl(a6)
+	bne.s	?oneup
+	move.b	sptempo(a6),cuntst(a6)
+	move.b	sptempo(a6),rcunt(a6)
+	move.b	#$80,speedup(a6)
+	rts
+?oneup:
+	move.b	oneupwk+sptempo(a6),oneupwk+cuntst(a6)
+	move.b	oneupwk+sptempo(a6),oneupwk+rcunt(a6)
+	move.b	#$80,oneupwk+speedup(a6)
+	rts
+	
+slowdownmus:
+	tst.b	oneupfl(a6)
+	bne.s	?oneup
+	move.b	tempo(a6),cuntst(a6)
+	move.b	tempo(a6),rcunt(a6)
+	clr.b	speedup(a6)
+	rts
+?oneup:
+	move.b	oneupwk+tempo(a6),oneupwk+cuntst(a6)
+	move.b	oneupwk+tempo(a6),oneupwk+rcunt(a6)
+	clr.b	oneupwk+speedup(a6)
+	rts
+;=======================================;
+;					;
+;	     FAID IN CHECK		;
+;					;
+;=======================================;
+fin_chk:
+	tst.b	fintm_ct(a6)		; if fout timer =0
+	beq.s	fin_cnt		; then jump
+	subq.b	#1,fintm_ct(a6)		; not 0 then fouttm -1
+?end:
+	rts
+
+;---------------------------------------;
+;	   FAID IN END CHECK		;
+;---------------------------------------;
+fin_cnt:
+	tst.b	fintm(a6)		; foutfl= foutfl--
+	beq.s	fin_done			; if foutfl= 0 then sound clear
+
+;---------------------------------------;
+;	    FIN VOLM SET (FM)	  	;
+;---------------------------------------;
+fin_fm:
+	subq.b	#1,fintm(a6)
+	move.b	#fin_ct0,fintm_ct(a6)	; fouttm reset
+	lea	fm_wk_top(a6),a5	; a5 = tone ram top
+	moveq	#fm_no-1,d7		; counter
+?loop:
+	tst.b	(a5)			; if disable
+	bpl.s	?pass			; then jump
+
+	subq.b	#1,volm(a5)		; volm add
+	jsr	vol_set(pc)
+?pass:
+	adda.w	#flgvol,a5
+	dbra	d7,?loop
+
+;---------------------------------------;
+;	    FIN VOLM SET (PSG)  	;
+;---------------------------------------;
+fin_psg:				; a5 = PSG ram top
+	moveq	#psg_no-1,d7		; counter
+?loop:
+	tst.b	(a5)			; if disable
+	bpl.s	?pass			; then jump
+	subq.b	#1,volm(a5)
+	move.b	volm(a5),d6		; d6 = volm data
+	cmpi.b	#$10,d6		; if volm < $10
+	bcs.s	?jump			; then jump
+	moveq	#$0f,d6
+?jump:
+	jsr	psg_att_set(pc)		; in d6 = volm
+?pass:
+	adda.w	#flgvol,a5
+	dbra	d7,?loop
+
+	rts
+fin_done:
+	bclr.b	#_wr,pcm_rythm_wk(a6)
+	clr.b	finfl(a6)
 	rts
 ;=======================================;
 ;					;
 ;		KEY ON			;
 ;					;
 ;=======================================;
-	public	key_on
 key_on:
 	btst.b	#_nl,(a5)		; if null flag = on
 	bne.s	?end			; then end
@@ -1518,7 +1665,7 @@ key_on:
 	moveq	#key_cont,d0
 	move.b	chian(a5),d1
 	ori.b	#$f0,d1			; key on data
-	bra	opn1_wrt_chk
+	bra	opn1_wrt
 ?end:
 	rts
 ;=======================================;
@@ -1526,7 +1673,6 @@ key_on:
 ;		KEY OFF			;
 ;					;
 ;=======================================;
-	public	key_off,key_off0
 key_off:
 	btst.b	#_tie,(a5)		; if tie flag on
 	bne.s	key_off_end		; then end
@@ -1535,7 +1681,7 @@ key_off:
 key_off0:
 	moveq	#key_cont,d0
 	move.b	chian(a5),d1
-	bra	opn1_wrt_chk
+	bra	opn1_wrt
 key_off_end:
 	rts
 ;=======================================;
@@ -1546,26 +1692,11 @@ key_off_end:
 ;	input	d0 = FM reg addr.
 ;		d1 = FM write data.
 ;		a5 = ram top
-	public	opn_wrt_chk
 opn_wrt_chk:
 	btst.b	#_wr,(a5)		; if write protect on
 	bne.s	?end			; then end
-	jsr	z80opn_chk(pc)		; z80 bus on
-	jsr	opn_wrt(pc)		; chip write
-	z80bus_off			; z80 bus off
+	bra	opn_wrt		; chip write
 ?end:
-	rts
-;=======================================;
-;	     OPN1 WRITE CHECK		:
-;=======================================;
-;	input	d0 = FM reg addr.
-;		d1 = FM write data.
-;		a5 = ram top
-	public	opn1_wrt_chk
-opn1_wrt_chk:
-	jsr	z80opn_chk(pc)		; z80 bus on
-	jsr	opn1_wrt(pc)		; opn direct write
-	z80bus_off			; bus req off
 	rts
 ;=======================================;
 ;					;
@@ -1575,7 +1706,6 @@ opn1_wrt_chk:
 ;	input	d0 = FM reg addr.
 ;		d1 = FM write data.
 ;		a5 = ram top
-	public	opn_wrt,opn1_wrt,opn2_wrt
 opn_wrt:
 ;----------< OPN 1 or 2 scan >----------;
 	btst.b	#2,chian(a5)
@@ -1588,6 +1718,9 @@ opn1_wrt:
 	btst	#7,d2			; opn status busy bit
 	bne.s	?loop1
 	move.b	d0,opn1_adr		; FM registor set
+	nop
+	nop
+	nop
 ?loop2:
 	move.b	opn_status,d2
 	btst	#7,d2			; opn status busy bit
@@ -1605,6 +1738,9 @@ opn2_wrt:
 	btst	#7,d2			; opn status busy bit
 	bne.s	?loop1
 	move.b	d0,opn2_adr		; FM registor set
+	nop
+	nop
+	nop
 ?loop2:
 	move.b	opn_status,d2
 	btst	#7,d2			; opn status busy bit
@@ -1632,8 +1768,20 @@ frq_b		equ	1148		; 47ch   /574	44eh
 frq_c1		equ	1216		; 4c0h   /606	48fh
 
 fm_scale:
-	dw	frq_c,frq_cs,frq_d,frq_ds,frq_e,frq_f
-	dw	frq_fs,frq_g,frq_gs,frq_a,frq_as,frq_b
+;	dc.w	frq_c,frq_cs,frq_d,frq_ds,frq_e,frq_f
+;	dc.w	frq_fs,frq_g,frq_gs,frq_a,frq_as,frq_b
+	dc.w  $25E, $284, $2AB,	$2D3, $2FE, $32D, $35C,	$38F; 0
+	dc.w  $3C5, $3FF, $43C,	$47C, $A5E, $A84, $AAB,	$AD3; 8
+	dc.w  $AFE, $B2D, $B5C,	$B8F, $BC5, $BFF, $C3C,	$C7C; 16
+	dc.w $125E,$1284,$12AB,$12D3,$12FE,$132D,$135C,$138F; 24
+	dc.w $13C5,$13FF,$143C,$147C,$1A5E,$1A84,$1AAB,$1AD3; 32
+	dc.w $1AFE,$1B2D,$1B5C,$1B8F,$1BC5,$1BFF,$1C3C,$1C7C; 40
+	dc.w $225E,$2284,$22AB,$22D3,$22FE,$232D,$235C,$238F; 48
+	dc.w $23C5,$23FF,$243C,$247C,$2A5E,$2A84,$2AAB,$2AD3; 56
+	dc.w $2AFE,$2B2D,$2B5C,$2B8F,$2BC5,$2BFF,$2C3C,$2C7C; 64
+	dc.w $325E,$3284,$32AB,$32D3,$32FE,$332D,$335C,$338F; 72
+	dc.w $33C5,$33FF,$343C,$347C,$3A5E,$3A84,$3AAB,$3AD3; 80
+	dc.w $3AFE,$3B2D,$3B5C,$3B8F,$3BC5,$3BFF,$3C3C,$3C7C; 88
 
 ;=======================================;
 ;	      END OF FILE		;

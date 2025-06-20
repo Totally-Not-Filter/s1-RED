@@ -98,10 +98,10 @@ cd_ballj	EQU	$04
 
 ; player control bit equates
 ; cd = control data?
-cd_up		EQU	%00000001
-cd_down		EQU	%00000010
-cd_left		EQU	%00000100
-cd_right	EQU	%00001000
+cd_up		EQU	0+2
+cd_down		EQU	1+2
+cd_left		EQU	2+2
+cd_right	EQU	3+2
 
 ; game mode equates
 logogamemd	EQU	$00
@@ -142,18 +142,34 @@ footdir		EQU	$36
 ; actor equates
 ; format: name_act
 play_act	EQU	$01
+;act	EQU $02
+;act	EQU $03
+;act	EQU $04
+;act	EQU $05
+;act	EQU $06
+;act	EQU $07
+;act	EQU $08
+spplay_act	EQU $09
+;act	EQU	$0a
 bou_act		EQU	$0b	; 棒 (pole)
 ben_act		EQU	$0c	; 弁 (valve)
+;act	EQU $0d
+;act	EQU	$0e
+;act	EQU $0f
 play02_act	EQU	$10
+;act	EQU $11
 signal_act	EQU	$12
 mfire_act	EQU	$13
+;act	EQU $14
 buranko_act	EQU	$15 ; 鞦韆 (swing)
 yari_act	EQU	$16	; 槍 (spear)
 thashi_act	EQU	$17 ; 橋 (bridge)
 shima_act	EQU	$18 ; 島 (island)
 ball_act	EQU	$19
 break_act	EQU	$1a
+;act	EQU $1b
 bgspr_act	EQU	$1c
+;act	EQU $1d
 buta_act	EQU	$1e
 kani_act	EQU	$1f	; カニ (crab)
 hachi_act	EQU	$22	; 蜂 (bee)

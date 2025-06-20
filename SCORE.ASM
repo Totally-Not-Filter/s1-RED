@@ -1,5 +1,5 @@
 scoreset:
-		tst.w	$FFFFFFFA
+		tst.w	debugflag
 		bne.w	loc_1C7A2
 		tst.b	$FFFFFE1F
 		beq.b	loc_1C6D8
@@ -67,7 +67,7 @@ locret_1C78A:
 		rts
 loc_1C78C:
 		clr.b	$FFFFFE1E
-		lea	$FFFFD000,a0
+		lea	playerwk,a0
 		movea.l	a0,a2
 		bsr.w	sub_1B098
 		move.b	#1,$FFFFFE1A

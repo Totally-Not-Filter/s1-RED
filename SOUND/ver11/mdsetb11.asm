@@ -7,173 +7,158 @@
 ;				      By  H.Kubota	;
 ;=======================================================;
 
-	public	setb,backtb
-
-	extern	SA0,SA1,SA2,SA3,SA4,SA5,SA6,SA7,SA8
-	extern	SA9,SAA,SAB,SAC,SAD,SAE,SAF
-	extern	SD0,SD1,SD2,SD3
-
-	include mdEQ11.lib
-
-	ifz	prg
-	org	se_top
-	endif
-
 ;=======================================;
 ;					;
 ;	    S.E. ADDRESS TABLE		;
 ;					;
 ;=======================================;
 setb:
-	if	seend>0A0H-1
-		DL	SA0
+	if	seend>$0A0-1
+		DC.L	SA0
 	endif
-	if	seend>0A1H-1
-		DL	SA1
+	if	seend>$0A1-1
+		DC.L	SA1
 	endif
-	if	seend>0A2H-1
-		DL	SA2
+	if	seend>$0A2-1
+		DC.L	SA2
 	endif
-	if	seend>0A3H-1
-		DL	SA3
+	if	seend>$0A3-1
+		DC.L	SA3
 	endif
-	if	seend>0A4H-1
-		DL	SA4
+	if	seend>$0A4-1
+		DC.L	SA4
 	endif
-	if	seend>0A5H-1
-		DL	SA5
+	if	seend>$0A5-1
+		DC.L	SA5
 	endif
-	if	seend>0A6H-1
-		DL	SA6
+	if	seend>$0A6-1
+		DC.L	SA6
 	endif
-	if	seend>0A7H-1
-		DL	SA7
+	if	seend>$0A7-1
+		DC.L	SA7
 	endif
-	if	seend>0A8H-1
-		DL	SA8
+	if	seend>$0A8-1
+		DC.L	SA8
 	endif
-	if	seend>0A9H-1
-		DL	SA9
+	if	seend>$0A9-1
+		DC.L	SA9
 	endif
-	if	seend>0AAH-1
-		DL	SAA
+	if	seend>$0AA-1
+		DC.L	SAA
 	endif
-	if	seend>0ABH-1
-		DL	SAB
+	if	seend>$0AB-1
+		DC.L	SAB
 	endif
-	if	seend>0ACH-1
-		DL	SAC
+	if	seend>$0AC-1
+		DC.L	SAC
 	endif
-	if	seend>0ADH-1
-		DL	SAD
+	if	seend>$0AD-1
+		DC.L	SAD
 	endif
-	if	seend>0AEH-1
-		DL	SAE
+	if	seend>$0AE-1
+		DC.L	SAE
 	endif
-	if	seend>0AFH-1
-		DL	SAF
+	if	seend>$0AF-1
+		DC.L	SAF
 	endif
-	if	seend>0B0H-1
-		DL	SB0
+	if	seend>$0B0-1
+		DC.L	SB0
 	endif
-	if	seend>0B1H-1
-		DL	SB1
+	if	seend>$0B1-1
+		DC.L	SB1
 	endif
-	if	seend>0B2H-1
-		DL	SB2
+	if	seend>$0B2-1
+		DC.L	SB2
 	endif
-	if	seend>0B3H-1
-		DL	SB3
+	if	seend>$0B3-1
+		DC.L	SB3
 	endif
-	if	seend>0B4H-1
-		DL	SB4
+	if	seend>$0B4-1
+		DC.L	SB4
 	endif
-	if	seend>0B5H-1
-		DL	SB5
+	if	seend>$0B5-1
+		DC.L	SB5
 	endif
-	if	seend>0B6H-1
-		DL	SB6
+	if	seend>$0B6-1
+		DC.L	SB6
 	endif
-	if	seend>0B7H-1
-		DL	SB7
+	if	seend>$0B7-1
+		DC.L	SB7
 	endif
-	if	seend>0B8H-1
-		DL	SB8
+	if	seend>$0B8-1
+		DC.L	SB8
 	endif
-	if	seend>0B9H-1
-		DL	SB9
+	if	seend>$0B9-1
+		DC.L	SB9
 	endif
-	if	seend>0BAH-1
-		DL	SBA
+	if	seend>$0BA-1
+		DC.L	SBA
 	endif
-	if	seend>0BBH-1
-		DL	SBB
+	if	seend>$0BB-1
+		DC.L	SBB
 	endif
-	if	seend>0BCH-1
-		DL	SBC
+	if	seend>$0BC-1
+		DC.L	SBC
 	endif
-	if	seend>0BDH-1
-		DL	SBD
+	if	seend>$0BD-1
+		DC.L	SBD
 	endif
-	if	seend>0BEH-1
-		DL	SBE
+	if	seend>$0BE-1
+		DC.L	SBE
 	endif
-	if	seend>0BFH-1
-		DL	SBF
+	if	seend>$0BF-1
+		DC.L	SBF
 	endif
-	if	seend>0C0H-1
-		DL	SC0
+	if	seend>$0C0-1
+		DC.L	SC0
 	endif
-	if	seend>0C1H-1
-		DL	SC1
+	if	seend>$0C1-1
+		DC.L	SC1
 	endif
-	if	seend>0C2H-1
-		DL	SC2
+	if	seend>$0C2-1
+		DC.L	SC2
 	endif
-	if	seend>0C3H-1
-		DL	SC3
+	if	seend>$0C3-1
+		DC.L	SC3
 	endif
-	if	seend>0C4H-1
-		DL	SC4
+	if	seend>$0C4-1
+		DC.L	SC4
 	endif
-	if	seend>0C5H-1
-		DL	SC5
+	if	seend>$0C5-1
+		DC.L	SC5
 	endif
-	if	seend>0C6H-1
-		DL	SC6
+	if	seend>$0C6-1
+		DC.L	SC6
 	endif
-	if	seend>0C7H-1
-		DL	SC7
+	if	seend>$0C7-1
+		DC.L	SC7
 	endif
-	if	seend>0C8H-1
-		DL	SC8
+	if	seend>$0C8-1
+		DC.L	SC8
 	endif
-	if	seend>0C9H-1
-		DL	SC9
+	if	seend>$0C9-1
+		DC.L	SC9
 	endif
-	if	seend>0CAH-1
-		DL	SCA
+	if	seend>$0CA-1
+		DC.L	SCA
 	endif
-	if	seend>0CBH-1
-		DL	SCB
+	if	seend>$0CB-1
+		DC.L	SCB
 	endif
-	if	seend>0CCH-1
-		DL	SCC
+	if	seend>$0CC-1
+		DC.L	SCC
 	endif
-	if	seend>0CDH-1
-		DL	SCD
+	if	seend>$0CD-1
+		DC.L	SCD
 	endif
-	if	seend>0CEH-1
-		DL	SCE
+	if	seend>$0CE-1
+		DC.L	SCE
 	endif
-	if	seend>0CFH-1
-		DL	SCF
+	if	seend>$0CF-1
+		DC.L	SCF
 	endif
 
 backtb:
-		DL	SD0
-		DL	SD1
-		DL	SD2
-		DL	SD3
+		DC.L	SD0
 
 

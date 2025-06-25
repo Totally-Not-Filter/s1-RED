@@ -1,3 +1,8 @@
+; md planes
+plane_a	EQU	$c000
+plane_b	EQU	$e000
+sprtbl	EQU	$f800
+
 ; taken from https://wiki.megadrive.org/index.php?title=IO_Registers
 REG_VERSION	EQU	$a10001
 REG_DATA1	EQU	$a10003
@@ -29,9 +34,14 @@ mapwk		EQU	$ff0000
 mapwka		EQU	$ffffa400
 mapwkb		EQU	$ffffa440
 pbuffer		EQU	$ffffa800
+;	EQU	$ffffaa00
 blkwk		EQU	$ffffb000
+;	EQU	$ffffc800
+;	EQU	$ffffcb00
+;	EQU	$ffffcc00
 actwk		EQU	$ffffd000
 playerwk	EQU	$ffffd000
+soundram	EQU	$fffff000
 gmmode		EQU	$fffff600
 swdata		EQU	$fffff602
 swdata1		EQU	$fffff604
@@ -65,6 +75,9 @@ scrz_v_posit	EQU	$fffff71c
 ;scrh_flag
 scralim_n_down	EQU	$fffff726
 scralim_up	EQU	$fffff72c
+plmaxspdwk	EQU	$fffff760
+pladdspdwk	EQU	$fffff762
+plretspdwk	EQU	$fffff764
 plpatno		EQU	$fffff766
 playwrtflag	EQU	$fffff767
 actset_rno	EQU	$fffff76c
@@ -108,7 +121,7 @@ logogamemd	EQU	$00
 titlegamemd	EQU	$04
 spgamemd	EQU	$10
 
-; obj equates
+; actor equates
 actno		EQU	$00	; actor number
 actflg		EQU	$01	; actor flag
 sproffset	EQU	$02	; sprite offset
@@ -125,6 +138,7 @@ sprhs		EQU	$19	; sprite horizontal
 patno		EQU	$1a ; pattern number
 patcnt		EQU	$1b	; pattern count
 mstno		EQU	$1c
+;	EQU $1d
 pattim		EQU	$1e	; pattern time
 pattimm		EQU	$1f	; pattern timer
 colino		EQU	$20	; collision number
@@ -135,29 +149,40 @@ r_no0		EQU	$24	; routine number 0
 r_no1		EQU	$25	; routine number 1
 direc		EQU	$26
 userflag	EQU	$28	; user flag
-speeduptimer	EQU	$30
-footdir		EQU	$36
 ;actfree
+;	EQU	$40
+
+; player actor equates
+;	EQU	$30
+;	EQU	$32
+speeduptimer	EQU	$34
+footdir		EQU	$36
+;	EQU	$37
+;	EQU	$38
+;	EQU	$3a
+;	EQU	$3c
+;	EQU	$3d
+;	EQU	$3e
 
 ; actor equates
 ; format: name_act
-play_act	EQU	$01
+play00_act	EQU	$01
 ;act	EQU $02
 ;act	EQU $03
 ;act	EQU $04
 ;act	EQU $05
 ;act	EQU $06
 ;act	EQU $07
-;act	EQU $08
-spplay_act	EQU $09
-;act	EQU	$0a
+exit2_act	EQU $08
+play01_act	EQU $09
+plawa_act	EQU	$0a
 bou_act		EQU	$0b	; 棒 (pole)
 ben_act		EQU	$0c	; 弁 (valve)
-;act	EQU $0d
+gole_act	EQU $0d
 ;act	EQU	$0e
 ;act	EQU $0f
 play02_act	EQU	$10
-;act	EQU $11
+hashi_act	EQU $11 ; 橋 (bridge)
 signal_act	EQU	$12
 mfire_act	EQU	$13
 ;act	EQU $14
@@ -167,36 +192,55 @@ thashi_act	EQU	$17 ; 橋 (bridge)
 shima_act	EQU	$18 ; 島 (island)
 ball_act	EQU	$19
 break_act	EQU	$1a
-;act	EQU $1b
+wave_act	EQU $1b
 bgspr_act	EQU	$1c
 ;act	EQU $1d
-buta_act	EQU	$1e
+buta_act	EQU	$1e	; 豚 (pig)
 kani_act	EQU	$1f	; カニ (crab)
+;act	EQU $20
+score_act	EQU $21
 hachi_act	EQU	$22	; 蜂 (bee)
+;act	EQU $23
+;act	EQU $24
 ring_act	EQU	$25
 item_act	EQU	$26
+bakuha_act	EQU $27 ; 爆破 (explosion)
 usagi_act	EQU $28	; 兎 (rabbit)
+ten_act		EQU $29
 door_act	EQU	$2a
 fish_act	EQU	$2b
 fish2_act	EQU	$2c
 mogura_act	EQU	$2d	; 土竜 (mole)
+item2_act	EQU $2e
 yuka_act	EQU	$2f	; 床 (floor)
 ochi_act	EQU	$30
 turi_act	EQU	$31 ; 吊り (hanging)
 switch2_act	EQU	$32
 box_act		EQU	$33
+zone_act	EQU $34
+;act	EQU $35
 toge_act	EQU	$36	; 峠 (difficult part)
+flyring_act	EQU $37
+baria_act	EQU $38 ; バリア (shield that gives invincibility)
+over_act	EQU $39
+;act	EQU $3a
 jyama_act	EQU	$3b ; 邪魔 (obstacle)
+brkabe_act	EQU $3c
 boss1_act	EQU	$3d
+masin_act	EQU $3e ; マシン (machine)
+;act	EQU $3f
 musi_act	EQU	$40	; 虫 (insect)
 sjump_act	EQU	$41
 kamere_act	EQU	$42	; カメレオン (chameleon)
 aruma_act	EQU	$43	; アルマジロ (armadillo)
 kageb_act	EQU	$44	; 陰 (shadow)
+;act	EQU $45
 fblock_act	EQU	$46
 bobin_act	EQU	$47	; ボビン (bobbin)
 btama_act	EQU	$48	; 玉 (ball)
 taki_act	EQU	$49	; 滝 (waterfall)
+;act	EQU $4a
+bigring_act	EQU $4b
 myogan_act	EQU	$4c
 yogan_act	EQU	$4d
 yogan2_act	EQU	$4e
@@ -208,9 +252,12 @@ break2_act	EQU	$53
 yoganc_act	EQU	$54
 bat_act		EQU	$55
 dai2_act	EQU	$56 ; 台 (platform)
+;act	EQU $57
+;act	EQU $58
 elev_act	EQU	$59
 pedal_act	EQU	$5a
 step_act	EQU	$5b
+;act	EQU $5c
 fun_act		EQU	$5d	; (fan)
 sisoo_act	EQU	$5e	; シーソー (seesaw)
 brobo_act	EQU	$5f
@@ -232,8 +279,30 @@ ele_act		EQU	$6e
 beltc_act	EQU	$6f
 yukai_act	EQU	$70
 scoli_act	EQU	$71
+shooter_act	EQU $72
+;act	EQU $73
+;act	EQU $74
+;act	EQU $75
+;act	EQU $76
+;act	EQU $77
 imo_act		EQU	$78 ; 芋虫 (caterpillar)
 save_act	EQU	$79
+;act	EQU $7a
+;act	EQU $7b
+ebigring_act	EQU $7c
 bten_act	EQU	$7d
+;act	EQU $7e
+;act	EQU $7f
+;act	EQU $80
+;act	EQU $81
+;act	EQU $82
+;act	EQU $83
+;act	EQU $84
 boss6_act	EQU	$85
+;act	EQU $86
+;act	EQU $87
+;act	EQU $88
+;act	EQU $89
 staff_act	EQU	$8a
+;act	EQU $8b
+;act	EQU $8c

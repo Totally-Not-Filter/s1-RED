@@ -5,9 +5,9 @@ logo:
 		bsr.w	sub_1E52
 		lea	VDP_CTRL,a6
 		move.w	#$8000+%00000100,(a6)
-		move.w	#$8200+%00110000,(a6)
-		move.w	#$8400+%00000111,(a6)
-		move.w	#$8700+%00000000,(a6)
+		move.w	#$8200+plane_a>>10,(a6)
+		move.w	#$8400+plane_b>>13,(a6)
+		move.w	#$8700+$00<<4+$00,(a6)
 		move.w	#$8B00+%00000000,(a6)
 		clr.b	waterflag
 		move.w	#$2700,sr
@@ -20,7 +20,7 @@ logo:
 		bsr.w	bitdevr	; Decompress SEGA patterns
 		lea	$FF0000,a1
 		lea	logomap,a0
-		move.w	#$000,d0
+		move.w	#$0000,d0
 		bsr.w	mapdevr
 		lea	$FF0000,a1
 		move.l	#$65100003,d0

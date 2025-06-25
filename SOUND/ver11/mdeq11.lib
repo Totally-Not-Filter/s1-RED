@@ -94,7 +94,7 @@ z80snr_dl_str	EQU	$A00227		; mdDT.src snare delay address
 ;	       SOUND RAM		;
 ;=======================================;
 ;--------------< COMMON >---------------;
-sound_ram	EQU	$fffff000		; sound ram top address
+sound_ram	EQU	$fff000		; sound ram top address
 prfl		EQU	$00		; priority flag
 rcunt		EQU	$01		; delay count work
 cuntst		EQU	$02		; delay store

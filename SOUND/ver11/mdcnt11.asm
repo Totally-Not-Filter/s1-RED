@@ -7,6 +7,7 @@
 ;				      By  H.Kubota	;
 ;=======================================================;
 	
+sound:
 ;=======================================;
 ;					;
 ;	     OPN BUSY CHECK		;
@@ -40,8 +41,7 @@ z80_chk_end:
 ;=======================================;
 ; use registor
 ;     a6 : sound ram top
-sound:
-	lea	sound_ram&$ffffff,a6		; a6 = sound ram top
+	lea	sound_ram,a6		; a6 = sound ram top
 	clr.b	seflag(a6)		; se flag clear
 
 	tst.b	pause_flg(a6)		; pause flag check
@@ -1133,24 +1133,24 @@ sescan:
 	rts
 
 se_song_tb:
-	dc.l	fm2_wk+sound_ram&$ffffff	; FM 2ch
+	dc.l	fm2_wk+sound_ram	; FM 2ch
 	dc.l	0			; dummy
-	dc.l	fm4_wk+sound_ram&$ffffff	; FM 4ch
-	dc.l	fm5_wk+sound_ram&$ffffff	; FM 5ch
-	dc.l	psg0_wk+sound_ram&$ffffff	; PSG 80ch
-	dc.l	psg1_wk+sound_ram&$ffffff	; PSG A0ch
-	dc.l	psg2_wk+sound_ram&$ffffff	; PSG C0ch
-	dc.l	psg2_wk+sound_ram&$ffffff	; PSG E0ch (for CMEND)
+	dc.l	fm4_wk+sound_ram	; FM 4ch
+	dc.l	fm5_wk+sound_ram	; FM 5ch
+	dc.l	psg0_wk+sound_ram	; PSG 80ch
+	dc.l	psg1_wk+sound_ram	; PSG A0ch
+	dc.l	psg2_wk+sound_ram	; PSG C0ch
+	dc.l	psg2_wk+sound_ram	; PSG E0ch (for CMEND)
 
 se_ram_tb:
-	dc.l	fm_se1_wk+sound_ram&$ffffff	; FM 2ch
+	dc.l	fm_se1_wk+sound_ram	; FM 2ch
 	dc.l	0			; dummy
-	dc.l	fm_se2_wk+sound_ram&$ffffff	; FM 4ch
-	dc.l	fm_se3_wk+sound_ram&$ffffff	; FM 5ch
-	dc.l	psg_se1_wk+sound_ram&$ffffff	; PSG 80ch
-	dc.l	psg_se2_wk+sound_ram&$ffffff	; PSG A0ch
-	dc.l	psg_se3_wk+sound_ram&$ffffff	; PSG C0ch
-	dc.l	psg_se3_wk+sound_ram&$ffffff	; PSG E0ch (for CMEND)
+	dc.l	fm_se2_wk+sound_ram	; FM 4ch
+	dc.l	fm_se3_wk+sound_ram	; FM 5ch
+	dc.l	psg_se1_wk+sound_ram	; PSG 80ch
+	dc.l	psg_se2_wk+sound_ram	; PSG A0ch
+	dc.l	psg_se3_wk+sound_ram	; PSG C0ch
+	dc.l	psg_se3_wk+sound_ram	; PSG E0ch (for CMEND)
 
 
 ;=======================================;
@@ -1236,14 +1236,14 @@ backscan:
 	rts
 
 bse_song_tb:
-	dc.l	fm4_wk+sound_ram&$ffffff	; FM 4ch
-	dc.l	psg2_wk+sound_ram&$ffffff	; PSG C0ch
+	dc.l	fm4_wk+sound_ram	; FM 4ch
+	dc.l	psg2_wk+sound_ram	; PSG C0ch
 bse_se_tb:
-	dc.l	fm_se2_wk+sound_ram&$ffffff	; FM 4ch
-	dc.l	psg_se3_wk+sound_ram&$ffffff	; PSG E0ch (NOISE MODE USE)
+	dc.l	fm_se2_wk+sound_ram	; FM 4ch
+	dc.l	psg_se3_wk+sound_ram	; PSG E0ch (NOISE MODE USE)
 bse_ram_tb:
-	dc.l	back_se_wk+sound_ram&$ffffff	; FM 4ch
-	dc.l	back_se2_wk+sound_ram&$ffffff	; PSG E0ch (NOISE MODE USE)
+	dc.l	back_se_wk+sound_ram	; FM 4ch
+	dc.l	back_se2_wk+sound_ram	; PSG E0ch (NOISE MODE USE)
 
 ;=======================================;
 ;					;

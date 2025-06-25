@@ -10,12 +10,12 @@ title:
 		bsr.w	sub_1352
 		lea	VDP_CTRL,a6
 		move.w	#$8000+%00000100,(a6)
-		move.w	#$8200+%00110000,(a6)
-		move.w	#$8400+%00000111,(a6)
+		move.w	#$8200+plane_a>>10,(a6)
+		move.w	#$8400+plane_b>>13,(a6)
 		move.w	#$9000+%00000001,(a6)
 		move.w	#$9200+%00000000,(a6)
 		move.w	#$8B00+%00000011,(a6)
-		move.w	#$8700+%00100000,(a6)
+		move.w	#$8700+$02<<4+$00,(a6)
 		clr.b	waterflag
 		bsr.w	scrinit
 		lea	actwk,a1
@@ -64,7 +64,7 @@ loc_2FC4:
 		lea	VDP_DATA,a6
 		move.l	#$50000003,4(a6)
 		lea	ascii.l,a5
-		move.w	#$0520/2-1,d1
+		move.w	#$520/2-1,d1
 loc_303E:
 		move.w	(a5)+,(a6)
 		dbf	d1,loc_303E
@@ -78,7 +78,7 @@ loc_303E:
 		bsr.w	sub_6286
 		lea	blkwk,a1
 		lea	zone00blk,a0
-		move.w	#$000,d0
+		move.w	#$0000,d0
 		bsr.w	mapdevr
 		lea	zone00map,a0
 		lea	mapwk,a1
@@ -113,15 +113,15 @@ loc_303E:
 		move.w	#376,$FFFFF614
 		lea	$FFFFD000+$80,a1
 		moveq	#0,d0
-		move.w	#$0200/$40-1,d1	; This line has a slight error to it, the base value should be $0400 instead of $0200, resulting in the PRESS START BUTTON text not appearing in-game.
+		move.w	#$200/$40-1,d1	; This line has a slight error to it, the base value should be $400 instead of $200, resulting in the PRESS START BUTTON text not appearing in-game.
 loc_311E:
 		move.l	d0,(a1)+
 		dbf	d1,loc_311E
-		move.b	#$0e,$FFFFD000+$40
-		move.b	#$0f,$FFFFD000+$80
-		move.b	#$0f,$FFFFD000+$C0
+		move.b	#$0e,$FFFFD000+$40+actno
+		move.b	#$0f,$FFFFD000+$80+actno
+		move.b	#$0f,$FFFFD000+$C0+actno
 		move.b	#$03,$FFFFD000+$C0+patno
-		move.b	#$0f,$FFFFD000+$100
+		move.b	#$0f,$FFFFD000+$100+actno
 		move.b	#$02,$FFFFD000+$100+patno
 		jsr	Sonic_Load
 		bsr.w	sub_6286
@@ -145,7 +145,7 @@ loc_317C:
 		move.w	playerwk+xposi,d0
 		addq.w	#2,d0
 		move.w	d0,playerwk+xposi
-		cmpi.w	#$1C00,d0
+		cmpi.w	#$1c00,d0
 		bcs.b	loc_31B6	; If D008 isn't 1C00, branch
 		move.b	#logogamemd,gmmode ; Set screen mode to 00 (sega screen)
 		rts
@@ -161,7 +161,7 @@ loc_31CA:
 		move.w	$FFFFFFE4,d0 ; Level select	code stuff
 		adda.w	d0,a0
 		move.b	swdata1+1,d0
-		andi.b	#$F,d0
+		andi.b	#$f,d0
 		cmp.b	(a0),d0
 		bne.b	loc_3210
 		addq.w	#1,$FFFFFFE4
@@ -178,7 +178,7 @@ loc_31CA:
 		move.b	d1,1(a0,d1.w)
 loc_3200:
 		move.b	#1,(a0,d1.w)
-		move.b	#$B5,d0		; Set ring sound
+		move.b	#$b5,d0		; Set ring sound
 		bsr.w	soundset	; Play ring sound
 		bra.b	loc_3222
 loc_3210:
@@ -206,7 +206,7 @@ loc_3242:
 		bsr.w	PalLoad		; Load level select palette
 		lea	$FFFFCC00,a1
 		moveq	#0,d0
-		move.w	#$0380/4-1,d1
+		move.w	#$380/4-1,d1
 loc_3264:
 		move.l	d0,(a1)+
 		dbf	d1,loc_3264
@@ -347,7 +347,7 @@ loc_33B6:
 		move.w	playerwk+xposi,d0
 		addq.w	#2,d0
 		move.w	d0,playerwk+xposi
-		cmpi.w	#$1C00,d0
+		cmpi.w	#$1c00,d0
 		bcs.b	loc_33E4
 		move.b	#0,gmmode
 		rts

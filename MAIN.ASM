@@ -3728,10 +3728,12 @@ loc_4CA4:				; CODE XREF: sub_4BE4+CAj
 		dbf	d3,loc_4C9A
 		rts
 ; End of function sub_4BE4
-byte_4CB8:	dc.b   9,$28,$18,$10,$28,$18,$10,$30,$18,  8,$10,  0
+byte_4CB8:	dc.b   9,$28,$18,$10,$28,$18,$10,$30,$18,  8,$10
+		even
 byte_4CC4:	dc.b   6,$30,$30,$30,$28,$18,$18,$18
+		even
 byte_4CCC:	dc.b   8,  2,  4,$FF,  2,  3,  8,$FF,  4,  2,  2,  3,  8,$FD,  4,  2
-		dc.b   2,  3,  2,$FF	; 16
+		dc.b   2,  3,  2,$FF
 		even
 ContinueScreen:
 		bsr.w	sub_1E52
@@ -3818,17 +3820,16 @@ loc_4E1E:
 ;Continue screen
 ;----------------------------------------------------------------------------
 
-Sprite_Continue:			; DATA XREF: ROM:0000D382o
+Sprite_Continue:
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_4E50(pc,d0.w),d1
 		jmp	off_4E50(pc,d1.w)
 
-off_4E50:	dc.w loc_4E58-off_4E50	; 0 ; DATA XREF: ROM:00004E50o
-					; ROM:00004E52o ...
-		dc.w loc_4E88-off_4E50	; 1
-		dc.w loc_4EAC-off_4E50	; 2
-		dc.w loc_4F20-off_4E50	; 3
+off_4E50:	dc.w loc_4E58-off_4E50
+		dc.w loc_4E88-off_4E50
+		dc.w loc_4EAC-off_4E50
+		dc.w loc_4F20-off_4E50
 
 
 loc_4E58:				; DATA XREF: ROM:00004E50o
@@ -3836,7 +3837,7 @@ loc_4E58:				; DATA XREF: ROM:00004E50o
 		move.l	#Map_5056,4(a0)
 		move.w	#$8500,2(a0)
 		move.b	#0,1(a0)
-		move.b	#$3C,$19(a0) ; '<'
+		move.b	#$3C,$19(a0)
 		move.w	#$120,xposi(a0)
 		move.w	#$C0,$A(a0)
 		move.w	#0,$FFFFFE20
@@ -3897,7 +3898,7 @@ loc_4F20:				; DATA XREF: ROM:00004E50o
 		move.b	$FFFFFE0F,d0
 		andi.b	#1,d0
 		bne.b	loc_4F40
-		tst.w	playerwk+$10
+		tst.w	playerwk+xspeed
 		bne.b	loc_4F56
 		rts
 
@@ -3945,13 +3946,13 @@ loc_4F78:				; DATA XREF: ROM:00004F70o
 		move.b	#4,1(a0)
 		move.b	#2,$18(a0)
 		move.b	#$1D,$1C(a0)
-		move.w	#$400,$12(a0)
+		move.w	#$400,yspeed(a0)
 
 loc_4FAE:				; DATA XREF: ROM:00004F70o
 		cmpi.w	#$1A0,yposi(a0)
 		bne.b	loc_4FD4
 		addq.b	#2,$24(a0)
-		clr.w	$12(a0)
+		clr.w	yspeed(a0)
 		move.l	#Map_5056,4(a0)
 		move.w	#$8500,2(a0)
 		move.b	#0,$1C(a0)
@@ -3977,20 +3978,20 @@ loc_4FF8:				; CODE XREF: ROM:00004FEAj
 		move.l	#playpat,4(a0)
 		move.w	#$0780,2(a0)
 		move.b	#$1E,$1C(a0)
-		clr.w	$14(a0)
+		clr.w	mspeed(a0)
 		subq.w	#8,yposi(a0)
 		move.b	#$e0,d0
 		bsr.w	soundset
 
 loc_5020:				; DATA XREF: ROM:00004F70o
-		cmpi.w	#$800,$14(a0)
+		cmpi.w	#$800,mspeed(a0)
 		bne.b	loc_5030
 		move.w	#$1000,xspeed(a0)
 		bra.b	loc_5036
 
 
 loc_5030:				; CODE XREF: ROM:00005026j
-		addi.w	#$20,$14(a0) ; ' '
+		addi.w	#$20,mspeed(a0)
 
 loc_5036:				; CODE XREF: ROM:0000502Ej
 		jsr	speedset2
@@ -4046,36 +4047,32 @@ byte_50DF:	dc.b 1			; DATA XREF: ROM:00005056o
 		even
 
 
-EndingSequence:				; CODE XREF: ROM:000003AEj
+EndingSequence:
 		move.b	#$e4,d0
 		bsr.w	soundset
 		bsr.w	sub_1E52
 		lea	actwk,a1
 		moveq	#0,d0
 		move.w	#$2000/4-1,d1
-
-loc_50FC:				; CODE XREF: ROM:000050FEj
+loc_50FC:
 		move.l	d0,(a1)+
 		dbf	d1,loc_50FC
 		lea	$FFFFF628,a1
 		moveq	#0,d0
 		move.w	#$58/4-1,d1
-
-loc_510C:				; CODE XREF: ROM:0000510Ej
+loc_510C:
 		move.l	d0,(a1)+
 		dbf	d1,loc_510C
 		lea	scra_h_posit,a1
 		moveq	#0,d0
 		move.w	#$100/4-1,d1
-
-loc_511C:				; CODE XREF: ROM:0000511Ej
+loc_511C:
 		move.l	d0,(a1)+
 		dbf	d1,loc_511C
 		lea	$FFFFFE60,a1
 		moveq	#0,d0
 		move.w	#$120/4-1,d1
-
-loc_512C:				; CODE XREF: ROM:0000512Ej
+loc_512C:
 		move.l	d0,(a1)+
 		dbf	d1,loc_512C
 		move.w	#$2700,sr
@@ -4098,8 +4095,7 @@ loc_512C:				; CODE XREF: ROM:0000512Ej
 		cmpi.b	#6,$FFFFFE57
 		beq.b	loc_518E
 		move.w	#$601,stageno
-
-loc_518E:				; CODE XREF: ROM:00005186j
+loc_518E:
 		moveq	#$1C,d0
 		bsr.w	PLC_Load
 		jsr	sub_1C822
@@ -4120,8 +4116,7 @@ loc_518E:				; CODE XREF: ROM:00005186j
 		btst.b	#6,swdata1
 		beq.b	loc_51E6
 		move.b	#1,debugflag
-
-loc_51E6:				; CODE XREF: ROM:000051DEj
+loc_51E6:
 		move.b	#play00_act,playerwk+actno
 		bset.b	#0,playerwk+cddat
 		move.b	#1,$FFFFF7CC
@@ -4389,10 +4384,12 @@ off_5516:	dc.w byte_551C-off_5516	; 0 ; DATA XREF: ROM:000054CCo
 					; ROM:00005516o ...
 		dc.w byte_552A-off_5516	; 1
 		dc.w byte_5534-off_5516	; 2
-byte_551C:	dc.b   3,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  2,$FA; 0
-					; DATA XREF: ROM:00005516o
-byte_552A:	dc.b   5,  3,  4,  3,  4,  3,  4,  3,$FA,  0; 0	; DATA XREF: ROM:00005516o
-byte_5534:	dc.b   3,  5,  5,  5,  6,  7,$FE,  1; 0	; DATA XREF: ROM:00005516o
+byte_551C:	dc.b   3,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  2,$FA
+		even
+byte_552A:	dc.b   5,  3,  4,  3,  4,  3,  4,  3,$FA
+		even
+byte_5534:	dc.b   3,  5,  5,  5,  6,  7,$FE,  1
+		even
 
 ;-------------------------------------------------------------------------------
 ; Sprite
@@ -4605,12 +4602,14 @@ byte_57A6:	dc.b 1			; DATA XREF: ROM:0000577Ao
 		dc.b $F8,  5,  0,  8,$F8; 0
 byte_57AC:	dc.b 1			; DATA XREF: ROM:0000577Ao
 byte_57AD:	dc.b $F8,  5,  0, $C,$F8; 0
+		even
 Map_57B2:	dc.w byte_57B4-Map_57B2	; DATA XREF: ROM:0000563Ao
 					; ROM:000057B2o
 byte_57B4:	dc.b 3			; DATA XREF: ROM:000057B2o
 		dc.b $F0, $F,  0,  0,$D0; 0
 		dc.b $F0, $F,  0,$10,$F0; 5
 		dc.b $F0, $F,  0,$20,$10; 10
+		even
 
 
 Credits:				; CODE XREF: ROM:000003B2j
@@ -4718,6 +4717,7 @@ byte_5908:	dc.b   1,  1, $A,  0,  6,$2C,  0, $D,  0,  0,  0,  0,  0,  0,  8,  0;
 					; DATA XREF: sub_5898+4Ao
 		dc.b   9,$57,  5,$CC,  4,$AB,  3,$A6,  0,  0,  2,$8C,  0,  0,  0,  0; 16
 		dc.b   3,  8,  1,  1	; 32
+		even
 
 
 loc_592C:				; CODE XREF: ROM:00005892j
@@ -4853,10 +4853,13 @@ off_5AA2:	dc.w byte_5AA8-off_5AA2	; 0 ; DATA XREF: ROM:00005A4Eo
 		dc.w byte_5AAC-off_5AA2	; 1
 		dc.w byte_5AB0-off_5AA2	; 2
 byte_5AA8:	dc.b   5,  0,$FC,  1	; 0 ; DATA XREF: ROM:00005AA2o
+		even
 byte_5AAC:	dc.b   5,  2,$FC,  3	; 0 ; DATA XREF: ROM:00005AA2o
+		even
 byte_5AB0:	dc.b   7,  4,  5,  6,  5,  4,  5,  6,  5,  4,  5,  6,  5,  7,  5,  6; 0
 					; DATA XREF: ROM:00005AA2o
 		dc.b   5,$FF		; 16
+		even
 
 ;---------------------------------------------------------------------------
 ; Sprite
@@ -5055,6 +5058,7 @@ byte_5D13:	dc.b $C			; DATA XREF: ROM:00005BBCo
 		dc.b $18, $C,  0,$87,  0; 45
 		dc.b $1C, $C,  0,$5B,$E0; 50
 		dc.b $1C, $C,  8,$5B,  0; 55
+		even
 ;---------------------------------------------------------------------------
 ; Credits demo script 1
 ;---------------------------------------------------------------------------
@@ -7370,7 +7374,7 @@ EndingDynResizing:			; DATA XREF: ROM:00006DD0o
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_7328:				; DATA XREF: ROM:0000D382o
+hashi:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_7336(pc,d0.w),d1
@@ -7871,7 +7875,7 @@ byte_794B:	dc.b 1			; DATA XREF: ROM:00007934o
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_7952:				; DATA XREF: ROM:0000D382o
+buranko:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_7960(pc,d0.w),d1
@@ -8178,7 +8182,7 @@ byte_7C9B:	dc.b 1			; DATA XREF: ROM:00007C66o
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_7CA2:				; DATA XREF: ROM:0000D382o
+thashi:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_7CB0(pc,d0.w),d1
@@ -8335,6 +8339,7 @@ byte_7E26:	dc.b 1			; DATA XREF: ROM:00007DF8o
 		dc.b   4,  0,  0,$10,$FD; 0
 byte_7E2C:	dc.b 1			; DATA XREF: ROM:00007DF8o
 byte_7E2D:	dc.b $F4,  0,  0,$11,$FD; 0 ; DATA XREF: ROM:00007DF8o
+		even
 
 ;---------------------------------------------------------------------------
 ; Sprite
@@ -8342,7 +8347,7 @@ byte_7E2D:	dc.b $F4,  0,  0,$11,$FD; 0 ; DATA XREF: ROM:00007DF8o
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_7E32:				; DATA XREF: ROM:0000D382o
+shima:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_7E40(pc,d0.w),d1
@@ -8673,6 +8678,7 @@ byte_8109:	dc.b $A			; DATA XREF: ROM:000080FAo
 		dc.b $24, $F,  8,$DA,  0; 35
 		dc.b $44, $F,  8,$DA,  0; 40
 		dc.b $64, $F,  8,$DA,  0; 45
+		even
 shimapat2:	dc.w byte_8140-shimapat2	; 0 ; DATA XREF: ROM:00007E54o
 					; ROM:0000813Co ...
 		dc.w byte_8155-shimapat2	; 1
@@ -8692,6 +8698,7 @@ byte_8155:	dc.b $A			; DATA XREF: ROM:0000813Co
 		dc.b $24, $F,  8,$D5,  0; 35
 		dc.b $44, $F,  8,$D5,  0; 40
 		dc.b $64, $F,  8,$D5,  0; 45
+		even
 z5daipat:	dc.w byte_818A-z5daipat	; DATA XREF: ROM:00008188o
 byte_818A:	dc.b 3			; DATA XREF: ROM:00008188o
 		dc.b $F6, $B,  0,$49,$E0; 0
@@ -8705,7 +8712,7 @@ byte_819C:	dc.b 2			; DATA XREF: ROM:0000819Ao
 		even
 
 
-Sprite_Null2:				; DATA XREF: ROM:0000D382o
+ball:				; DATA XREF: ROM:0000D382o
 		rts
 
 ballpat:	dc.w byte_81B2-ballpat	; 0 ; DATA XREF: ROM:000081AAo
@@ -8735,6 +8742,7 @@ byte_81FB:	dc.b 4			; DATA XREF: ROM:000081AAo
 		dc.b $E8, $A,  8,$12,  0; 5
 		dc.b   0, $A,$10,$12,$E8; 10
 		dc.b   0, $A,$10,$1B,  0; 15
+		even
 
 ;---------------------------------------------------------------------------
 ; Sprite
@@ -8742,7 +8750,7 @@ byte_81FB:	dc.b 4			; DATA XREF: ROM:000081AAo
 ; Collapsable platform
 ;---------------------------------------------------------------------------
 
-Sprite_CollapsPlatf:			; DATA XREF: ROM:0000D382o
+break:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_821E(pc,d0.w),d1
@@ -8848,7 +8856,7 @@ loc_831A:				; CODE XREF: ROM:00008316j
 		rts
 
 
-Sprite_BreakablePlatform:		; DATA XREF: ROM:0000D382o
+break2:		; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_832E(pc,d0.w),d1
@@ -9036,11 +9044,16 @@ loc_84F2:				; CODE XREF: ROM:000084AEj
 		move.w	#$B9,d0
 		jmp	soundset.l
 
-byte_8500:	dc.b $1C,$18,$14,$10,$1A,$16,$12, $E, $A,  6,$18,$14,$10, $C,  8,  4; 0
-					; DATA XREF: ROM:0000847Ao
-		dc.b $16,$12, $E, $A,  6,  2,$14,$10, $C,  0; 16
-byte_851A:	dc.b $1E,$16, $E,  6,$1A,$12, $A,  2; 0	; DATA XREF: ROM:00008458o
-byte_8522:	dc.b $16,$1E,$1A,$12,  6, $E, $A,  2; 0	; DATA XREF: ROM:00008466o
+byte_8500:
+		dc.b $1C,$18,$14,$10,$1A,$16,$12, $E, $A,  6,$18,$14,$10, $C,  8,  4
+		dc.b $16,$12, $E, $A,  6,  2,$14,$10, $C
+		even
+byte_851A:
+		dc.b $1E,$16, $E,  6,$1A,$12, $A,  2
+		even
+byte_8522:
+		dc.b $16,$1E,$1A,$12,  6, $E, $A,  2
+		even
 
 
 
@@ -9080,6 +9093,7 @@ byte_8570:	dc.b $20,$20,$20,$20,$20,$20,$20,$20,$21,$21,$22,$22,$23,$23,$24,$24;
 					; DATA XREF: ROM:0000827Co sub_829C+Co
 		dc.b $25,$25,$26,$26,$27,$27,$28,$28,$29,$29,$2A,$2A,$2B,$2B,$2C,$2C; 16
 		dc.b $2D,$2D,$2E,$2E,$2F,$2F,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30; 32
+		even
 off_85A0:	dc.w byte_85A8-off_85A0	; 0 ; DATA XREF: ROM:0000822Eo
 					; ROM:000085A0o ...
 		dc.w byte_85F9-off_85A0	; 1
@@ -9171,6 +9185,7 @@ byte_86C8:	dc.b $19		; DATA XREF: ROM:000085A0o
 		dc.b $10,  5,  0,$AB,$20; 110
 		dc.b $10,  5,  0,$AB,$10; 115
 		dc.b $10,  5,  0,$B7,  0; 120
+		even
 break2pat:	dc.w byte_874E-break2pat	; 0 ; DATA XREF: ROM:0000833Eo
 					; ROM:00008746o ...
 		dc.w byte_8763-break2pat	; 1
@@ -9204,9 +9219,10 @@ byte_87A1:	dc.b 8			; DATA XREF: ROM:00008746o
 		dc.b   8,  5,  0, $C,$F0; 25
 		dc.b   8,  5,  0,  8,  0; 30
 		dc.b   8,  5,  0, $C,$10; 35
+		even
 
 
-Sprite_87CA:				; DATA XREF: ROM:0000D382o
+bgspr:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_87D8(pc,d0.w),d1
@@ -9270,9 +9286,10 @@ hassyapat:	dc.w byte_8858-hassyapat	; DATA XREF: ROM:0000882Eo
 					; ROM:00008838o ...
 byte_8858:	dc.b 1			; DATA XREF: ROM:00008856o
 		dc.b $F0,  7,  0,  0,$F8; 0
+		even
 
 
-Sprite_885E:				; DATA XREF: ROM:0000D382o
+switch:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_886C(pc,d0.w),d1
@@ -9362,7 +9379,7 @@ byte_891E:	dc.b 4			; DATA XREF: ROM:0000891Co
 		even
 
 
-Sprite_8934:				; DATA XREF: ROM:0000D382o
+door:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_8942(pc,d0.w),d1
@@ -9409,7 +9426,7 @@ loc_89A2:				; CODE XREF: ROM:00008998j
 
 loc_89A8:				; CODE XREF: ROM:0000897Cj
 					; ROM:00008986j ...
-		lea	byte_89D0,a1
+		lea	off_89D0,a1
 		bsr.w	patchg
 		tst.b	$1A(a0)
 		bne.b	loc_89CC
@@ -9423,9 +9440,15 @@ loc_89A8:				; CODE XREF: ROM:0000897Cj
 loc_89CC:				; CODE XREF: ROM:000089B6j
 		bra.w	loc_F6AC
 
-byte_89D0:	dc.b   0,  4,  0,$10,  0,  8,  7,  6,  5,  4,  3,  2,  1,  0,$FE,  1; 0
-					; DATA XREF: ROM:000089A8o
+off_89D0:
+		dc.w byte_89D4-off_89D0
+		dc.w byte_89E0-off_89D0
+byte_89D4:
+		dc.b   0,  8,  7,  6,  5,  4,  3,  2,  1,  0,$FE,  1; 0
+		even
+byte_89E0:
 		dc.b   0,  0,  1,  2,  3,  4,  5,  6,  7,  8,$FE,  1; 16
+		even
 doorpat:	dc.w byte_89FE-doorpat	; 0 ; DATA XREF: ROM:0000894Ao
 					; ROM:000089ECo ...
 		dc.w byte_8A09-doorpat	; 1
@@ -9588,7 +9611,7 @@ loc_8B48:				; CODE XREF: sub_8ADA+Ej sub_8ADA+16j	...
 
 
 
-Sprite_DoubleBigExplosion:		; DATA XREF: ROM:0000D382o
+buta:		; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_8B5A(pc,d0.w),d1
@@ -9621,7 +9644,7 @@ locret_8BAC:				; CODE XREF: ROM:00008B9Cj
 
 
 loc_8BAE:				; DATA XREF: ROM:00008B5Ao
-		lea	byte_8E48,a1
+		lea	off_8E48,a1
 		bsr.w	patchg
 		cmpi.b	#1,$1A(a0)
 		bne.b	loc_8BC8
@@ -9773,7 +9796,7 @@ loc_8D5E:				; CODE XREF: ROM:00008D48j
 		bra.w	actionsub
 
 
-Sprite_Explosion:			; DATA XREF: ROM:0000D382o
+bakuha:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_8D70(pc,d0.w),d1
@@ -9846,9 +9869,12 @@ loc_8E08:				; DATA XREF: ROM:00008E04o
 		move.w	#$C4,d0
 		jmp	soundset.l
 
-byte_8E48:	dc.b   0,  2,  9,  0,  0,  2,  2,  3,  2,  0,  0,  2,  2,  3,  2,  0; 0
-					; DATA XREF: ROM:00008BAEo
-		dc.b   0,  2,  2,  3,  2,  0,  0,  1,$FF,  0; 16
+off_8E48:
+		dc.w byte_8E4A-off_8E48
+byte_8E4A:
+		dc.b   9,  0,  0,  2,  2,  3,  2,  0,  0,  2,  2,  3,  2,  0
+		dc.b   0,  2,  2,  3,  2,  0,  0,  1,$FF
+		even
 butapat:
 		dc.w byte_8E6E-butapat; 0 ; DATA XREF: ROM:00008B6Ao
 					; ROM:00008C38o ...
@@ -9873,6 +9899,7 @@ byte_8E9A:	dc.b 1			; DATA XREF: ROM:00008E62o
 		dc.b $F8,  5,  0,$27,$F8; 0
 byte_8EA0:	dc.b 1			; DATA XREF: ROM:00008E62o
 		dc.b $F8,  5,  0,$2B,$F8; 0
+		even
 Map_Explosion2:	dc.w byte_8EAE-Map_Explosion2; 0 ; DATA	XREF: ROM:00008D08o
 					; ROM:00008EA6o ...
 		dc.w byte_8EB4-Map_Explosion2; 1
@@ -9887,6 +9914,7 @@ byte_8EBA:	dc.b 1			; DATA XREF: ROM:00008EA6o
 		dc.b $F4, $A,  0,$12,$F4; 0
 byte_8EC0:	dc.b 1			; DATA XREF: ROM:00008EA6o
 		dc.b $F4, $A,  0,$1B,$F4; 0
+		even
 Map_Explosion:	dc.w byte_8ED0-Map_Explosion; 0	; DATA XREF: ROM:00008D9Co
 					; ROM:00008EC6o ...
 		dc.w byte_8ED6-Map_Explosion; 1
@@ -9912,6 +9940,7 @@ byte_8EF7:	dc.b 4			; DATA XREF: ROM:00008EC6o
 		dc.b $EC,  5,  0,$3C,  4; 5
 		dc.b   4,  5,$18,$3C,$EC; 10
 		dc.b $FC, $A,$18,$33,$FC; 15
+		even
 Map_LargeExplosion:
 		dc.w	byte_8ED0-Map_LargeExplosion ; DATA XREF: ROM:00008E0Co
 					; ROM:00008F0Ct ...
@@ -9923,6 +9952,7 @@ byte_8F16:	dc.b 1			; DATA XREF: ROM:00008F0Eo
 		dc.b $F0, $F,  0,$40,$F0; 0
 byte_8F1C:	dc.b 1			; DATA XREF: ROM:00008F10o
 		dc.b $F0, $F,  0,$50,$F0; 0
+		even
 
 
 usagi:				; DATA XREF: ROM:0000D382o
@@ -10382,7 +10412,7 @@ loc_9404:				; CODE XREF: ROM:00009260p
 		rts
 
 
-Sprite_9412:				; DATA XREF: ROM:0000D382o
+ten:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_9424(pc,d0.w),d1
@@ -10421,6 +10451,7 @@ byte_9472:	dc.b 1			; DATA XREF: ROM:00009466o
 		dc.b $F4,  6,  0,  6,$F8; 0
 byte_9478:	dc.b 1			; DATA XREF: ROM:00009466o
 		dc.b $F4,  6,  0, $C,$F8; 0
+		even
 azarpat:
 flicpat:
 niwapat:	dc.w byte_948A-flicpat	; 0 ; DATA XREF: ROM:00008F72o
@@ -10433,6 +10464,7 @@ byte_948A:	dc.b 1			; DATA XREF: ROM:0000947Eo
 		dc.b $FC,  5,  0,  6,$F8; 0
 byte_9490:	dc.b 1			; DATA XREF: ROM:0000947Eo
 		dc.b $FC,  5,  0, $A,$F8; 0
+		even
 risupat:
 fbutapat:	dc.w byte_94A2-fbutapat	; 0 ; DATA XREF: ROM:00008F8Ao
 					; ROM:00008F9Ao ...
@@ -10444,6 +10476,7 @@ byte_94A2:	dc.b 1			; DATA XREF: ROM:00009496o
 		dc.b $FC,  9,  0,  6,$F4; 0
 byte_94A8:	dc.b 1			; DATA XREF: ROM:00009496o
 		dc.b $FC,  9,  0, $C,$F4; 0
+		even
 Map_94AE:	dc.w byte_94BC-Map_94AE	; 0 ; DATA XREF: ROM:0000942Co
 					; ROM:000094AEo ...
 		dc.w byte_94C2-Map_94AE	; 1
@@ -10468,6 +10501,7 @@ byte_94DA:	dc.b 2			; DATA XREF: ROM:000094AEo
 byte_94E5:	dc.b 2			; DATA XREF: ROM:000094AEo
 		dc.b $FC,  8,  0,  6,$F4; 0
 		dc.b $FC,  4,  0,  7,  6; 5
+		even
 
 
 kani:			; DATA XREF: ROM:0000D382o
@@ -10685,14 +10719,22 @@ off_971A:	dc.w byte_972A-off_971A	; 0 ; DATA XREF: ROM:0000956Ao
 		dc.w byte_9742-off_971A	; 5
 		dc.w byte_9748-off_971A	; 6
 		dc.w byte_974C-off_971A	; 7
-byte_972A:	dc.b  $F,  0,$FF,  0	; 0 ; DATA XREF: ROM:0000971Ao
-byte_972E:	dc.b  $F,  2,$FF,  0	; 0 ; DATA XREF: ROM:0000971Ao
-byte_9732:	dc.b  $F,$22,$FF,  0	; 0 ; DATA XREF: ROM:0000971Ao
-byte_9736:	dc.b  $F,  1,$21,  0,$FF,  0; 0	; DATA XREF: ROM:0000971Ao
-byte_973C:	dc.b  $F,$21,  3,  2,$FF,  0; 0	; DATA XREF: ROM:0000971Ao
-byte_9742:	dc.b  $F,  1,$23,$22,$FF,  0; 0	; DATA XREF: ROM:0000971Ao
-byte_9748:	dc.b  $F,  4,$FF,  0	; 0 ; DATA XREF: ROM:0000971Ao
-byte_974C:	dc.b   1,  5,  6,$FF	; 0 ; DATA XREF: ROM:0000971Ao
+byte_972A:	dc.b  $F,  0,$FF
+		even
+byte_972E:	dc.b  $F,  2,$FF
+		even
+byte_9732:	dc.b  $F,$22,$FF
+		even
+byte_9736:	dc.b  $F,  1,$21,  0,$FF
+		even
+byte_973C:	dc.b  $F,$21,  3,  2,$FF
+		even
+byte_9742:	dc.b  $F,  1,$23,$22,$FF
+		even
+byte_9748:	dc.b  $F,  4,$FF
+		even
+byte_974C:	dc.b   1,  5,  6,$FF
+		even
 kanipat:	dc.w byte_975E-kanipat; 0 ; DATA XREF: ROM:00009514o
 					; ROM:000096C2o ...
 		dc.w byte_9773-kanipat; 1
@@ -10892,7 +10934,7 @@ loc_994A:				; DATA XREF: ROM:00009940o
 loc_9994:				; CODE XREF: ROM:0000997Ej
 					; DATA XREF: ROM:00009940o
 		bsr.b	sub_99A4
-		lea	byte_9A2A,a1
+		lea	off_9A2A,a1
 		bsr.w	patchg
 		bra.w	actionsub
 
@@ -10913,7 +10955,7 @@ loc_99B2:				; DATA XREF: ROM:00009940o
 		move.b	#-$79,$20(a0)
 		move.b	#1,$1C(a0)
 		bsr.w	speedset2
-		lea	byte_9A2A,a1
+		lea	off_9A2A,a1
 		bsr.w	patchg
 		bsr.w	actionsub
 		move.w	$FFFFF72E,d0
@@ -10942,7 +10984,7 @@ loc_99FE:				; DATA XREF: ROM:00009940o
 		bsr.w	speedset2
 
 loc_9A08:				; CODE XREF: ROM:00009992j
-		lea	byte_9A2A,a1
+		lea	off_9A2A,a1
 		bsr.w	patchg
 		bsr.w	actionsub
 		rts
@@ -10952,9 +10994,20 @@ off_9A18:	dc.w byte_9A1E-off_9A18	; 0 ; DATA XREF: ROM:0000982Ao
 		dc.w byte_9A22-off_9A18	; 1
 		dc.w byte_9A26-off_9A18	; 2
 byte_9A1E:	dc.b   1,  0,  1,$FF	; 0 ; DATA XREF: ROM:00009A18o
+		even
 byte_9A22:	dc.b   1,  2,  3,$FF	; 0 ; DATA XREF: ROM:00009A18o
+		even
 byte_9A26:	dc.b   1,  4,  5,$FF	; 0 ; DATA XREF: ROM:00009A18o
-byte_9A2A:	dc.b   0,  4,  0,  8,  7,  0,  1,$FC,  1,  2,  3,$FF; 0
+		even
+off_9A2A:
+		dc.w byte_9A2E-off_9A2A
+		dc.w byte_9A32-off_9A2A
+byte_9A2E:
+		dc.b   7,  0,  1,$FC
+		even
+byte_9A32:
+		dc.b   1,  2,  3,$FF
+		even
 					; DATA XREF: ROM:00009996o
 					; sub_99A4+26o	...
 hachipat:	dc.w byte_9A42-hachipat; 0 ; DATA	XREF: ROM:000097F6o
@@ -11008,6 +11061,7 @@ byte_9AE7:	dc.b 4			; DATA XREF: ROM:00009A36o
 		dc.b  $C,  4,  0, $D,$F4; 15
 		dc.b $F4,  8,  0,$1F,$EC; 20
 		dc.b $F4,  4,  0,$22,  4; 25
+		even
 hachipatBall:
 		dc.w	byte_9B0E-hachipatBall; 0	; DATA XREF: ROM:00009954o
 					; ROM:00009B06o ...
@@ -11022,6 +11076,7 @@ byte_9B1A:	dc.b 1			; DATA XREF: ROM:00009B06o
 		dc.b $F8,  5,  0,$2C,$F8; 0
 byte_9B20:	dc.b 1			; DATA XREF: ROM:00009B06o
 		dc.b $F8,  5,  0,$33,$F8; 0
+		even
 
 
 ring:				; DATA XREF: ROM:0000D382o
@@ -11036,8 +11091,9 @@ off_9B34:	dc.w loc_9B5E-off_9B34	; 0 ; DATA XREF: ROM:00009B34o
 		dc.w loc_9C3E-off_9B34	; 2
 		dc.w loc_9C64-off_9B34	; 3
 		dc.w loc_9C72-off_9B34	; 4
-byte_9B3E:	dc.b $10
-byte_9B3F:	dc.b   0,$18,  0,$20,  0,  0,$10,  0,$18,  0,$20,$10,$10,$18,$18,$20; 0
+byte_9B3E:
+		dc.b $10
+		dc.b   0,$18,  0,$20,  0,  0,$10,  0,$18,  0,$20,$10,$10,$18,$18,$20; 0
 		dc.b $20,$F0,$10,$E8,$18,$E0,$20,$10,  8,$18,$10,$F0,  8,$E8,$10; 16
 
 
@@ -11061,7 +11117,7 @@ loc_9B80:				; CODE XREF: ROM:00009B7Cj
 		add.w	d0,d0
 		move.b	byte_9B3E(pc,d0.w),d5
 		ext.w	d5
-		move.b	byte_9B3F(pc,d0.w),d6
+		move.b	byte_9B3E+1(pc,d0.w),d6
 		ext.w	d6
 		movea.l	a0,a1
 		move.w	xposi(a0),d2
@@ -11133,7 +11189,7 @@ loc_9C3E:				; DATA XREF: ROM:00009B34o
 		bset.b	d1,2(a2,d0.w)
 
 loc_9C64:				; DATA XREF: ROM:00009B34o
-		lea	byte_9F8A,a1
+		lea	off_9F8A,a1
 		bsr.w	patchg
 		bra.w	actionsub
 
@@ -11175,7 +11231,7 @@ loc_9CB0:				; CODE XREF: sub_9C76+14j sub_9C76+24j ...
 ; Rings	flying out from	being hit
 ;----------------------------------------------------------------------------------
 
-Sprite_HitRings:			; DATA XREF: ROM:0000D382o
+flyring:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_9CC4(pc,d0.w),d1
@@ -11209,7 +11265,7 @@ loc_9CE6:				; CODE XREF: ROM:00009D6Ej
 		bne.w	loc_9D72
 
 loc_9CEE:				; CODE XREF: ROM:00009CE4j
-		move.b	#$37,actno(a1) ; '7'
+		move.b	#flyring_act,actno(a1)
 		addq.b	#2,$24(a1)
 		move.b	#8,$16(a1)
 		move.b	#8,$17(a1)
@@ -11289,7 +11345,7 @@ loc_9DE0:				; DATA XREF: ROM:00009CC4o
 		bsr.w	sub_9C76
 
 loc_9DF4:				; DATA XREF: ROM:00009CC4o
-		lea	byte_9F8A,a1
+		lea	off_9F8A,a1
 		bsr.w	patchg
 		bra.w	actionsub
 
@@ -11300,7 +11356,7 @@ loc_9E02:				; CODE XREF: ROM:00009DCCj
 		bra.w	frameout
 
 
-Sprite_GoldenRing:			; DATA XREF: ROM:0000D382o
+bigring:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_9E14(pc,d0.w),d1
@@ -11374,7 +11430,7 @@ loc_9ED2:				; CODE XREF: ROM:00009E42j
 		bra.w	frameout
 
 
-Sprite_SSEntry:				; DATA XREF: ROM:0000D382o
+ebigring:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_9EE4(pc,d0.w),d1
@@ -11439,7 +11495,11 @@ loc_9F78:				; CODE XREF: ROM:00009F4Ej
 loc_9F86:				; DATA XREF: ROM:00009EE4o
 		bra.w	frameout
 
-byte_9F8A:	dc.b   0,  2,  5,  4,  5,  6,  7,$FC; 0	; DATA XREF: ROM:00009C64o
+off_9F8A:
+		dc.w byte_9F8C-off_9F8A
+byte_9F8C:
+		dc.b   5,  4,  5,  6,  7,$FC
+		even
 					; ROM:00009DF4o ...
 ringpat:	dc.w byte_9FA2-ringpat; 0 ; DATA XREF: ROM:00009BD2o
 					; ROM:00009D10o ...
@@ -11466,6 +11526,7 @@ byte_9FC6:	dc.b 1			; DATA XREF: ROM:00009F92o
 		dc.b $F8,  5,  8, $A,$F8; 0
 byte_9FCC:	dc.b 1			; DATA XREF: ROM:00009F92o
 		dc.b $F8,  5,$10, $A,$F8; 0
+		even
 bigringpat:	dc.w byte_9FDA-bigringpat; 0 ; DATA	XREF: ROM:00009E1Co
 					; ROM:00009FD2o ...
 		dc.w byte_A00D-bigringpat; 1
@@ -11505,6 +11566,7 @@ byte_A04B:	dc.b 8			; DATA XREF: ROM:00009FD2o
 		dc.b   8,  9,  8,$45,$E8; 25
 		dc.b $10,  8,  8,$4B,  0; 30
 		dc.b $18, $C,  8,$4E,$F0; 35
+		even
 Map_SSEntry:	dc.w byte_A084-Map_SSEntry; 0 ;	DATA XREF: ROM:00009EEEo
 					; ROM:0000A074o ...
 		dc.w byte_A08F-Map_SSEntry; 1
@@ -11550,9 +11612,10 @@ byte_A103:	dc.b 4			; DATA XREF: ROM:0000A074o
 		dc.b $E0, $F,  8,$44,  0; 5
 		dc.b   0, $F,$10,$44,$E0; 10
 		dc.b   0, $F,$18,$44,  0; 15
+		even
 
 
-Sprite_Monitor:				; DATA XREF: ROM:0000D382o
+item:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_A126(pc,d0.w),d1
@@ -11724,7 +11787,7 @@ loc_A2E8:				; CODE XREF: ROM:0000A2D0j
 		bra.w	actionsub
 
 
-Sprite_MonitorContents:			; DATA XREF: ROM:0000D382o
+item2:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_A314(pc,d0.w),d1
@@ -11934,23 +11997,26 @@ off_A508:	dc.w byte_A51C-off_A508	; 0 ; DATA XREF: ROM:0000A276o
 		dc.w byte_A56A-off_A508	; 7
 		dc.w byte_A576-off_A508	; 8
 		dc.w byte_A582-off_A508	; 9
-byte_A51C:	dc.b   1,  0,  1,  2,$FF,  0; 0	; DATA XREF: ROM:0000A508o
-byte_A522:	dc.b   1,  0,  3,  3,  1,  3,  3,  2,  3,  3,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A52E:	dc.b   1,  0,  4,  4,  1,  4,  4,  2,  4,  4,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A53A:	dc.b   1,  0,  5,  5,  1,  5,  5,  2,  5,  5,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A546:	dc.b   1,  0,  6,  6,  1,  6,  6,  2,  6,  6,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A552:	dc.b   1,  0,  7,  7,  1,  7,  7,  2,  7,  7,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A55E:	dc.b   1,  0,  8,  8,  1,  8,  8,  2,  8,  8,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A56A:	dc.b 1,	0, 9, 9, 1, 9, 9, 2, 9,	9, $FF,	0; 0 ; DATA XREF: ROM:0000A508o
-byte_A576:	dc.b   1,  0, $A, $A,  1, $A, $A,  2, $A, $A,$FF,  0; 0
-					; DATA XREF: ROM:0000A508o
-byte_A582:	dc.b   2,  0,  1,  2, $B,$FE,  1,  0; 0	; DATA XREF: ROM:0000A508o
+byte_A51C:	dc.b   1,  0,  1,  2,$FF
+		even
+byte_A522:	dc.b   1,  0,  3,  3,  1,  3,  3,  2,  3,  3,$FF
+		even
+byte_A52E:	dc.b   1,  0,  4,  4,  1,  4,  4,  2,  4,  4,$FF
+		even
+byte_A53A:	dc.b   1,  0,  5,  5,  1,  5,  5,  2,  5,  5,$FF
+		even
+byte_A546:	dc.b   1,  0,  6,  6,  1,  6,  6,  2,  6,  6,$FF
+		even
+byte_A552:	dc.b   1,  0,  7,  7,  1,  7,  7,  2,  7,  7,$FF
+		even
+byte_A55E:	dc.b   1,  0,  8,  8,  1,  8,  8,  2,  8,  8,$FF
+		even
+byte_A56A:	dc.b 1,	0, 9, 9, 1, 9, 9, 2, 9,	9, $FF
+		even
+byte_A576:	dc.b   1,  0, $A, $A,  1, $A, $A,  2, $A, $A,$FF
+		even
+byte_A582:	dc.b   2,  0,  1,  2, $B,$FE,  1
+		even
 itempat:	dc.w byte_A5A2-itempat; 0 ; DATA XREF: ROM:0000A140o
 					; ROM:0000A348o ...
 		dc.w byte_A5A8-itempat; 1
@@ -11998,6 +12064,7 @@ byte_A60B:	dc.b 2			; DATA XREF: ROM:0000A58Ao
 		dc.b $EF, $F,  0,  0,$F0; 5
 byte_A616:	dc.b 1			; DATA XREF: ROM:0000A58Ao
 		dc.b $FF, $D,  0,$38,$F0; 0
+		even
 
 
 Sprite_A61C:				; DATA XREF: ROM:0000D382o
@@ -12093,13 +12160,12 @@ loc_A6FA:				; CODE XREF: ROM:0000A6D8j
 		lea	off_A712,a1
 		bra.w	patchg
 
-off_A704:	dc.w byte_A706-off_A704	; DATA XREF: ROM:0000A65Co
-					; ROM:0000A68Co ...
-byte_A706:	dc.b   7,  0,  1,  2,  3,  4,  5,  6,  7,$FE,  2,  0; 0
-					; DATA XREF: ROM:0000A704o
-off_A712:	dc.w byte_A714-off_A712	; DATA XREF: ROM:0000A6FAo
-					; ROM:0000A712o
-byte_A714:	dc.b $1F,  0,  1,$FF	; 0 ; DATA XREF: ROM:0000A712o
+off_A704:	dc.w byte_A706-off_A704
+byte_A706:	dc.b   7,  0,  1,  2,  3,  4,  5,  6,  7,$FE,  2
+		even
+off_A712:	dc.w byte_A714-off_A712
+byte_A714:	dc.b $1F,  0,  1,$FF
+		even
 
 
 
@@ -12230,6 +12296,7 @@ byte_A7EB:	dc.b $1E		; DATA XREF: ROM:0000A7C4o
 		dc.b $F8, $F,  0,  0,$80; 145
 byte_A882:	dc.b 1			; DATA XREF: ROM:0000A7C4o
 		dc.b $FC,  4,  0,  0,$F8; 0
+		even
 Map_A888:	dc.w byte_A898-Map_A888	; 0 ; DATA XREF: ROM:0000A642o
 					; ROM:0000A888o ...
 		dc.w byte_A8CB-Map_A888	; 1
@@ -12375,6 +12442,7 @@ byte_AAB1:	dc.b $16		; DATA XREF: ROM:0000A888o
 		dc.b $50, $D,  1,$9A,  8; 95
 		dc.b $50, $C,  1,$A2,$28; 100
 		dc.b $58,  8,  1,$A6,$28; 105
+		even
 
 
 fish:				; DATA XREF: ROM:0000D382o
@@ -12429,9 +12497,12 @@ off_ABB8:	dc.w byte_ABBE-off_ABB8	; 0 ; DATA XREF: ROM:0000AB6Co
 					; ROM:0000ABB8o ...
 		dc.w byte_ABC2-off_ABB8	; 1
 		dc.w byte_ABC6-off_ABB8	; 2
-byte_ABBE:	dc.b   7,  0,  1,$FF	; 0 ; DATA XREF: ROM:0000ABB8o
-byte_ABC2:	dc.b   3,  0,  1,$FF	; 0 ; DATA XREF: ROM:0000ABB8o
-byte_ABC6:	dc.b   7,  0,$FF,  0	; 0 ; DATA XREF: ROM:0000ABB8o
+byte_ABBE:	dc.b   7,  0,  1,$FF
+		even
+byte_ABC2:	dc.b   3,  0,  1,$FF
+		even
+byte_ABC6:	dc.b   7,  0,$FF
+		even
 fishpat:	dc.w byte_ABCE-fishpat	; 0 ; DATA XREF: ROM:0000AB3Ao
 					; ROM:0000ABCAo ...
 		dc.w byte_ABD4-fishpat	; 1
@@ -12439,6 +12510,7 @@ byte_ABCE:	dc.b 1			; DATA XREF: ROM:0000ABCAo
 		dc.b $F0, $F,  0,  0,$F0; 0
 byte_ABD4:	dc.b 1			; DATA XREF: ROM:0000ABCAo
 		dc.b $F0, $F,  0,$10,$F0; 0
+		even
 
 
 fish2:				; DATA XREF: ROM:0000D382o
@@ -12488,7 +12560,8 @@ loc_AC56:				; CODE XREF: ROM:0000AC3Ej
 
 off_AC68:	dc.w byte_AC6A-off_AC68	; DATA XREF: ROM:0000AC56o
 					; ROM:0000AC68o
-byte_AC6A:	dc.b   7,  0,  1,  2,  3,$FF; 0	; DATA XREF: ROM:0000AC68o
+byte_AC6A:	dc.b   7,  0,  1,  2,  3,$FF
+		even
 fish2pat:	dc.w byte_AC78-fish2pat	; 0 ; DATA XREF: ROM:0000ABF0o
 					; ROM:0000AC70o ...
 		dc.w byte_AC83-fish2pat	; 1
@@ -12506,6 +12579,7 @@ byte_AC8E:	dc.b 2			; DATA XREF: ROM:0000AC70o
 byte_AC99:	dc.b 2			; DATA XREF: ROM:0000AC70o
 		dc.b $F4, $E,  0, $C,$F0; 0
 		dc.b $F5,  5,$10,$1C,$10; 5
+		even
 
 
 mogura:			; DATA XREF: ROM:0000D382o
@@ -12671,10 +12745,14 @@ off_AE44:	dc.w byte_AE4C-off_AE44	; 0 ; DATA XREF: ROM:0000AD04o
 		dc.w byte_AE50-off_AE44	; 1
 		dc.w byte_AE54-off_AE44	; 2
 		dc.w byte_AE58-off_AE44	; 3
-byte_AE4C:	dc.b   3,  0,  6,$FF	; 0 ; DATA XREF: ROM:0000AE44o
-byte_AE50:	dc.b   3,  0,  1,$FF	; 0 ; DATA XREF: ROM:0000AE44o
-byte_AE54:	dc.b   3,  2,  3,$FF	; 0 ; DATA XREF: ROM:0000AE44o
-byte_AE58:	dc.b   3,  4,$FF,  0	; 0 ; DATA XREF: ROM:0000AE44o
+byte_AE4C:	dc.b   3,  0,  6,$FF
+		even
+byte_AE50:	dc.b   3,  0,  1,$FF
+		even
+byte_AE54:	dc.b   3,  2,  3,$FF
+		even
+byte_AE58:	dc.b   3,  4,$FF
+		even
 mogurapat:
 		dc.w byte_AE6A-mogurapat; 0 ;	DATA XREF: ROM:0000ACC6o
 					; ROM:0000AE5Co ...
@@ -12708,7 +12786,7 @@ byte_AEAC:	dc.b 2			; DATA XREF: ROM:0000AE5Co
 		even
 
 
-Sprite_MzUpdownPlatf:			; DATA XREF: ROM:0000D382o
+yuka:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_AEC6(pc,d0.w),d1
@@ -13060,7 +13138,8 @@ loc_B2BE:				; CODE XREF: ROM:0000B2B0j
 
 off_B2CC:	dc.w byte_B2CE-off_B2CC	; DATA XREF: ROM:0000B2BEo
 					; ROM:0000B2CCo
-byte_B2CE:	dc.b   5,  0,$20,  1,$21,$FF; 0	; DATA XREF: ROM:0000B2CCo
+byte_B2CE:	dc.b   5,  0,$20,  1,$21,$FF
+		even
 Map_B2D4:	dc.w byte_B2DA-Map_B2D4	; 0 ; DATA XREF: ROM:0000AEDAo
 					; ROM:0000B2D4o ...
 		dc.w byte_B31C-Map_B2D4	; 1
@@ -13097,6 +13176,7 @@ byte_B34F:	dc.b 6			; DATA XREF: ROM:0000B2D4o
 		dc.b $D0, $F,  0,$11,  0; 15
 		dc.b $F0, $F,  0,  1,  0; 20
 		dc.b $10, $F,  0,  1,  0; 25
+		even
 firepat:	dc.w byte_B37A-firepat	; 0 ; DATA XREF: ROM:0000B1F4o
 					; ROM:0000B36Eo ...
 		dc.w byte_B380-firepat	; 1
@@ -13116,9 +13196,10 @@ byte_B392:	dc.b 1			; DATA XREF: ROM:0000B36Eo
 		dc.b $F8, $D,  0,$1E,$E8; 0
 byte_B398:	dc.b 1			; DATA XREF: ROM:0000B36Eo
 		dc.b $F8,  9,  0,$26,$F0; 0
+		even
 
 
-Sprite_B39E:				; DATA XREF: ROM:0000D382o
+ochi:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_B3D2(pc,d0.w),d1
@@ -13144,7 +13225,9 @@ off_B3D2:	dc.w loc_B3E8-off_B3D2	; 0 ; DATA XREF: ROM:0000B3D2o
 		dc.w loc_B4B2-off_B3D2	; 3
 		dc.w loc_B4CA-off_B3D2	; 4
 byte_B3DC:	dc.b   2,  0,  0,  4,  0,  1; 0	; DATA XREF: ROM:0000B3E8o
+		even
 byte_B3E2:	dc.b   6,  0,  2,  8,  0,  1; 0	; DATA XREF: ROM:0000B3FEo
+		even
 
 
 loc_B3E8:				; DATA XREF: ROM:0000B3D2o
@@ -13390,7 +13473,7 @@ byte_B648:	dc.b $A			; DATA XREF: ROM:0000B5FAo
 		even
 
 
-Sprite_MzSpikesBloc:			; DATA XREF: ROM:0000D382o
+turi:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_B68A(pc,d0.w),d1
@@ -13975,7 +14058,7 @@ byte_BCFA:	dc.b 8			; DATA XREF: ROM:0000BC5Ao
 		even
 
 
-Sprite_MzButton:			; DATA XREF: ROM:0000D382o
+switch2:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_BD3C(pc,d0.w),d1
@@ -14162,9 +14245,10 @@ byte_BEC2:	dc.b 2			; DATA XREF: ROM:0000BEA4o
 		dc.b $F5,  5,$FF,$FC,$F0; 0
 		dc.b $F5,  5,  7,$FC,  0; 5
 		dc.b $F8,  5,  0,  0,$F8; 10
+		even
 
 
-Sprite_MzMoveableBlock:			; DATA XREF: ROM:0000D382o
+box:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_BEE0(pc,d0.w),d1
@@ -14725,7 +14809,7 @@ word_C448:
 ; Game over sprite
 ;---------------------------------------------------------------------------
 
-Sprite_GameOver:			; DATA XREF: ROM:0000D382o
+over:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_C4C6(pc,d0.w),d1
@@ -15354,6 +15438,7 @@ byte_CB8A:	dc.b 5			; DATA XREF: ROM:0000C9E6o
 		dc.b $F8,  5,  0,$2E,$F4; 10
 		dc.b $F8,  5,  0,  0,  4; 15
 		dc.b $F8,  5,  0,$26,$14; 20
+		even
 Map_GameOver:	dc.w byte_CBAC-Map_GameOver; 0 ; DATA XREF: ROM:0000C4F2o
 					; ROM:0000CBA4o ...
 		dc.w byte_CBB7-Map_GameOver; 1
@@ -15371,6 +15456,7 @@ byte_CBC2:	dc.b 2			; DATA XREF: ROM:0000CBA4o
 byte_CBCD:	dc.b 2			; DATA XREF: ROM:0000CBA4o
 		dc.b $F8, $D,  0,$14, $C; 0
 		dc.b $F8, $D,  0, $C,$2C; 5
+		even
 Map_Results:	dc.w byte_CBEA-Map_Results; 0 ;	DATA XREF: ROM:0000C5CEo
 					; ROM:0000CBD8o ...
 		dc.w byte_CC13-Map_Results; 1
@@ -15503,6 +15589,7 @@ byte_CDA8:	dc.b $F			; DATA XREF: ROM:0000CCA2o
 		dc.b $F8,  5,  0,  0,$58; 60
 		dc.b $F8,  5,  0,$26,$68; 65
 		dc.b $F8,  5,  0,$26,$78; 70
+		even
 Map_CDF4:	dc.w byte_CE02-Map_CDF4	; 0 ; DATA XREF: ROM:0000C9B0o
 					; ROM:0000CDF4o ...
 		dc.w byte_CE08-Map_CDF4	; 1
@@ -15527,7 +15614,7 @@ byte_CE26:	dc.b   0
 		even
 
 
-Sprite_Spikes:				; DATA XREF: ROM:0000D382o
+toge:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_CE36(pc,d0.w),d1
@@ -15740,7 +15827,7 @@ byte_D049:	dc.b 1			; DATA XREF: ROM:0000CFE8o
 		even
 
 
-Sprite_GhzRock:				; DATA XREF: ROM:0000D382o
+jyama:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_D05E(pc,d0.w),d1
@@ -15777,7 +15864,7 @@ loc_D086:				; DATA XREF: ROM:0000D05Eo
 		rts
 
 
-Sprite_D0BE:				; DATA XREF: ROM:0000D382o
+taki:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_D0CC(pc,d0.w),d1
@@ -15816,7 +15903,7 @@ byte_D110:	dc.b 2			; DATA XREF: ROM:0000D10Eo
 		dc.b $F0, $B,  0,  0,$E8; 0
 		dc.b $F0, $B,  0, $C,  0; 5
 		even
-Sprite_GhzBreakableBarrier:
+brkabe:
 		moveq	#0,d0
 		move.b	r_no0(a0),d0
 		move.w	off_D12E(pc,d0.w),d1
@@ -15996,146 +16083,146 @@ loc_D37C:
 ; This array contains the pointers to all the level sprites used in the	game.
 ;---------------------------------------------------------------------------
 SpritesArray:
-		dc.l play00		; 0
-		dc.l speedset	; 1
-		dc.l speedset	; 2
-		dc.l speedset	; 3
-		dc.l speedset	; 4
-		dc.l speedset	; 5
-		dc.l speedset	; 6
-		dc.l Sprite_142F0	; 7
-		dc.l play01		; 8
-		dc.l Sprite_13C98	; 9
-		dc.l Sprite_11206	; 10
-		dc.l Sprite_11346	; 11
-		dc.l Sprite_EB28	; 12
-		dc.l Sprite_A61C	; 13
-		dc.l Sprite_A69C	; 14
-		dc.l play02	; 15
-		dc.l Sprite_7328	; 16
-		dc.l Sprite_E90C	; 17
-		dc.l Sprite_E296	; 18
-		dc.l Sprite_E304	; 19
-		dc.l Sprite_7952	; 20
-		dc.l Sprite_11F04	; 21
-		dc.l Sprite_7CA2	; 22
-		dc.l Sprite_7E32	; 23
-		dc.l Sprite_Null2	; 24
-		dc.l Sprite_CollapsPlatf; 25
-		dc.l Sprite_110C6	; 26
-		dc.l Sprite_87CA	; 27
-		dc.l Sprite_885E	; 28
-		dc.l Sprite_DoubleBigExplosion;	29
-		dc.l kani	; 30
-		dc.l Sprite_BigExplosion; 31
-		dc.l score	; 32
-		dc.l hachi	; 33
-		dc.l hachiBall; 34
-		dc.l Sprite_8CF2	; 35
-		dc.l ring	; 36
-		dc.l Sprite_Monitor	; 37
-		dc.l Sprite_Explosion	; 38
-		dc.l usagi	; 39
-		dc.l Sprite_9412	; 40
-		dc.l Sprite_8934	; 41
-		dc.l fish	; 42
-		dc.l fish2	; 43
-		dc.l mogura; 44
-		dc.l Sprite_MonitorContents; 45
-		dc.l Sprite_MzUpdownPlatf; 46
-		dc.l Sprite_B39E	; 47
-		dc.l Sprite_MzSpikesBloc; 48
-		dc.l Sprite_MzButton	; 49
-		dc.l Sprite_MzMoveableBlock; 50
-		dc.l zone	; 51
-		dc.l Sprite_B1DC	; 52
-		dc.l Sprite_Spikes	; 53
-		dc.l Sprite_HitRings	; 54
-		dc.l Sprite_14158	; 55
-		dc.l Sprite_GameOver	; 56
-		dc.l Sprite_Results	; 57
-		dc.l Sprite_GhzRock	; 58
-		dc.l Sprite_GhzBreakableBarrier; 59
-		dc.l boss1	; 60
-		dc.l Sprite_EggPrison	; 61
-		dc.l Sprite_LargeExplosion; 62
-		dc.l musi		; 63
-		dc.l Sprite_Spring	; 64
-		dc.l Sprite_DD68	; 65
-		dc.l Sprite_DFFA	; 66
-		dc.l kageb	; 67
-		dc.l Sprite_MzSidewaySpikes_Unused; 68
-		dc.l Sprite_E7D0	; 69
-		dc.l Sprite_Bumper	; 70
-		dc.l btama	; 71
-		dc.l Sprite_D0BE	; 72
-		dc.l Sprite_SSUnusedEntry; 73
-		dc.l Sprite_GoldenRing	; 74
-		dc.l Sprite_ED84	; 75
-		dc.l Sprite_EE70	; 76
-		dc.l Sprite_F05E	; 77
-		dc.l usa	; 78
-		dc.l Sprite_SyzSpikeBadnik; 79
-		dc.l Sprite_MzBreakableBlock; 80
-		dc.l Sprite_FDF8	; 81
-		dc.l Sprite_BreakablePlatform; 82
-		dc.l Sprite_F1B8	; 83
-		dc.l Sprite_MzBatBadnik	; 84
-		dc.l Sprite_10286	; 85
-		dc.l Sprite_10782	; 86
-		dc.l Sprite_10976	; 87
-		dc.l Sprite_10AD2	; 88
-		dc.l Sprite_10D5A	; 89
-		dc.l Sprite_10E90	; 90
-		dc.l Sprite_11044	; 91
-		dc.l Sprite_114FC	; 92
-		dc.l Sprite_1163C	; 93
-		dc.l brobo	; 94
-		dc.l Sprite_SpikeballBadnik; 95
-		dc.l Sprite_11FD4	; 96
-		dc.l Sprite_121E8	; 97
-		dc.l Sprite_1233C	; 98
-		dc.l awa	; 99
-		dc.l Sprite_12A9E	; 100
-		dc.l Sprite_1509A	; 101
-		dc.l Sprite_154E2	; 102
-		dc.l Sprite_1568E	; 103
-		dc.l Sprite_15730	; 104
-		dc.l Sprite_1597C	; 105
-		dc.l Sprite_15C12	; 106
-		dc.l Sprite_15FF8	; 107
-		dc.l Sprite_E4E0	; 108
-		dc.l Sprite_16146	; 109
-		dc.l Sprite_1626A	; 110
-		dc.l Sprite_1652A	; 111
-		dc.l Sprite_1141A	; 112
-		dc.l Sprite_16668	; 113
-		dc.l Sprite_MzBoss	; 114
-		dc.l Sprite_186A4	; 115
-		dc.l Sprite_SyzBoss	; 116
-		dc.l Sprite_19692	; 117
-		dc.l Sprite_LzBoss	; 118
-		dc.l imo	; 119
-		dc.l Sprite_Starpoll	; 120
-		dc.l Sprite_SlzBoss	; 121
-		dc.l Sprite_18CCE	; 122
-		dc.l Sprite_SSEntry	; 123
-		dc.l Sprite_HiddenPoints; 124
-		dc.l Sprite_SSResults	; 125
-		dc.l Sprite_Bubble	; 126
-		dc.l Sprite_Continue	; 127
-		dc.l Sprite_4F5C	; 128
-		dc.l Sprite_19832	; 129
-		dc.l Sprite_19B60	; 130
-		dc.l Sprite_1A44E	; 131
-		dc.l boss6	; 132
-		dc.l Sprite_1A7DA	; 133
-		dc.l Sprite_53E2	; 134
-		dc.l Sprite_553C	; 135
-		dc.l Sprite_5616	; 136
-		dc.l staff	; 137
-		dc.l Sprite_59E2	; 138
-		dc.l Sprite_5AC2	; 139
+		dc.l play00		; 0x01
+		dc.l speedset	; 0x02
+		dc.l speedset	; 0x03
+		dc.l speedset	; 0x04
+		dc.l speedset	; 0x05
+		dc.l speedset	; 0x06
+		dc.l speedset	; 0x07
+		dc.l exit2	; 0x08
+		dc.l play01		; 0x09
+		dc.l plawa	; 0x0A
+		dc.l bou	; 0x0B
+		dc.l ben	; 0x0C
+		dc.l gole	; 0x0D
+		dc.l Sprite_A61C	; 0x0E
+		dc.l Sprite_A69C	; 0x0F
+		dc.l play02	; 0x10
+		dc.l hashi	; 0x11
+		dc.l signal	; 0x12
+		dc.l mfire	; 0x13
+		dc.l fire	; 0x14
+		dc.l buranko	; 0x15
+		dc.l yari	; 0x16
+		dc.l thashi	; 0x17
+		dc.l shima	; 0x18
+		dc.l ball	; 0x19
+		dc.l break	; 0x1A
+		dc.l wave	; 0x1B
+		dc.l bgspr	; 0x1C
+		dc.l switch	; 0x1D
+		dc.l buta	; 0x1E
+		dc.l kani	; 0x1F
+		dc.l Sprite_BigExplosion	; 0x20
+		dc.l score	; 0x21
+		dc.l hachi	; 0x22
+		dc.l hachiBall	; 0x23
+		dc.l Sprite_8CF2	; 0x24
+		dc.l ring	; 0x25
+		dc.l item	; 0x26
+		dc.l bakuha	; 0x27
+		dc.l usagi	; 0x28
+		dc.l ten	; 0x29
+		dc.l door	; 0x2A
+		dc.l fish	; 0x2B
+		dc.l fish2	; 0x2C
+		dc.l mogura	; 0x2D
+		dc.l item2	; 0x2E
+		dc.l yuka	; 0x2F
+		dc.l ochi	; 0x30
+		dc.l turi	; 0x31
+		dc.l switch2	; 0x32
+		dc.l box	; 0x33
+		dc.l zone	; 0x34
+		dc.l Sprite_B1DC	; 0x35
+		dc.l toge	; 0x36
+		dc.l flyring	; 0x37
+		dc.l baria	; 0x38
+		dc.l over	; 0x39
+		dc.l Sprite_Results	; 0x3A
+		dc.l jyama	; 0x3B
+		dc.l brkabe	; 0x3C
+		dc.l boss1	; 0x3D
+		dc.l masin	; 0x3E
+		dc.l Sprite_LargeExplosion	; 0x3F
+		dc.l musi	; 0x40
+		dc.l sjump	; 0x41
+		dc.l kamere	; 0x42
+		dc.l aruma	; 0x43
+		dc.l kageb	; 0x44
+		dc.l Sprite_MzSidewaySpikes_Unused	; 0x45
+		dc.l fblock	; 0x46
+		dc.l bobin	; 0x47
+		dc.l btama	; 0x48
+		dc.l taki	; 0x49
+		dc.l Sprite_SSUnusedEntry	; 0x4A
+		dc.l bigring	; 0x4B
+		dc.l myogan	; 0x4C
+		dc.l yogan	; 0x4D
+		dc.l yogan2	; 0x4E
+		dc.l usa	; 0x4F
+		dc.l yado	; 0x50
+		dc.l bryuka	; 0x51
+		dc.l dai	; 0x52
+		dc.l break2	; 0x53
+		dc.l yoganc	; 0x54
+		dc.l bat	; 0x55
+		dc.l dai2	; 0x56
+		dc.l Sprite_10782	; 0x57
+		dc.l Sprite_10976	; 0x58
+		dc.l elev	; 0x59
+		dc.l pedal	; 0x5A
+		dc.l step	; 0x5B
+		dc.l Sprite_11044	; 0x5C
+		dc.l fun	; 0x5D
+		dc.l sisoo	; 0x5E
+		dc.l brobo	; 0x5F
+		dc.l uni	; 0x60
+		dc.l dai3	; 0x61
+		dc.l kazari	; 0x62
+		dc.l kassya	; 0x63
+		dc.l awa	; 0x64
+		dc.l mizu	; 0x65
+		dc.l mawaru	; 0x66
+		dc.l haguruma	; 0x67
+		dc.l beltcon	; 0x68
+		dc.l pata	; 0x69
+		dc.l noko	; 0x6A
+		dc.l dai4	; 0x6B
+		dc.l yukae	; 0x6C
+		dc.l fire6	; 0x6D
+		dc.l ele	; 0x6E
+		dc.l beltc	; 0x6F
+		dc.l yukai	; 0x70
+		dc.l scoli	; 0x71
+		dc.l shooter	; 0x72
+		dc.l Sprite_MzBoss	; 0x73
+		dc.l Sprite_186A4	; 0x74
+		dc.l Sprite_SyzBoss	; 0x75
+		dc.l Sprite_19692	; 0x76
+		dc.l Sprite_LzBoss	; 0x77
+		dc.l imo	; 0x78
+		dc.l save	; 0x79
+		dc.l Sprite_SlzBoss	; 0x7A
+		dc.l Sprite_18CCE	; 0x7B
+		dc.l ebigring	; 0x7C
+		dc.l bten	; 0x7D
+		dc.l Sprite_SSResults	; 0x7E
+		dc.l Sprite_Bubble	; 0x7F
+		dc.l Sprite_Continue	; 0x80
+		dc.l Sprite_4F5C	; 0x81
+		dc.l Sprite_19832	; 0x82
+		dc.l Sprite_19B60	; 0x83
+		dc.l Sprite_1A44E	; 0x84
+		dc.l boss6	; 0x85
+		dc.l Sprite_1A7DA	; 0x86
+		dc.l Sprite_53E2	; 0x87
+		dc.l Sprite_553C	; 0x88
+		dc.l Sprite_5616	; 0x89
+		dc.l staff	; 0x8A
+		dc.l Sprite_59E2	; 0x8B
+		dc.l Sprite_5AC2	; 0x8C
 speedset:
 		move.l	xposi(a0),d2
 		move.l	yposi(a0),d3
@@ -16523,7 +16610,7 @@ loc_DAB0:
 		dbf	d0,loc_DAB0
 locret_DABC:
 		rts
-Sprite_Spring:				; DATA XREF: ROM:0000D382o
+sjump:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_DAF0(pc,d0.w),d1
@@ -16748,7 +16835,7 @@ byte_DD53:	dc.b 4			; DATA XREF: ROM:0000DD1Ao
 		dc.b   8,  0,  0,  3,$F8; 15
 
 
-Sprite_DD68:				; DATA XREF: ROM:0000D382o
+kamere:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_DD76(pc,d0.w),d1
@@ -16980,7 +17067,7 @@ byte_DFF8:	dc.b 0			; DATA XREF: ROM:0000DF42o
 		even
 
 
-Sprite_DFFA:				; DATA XREF: ROM:0000D382o
+aruma:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E008(pc,d0.w),d1
@@ -17232,7 +17319,7 @@ byte_E280:	dc.b 4			; DATA XREF: ROM:0000E250o
 		even
 
 
-Sprite_E296:				; DATA XREF: ROM:0000D382o
+mfire:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E2A8(pc,d0.w),d1
@@ -17272,7 +17359,7 @@ locret_E302:				; CODE XREF: ROM:0000E2D6j
 		rts
 
 
-Sprite_E304:				; DATA XREF: ROM:0000D382o
+fire:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E316(pc,d0.w),d1
@@ -17445,7 +17532,7 @@ byte_E4D6:	dc.b   5,  3,$43,  4,$44,$FF; 0	; DATA XREF: ROM:0000E4C4o
 byte_E4DC:	dc.b   5,  5,$FC,  0	; 0 ; DATA XREF: ROM:0000E4C4o
 
 
-Sprite_E4E0:				; DATA XREF: ROM:0000D382o
+fire6:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E4EE(pc,d0.w),d1
@@ -17651,7 +17738,7 @@ byte_E7B1:	dc.b 6			; DATA XREF: ROM:0000E5F4o
 		dc.b $20,  1,  8,  0,$FC; 25
 
 
-Sprite_E7D0:				; DATA XREF: ROM:0000D382o
+fblock:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E7DE(pc,d0.w),d1
@@ -17776,7 +17863,7 @@ byte_E906:	dc.b 1			; DATA XREF: ROM:0000E904o
 		dc.b $F0, $F,  0,  1,$F0; 0
 
 
-Sprite_E90C:				; DATA XREF: ROM:0000D382o
+signal:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E91A(pc,d0.w),d1
@@ -17843,7 +17930,7 @@ byte_E9C5:	dc.b 2			; DATA XREF: ROM:0000E982o
 		dc.b   0, $C,$10,$45,$F0; 5
 
 
-Sprite_Bumper:				; DATA XREF: ROM:0000D382o
+bobin:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_E9DE(pc,d0.w),d1
@@ -17951,7 +18038,7 @@ byte_EB1C:	dc.b 2			; DATA XREF: ROM:0000EB00o
 		even
 
 
-Sprite_EB28:				; DATA XREF: ROM:0000D382o
+gole:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_EB64(pc,d0.w),d1
@@ -18149,7 +18236,7 @@ byte_ED73:	dc.b 3			; DATA XREF: ROM:0000ED38o
 		even
 
 
-Sprite_ED84:				; DATA XREF: ROM:0000D382o
+myogan:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_ED96(pc,d0.w),d1
@@ -18240,7 +18327,7 @@ loc_EE5A:				; DATA XREF: ROM:0000ED96o
 		rts
 
 
-Sprite_EE70:				; DATA XREF: ROM:0000D382o
+yogan:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_EE82(pc,d0.w),d1
@@ -18428,7 +18515,7 @@ loc_F05A:				; CODE XREF: ROM:0000F006j
 		bra.w	frameout
 
 
-Sprite_F05E:				; DATA XREF: ROM:0000D382o
+yogan2:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_F06C(pc,d0.w),d1
@@ -18564,7 +18651,7 @@ loc_F1B4:				; CODE XREF: ROM:0000F1A2j
 		bra.w	frameout
 
 
-Sprite_F1B8:				; DATA XREF: ROM:0000D382o
+yoganc:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_F1C6(pc,d0.w),d1
@@ -19063,7 +19150,7 @@ loc_F82C:
 loc_F836:
 		moveq	#0,d0
 		rts
-Sprite_SyzSpikeBadnik:			; DATA XREF: ROM:0000D382o
+yado:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_F848(pc,d0.w),d1
@@ -19510,7 +19597,7 @@ loc_FC84:				; CODE XREF: sub_FC2C+4Aj
 
 
 
-Sprite_MzBreakableBlock:		; DATA XREF: ROM:0000D382o
+bryuka:		; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_FCA4(pc,d0.w),d1
@@ -19615,7 +19702,7 @@ byte_FDE3:	dc.b 4			; DATA XREF: ROM:0000FDD4o
 		dc.b   0,  5,$80,  0,  0; 15
 
 
-Sprite_FDF8:				; DATA XREF: ROM:0000D382o
+dai:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_FE06(pc,d0.w),d1
@@ -19896,7 +19983,7 @@ byte_100A2:	dc.b 1			; DATA XREF: ROM:000100A0o
 		dc.b $F8, $D,  0,  0,$F0; 0
 
 
-Sprite_MzBatBadnik:			; DATA XREF: ROM:0000D382o
+bat:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_100B6(pc,d0.w),d1
@@ -20082,7 +20169,7 @@ byte_10271:	dc.b 4			; DATA XREF: ROM:0001023Eo
 		dc.b $FE,  0,  0,$27, $C; 15
 
 
-Sprite_10286:				; DATA XREF: ROM:0000D382o
+dai2:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_10294(pc,d0.w),d1
@@ -20909,7 +20996,7 @@ byte_10AC6:	dc.b 2			; DATA XREF: ROM:00010AA0o
 		even
 
 
-Sprite_10AD2:				; DATA XREF: ROM:0000D382o
+elev:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_10B02(pc,d0.w),d1
@@ -21172,7 +21259,7 @@ byte_10D4A:	dc.b 3			; DATA XREF: ROM:00010D48o
 		dc.b $F8,  7,  0,$41,$18; 10
 
 
-Sprite_10D5A:				; DATA XREF: ROM:0000D382o
+pedal:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_10D8A(pc,d0.w),d1
@@ -21294,7 +21381,7 @@ byte_10E84:	dc.b 2			; DATA XREF: ROM:00010E82o
 		even
 
 
-Sprite_10E90:				; DATA XREF: ROM:0000D382o
+step:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_10EC0(pc,d0.w),d1
@@ -21525,7 +21612,7 @@ byte_11098:	dc.b 9			; DATA XREF: ROM:00011096o
 		even
 
 
-Sprite_110C6:				; DATA XREF: ROM:0000D382o
+wave:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_110D4(pc,d0.w),d1
@@ -21627,7 +21714,7 @@ byte_111E6:	dc.b 6			; DATA XREF: ROM:0001116Co
 		even
 
 
-Sprite_11206:				; DATA XREF: ROM:0000D382o
+bou:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_11214(pc,d0.w),d1
@@ -21740,7 +21827,7 @@ byte_11331:	dc.b 4			; DATA XREF: ROM:00011322o
 		even
 
 
-Sprite_11346:				; DATA XREF: ROM:0000D382o
+ben:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_11354(pc,d0.w),d1
@@ -21815,7 +21902,7 @@ byte_1140E:	dc.b 2			; DATA XREF: ROM:000113F2o
 		even
 
 
-Sprite_1141A:				; DATA XREF: ROM:0000D382o
+scoli:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_11428(pc,d0.w),d1
@@ -21898,7 +21985,7 @@ byte_114E6:	dc.b 4			; DATA XREF: ROM:000114B6o
 		even
 
 
-Sprite_114FC:				; DATA XREF: ROM:0000D382o
+fun:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1150A(pc,d0.w),d1
@@ -22020,7 +22107,7 @@ byte_11630:	dc.b 2			; DATA XREF: ROM:00011610o
 		even
 
 
-Sprite_1163C:				; DATA XREF: ROM:0000D382o
+sisoo:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_11670(pc,d0.w),d1
@@ -22579,7 +22666,7 @@ byte_11CC8:	dc.b 1			; DATA XREF: ROM:00011C28o
 		even
 
 
-Sprite_SpikeballBadnik:			; DATA XREF: ROM:0000D382o
+uni:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_11CDC(pc,d0.w),d1
@@ -22793,7 +22880,7 @@ byte_11EFE:	dc.b 1			; DATA XREF: ROM:00011EE4o
 		even
 
 
-Sprite_11F04:				; DATA XREF: ROM:0000D382o
+yari:				; DATA XREF: ROM:0000D382o
 					; ROM:00011F14o ...
 		moveq	#0,d0
 		move.b	$24(a0),d0
@@ -22874,7 +22961,7 @@ byte_11FC9:	dc.b 2			; DATA XREF: ROM:00011F9Ao
 		even
 
 
-Sprite_11FD4:				; DATA XREF: ROM:0000D382o
+dai3:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_11FE2(pc,d0.w),d1
@@ -23103,7 +23190,7 @@ byte_121E1:	dc.b 1			; DATA XREF: ROM:000121C2o
 		even
 
 
-Sprite_121E8:				; DATA XREF: ROM:0000D382o
+kazari:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_121FA(pc,d0.w),d1
@@ -23212,7 +23299,7 @@ byte_12336:	dc.b 1			; DATA XREF: ROM:00012318o
 		even
 
 
-Sprite_1233C:				; DATA XREF: ROM:0000D382o
+kassya:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_12392(pc,d0.w),d1
@@ -23938,7 +24025,7 @@ byte_12A9C:	dc.b 0			; DATA XREF: ROM:000129CCo
 		even
 
 
-Sprite_12A9E:				; DATA XREF: ROM:0000D382o
+mizu:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_12AAC(pc,d0.w),d1
@@ -24060,7 +24147,7 @@ byte_12BCC:	dc.b 2			; DATA XREF: ROM:00012B54o
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_13C98:				; DATA XREF: ROM:0000D382o
+plawa:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_13CA6(pc,d0.w),d1
@@ -24431,7 +24518,7 @@ byte_14152:	dc.b 1			; DATA XREF: ROM:00014150o
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_14158:				; DATA XREF: ROM:0000D382o
+baria:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_14166(pc,d0.w),d1
@@ -24600,7 +24687,7 @@ locret_142EE:				; CODE XREF: ROM:000142E0j
 ; Unknown
 ;---------------------------------------------------------------------------
 
-Sprite_142F0:				; DATA XREF: ROM:0000D382o
+exit2:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_142FE(pc,d0.w),d1
@@ -26041,7 +26128,7 @@ locret_15098:				; CODE XREF: sub_1506C+26j
 
 
 
-Sprite_1509A:				; DATA XREF: ROM:0000D382o
+mawaru:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_150A8(pc,d0.w),d1
@@ -26360,7 +26447,7 @@ byte_154A4:	dc.b $C			; DATA XREF: ROM:00015292o
 		even
 
 
-Sprite_154E2:				; DATA XREF: ROM:0000D382o
+haguruma:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_154F0(pc,d0.w),d1
@@ -26530,7 +26617,7 @@ byte_15688:	dc.b 1			; DATA XREF: ROM:00015686o
 		even
 
 
-Sprite_1568E:				; DATA XREF: ROM:0000D382o
+beltcon:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1569C(pc,d0.w),d1
@@ -26599,7 +26686,7 @@ locret_1572E:				; CODE XREF: ROM:0001570Aj
 		rts
 
 
-Sprite_15730:				; DATA XREF: ROM:0000D382o
+pata:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1573E(pc,d0.w),d1
@@ -26785,7 +26872,7 @@ byte_15970:	dc.b 2			; DATA XREF: ROM:0001593Ao
 		even
 
 
-Sprite_1597C:				; DATA XREF: ROM:0000D382o
+noko:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1598A(pc,d0.w),d1
@@ -27024,7 +27111,7 @@ byte_15BFD:	dc.b 4			; DATA XREF: ROM:00015B98o
 		even
 
 
-Sprite_15C12:				; DATA XREF: ROM:0000D382o
+dai4:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_15C20(pc,d0.w),d1
@@ -27399,7 +27486,7 @@ byte_15FB0:	dc.b $E			; DATA XREF: ROM:00015F68o
 		even
 
 
-Sprite_15FF8:				; DATA XREF: ROM:0000D382o
+yukae:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_16006(pc,d0.w),d1
@@ -27519,7 +27606,7 @@ byte_16144:	dc.b 0			; DATA XREF: ROM:0001612Ao
 		even
 
 
-Sprite_16146:				; DATA XREF: ROM:0000D382o
+ele:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_16154(pc,d0.w),d1
@@ -27610,7 +27697,7 @@ byte_16255:	dc.b 4			; DATA XREF: ROM:000161E0o
 		even
 
 
-Sprite_1626A:				; DATA XREF: ROM:0000D382o
+beltc:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_162C2(pc,d0.w),d1
@@ -27848,7 +27935,7 @@ word_16516:	dc.w   $10,$1C80,$1C14,	$5E0,$1CEF, $572,$1CEF,	$5B0; 0
 		dc.w $1C14, $61E	; 8
 
 
-Sprite_1652A:				; DATA XREF: ROM:0000D382o
+yukai:				; DATA XREF: ROM:0000D382o
 					; ROM:0001653Ao
 		moveq	#0,d0
 		move.b	$24(a0),d0
@@ -27951,7 +28038,7 @@ byte_1662A:	dc.b $C			; DATA XREF: ROM:00016628o
 		even
 
 
-Sprite_16668:				; DATA XREF: ROM:0000D382o
+shooter:				; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1669A(pc,d0.w),d1
@@ -28628,7 +28715,7 @@ byte_16E28:	dc.b 1			; DATA XREF: ROM:00016D6Eo
 ; Starpoll
 ;----------------------------------------------------------------------------
 
-Sprite_Starpoll:			; DATA XREF: ROM:0000D382o
+save:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_16E42(pc,d0.w),d1
@@ -28863,7 +28950,7 @@ byte_1713F:	dc.b 6			; DATA XREF: ROM:000170F8o
 ; Hidden points	at the end of level
 ;----------------------------------------------------------------------------
 
-Sprite_HiddenPoints:
+bten:
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1716C(pc,d0.w),d1
@@ -34199,7 +34286,7 @@ byte_1AB20:	dc.b 0			; DATA XREF: ROM:0001AAA6o
 
 
 
-Sprite_EggPrison:			; DATA XREF: ROM:0000D382o
+masin:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_1AB58(pc,d0.w),d1

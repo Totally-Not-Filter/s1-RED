@@ -185,7 +185,7 @@ play02_act	EQU	$10
 hashi_act	EQU $11 ; 橋 (bridge)
 signal_act	EQU	$12
 mfire_act	EQU	$13
-;act	EQU $14
+fire_act	EQU $14
 buranko_act	EQU	$15 ; 鞦韆 (swing)
 yari_act	EQU	$16	; 槍 (spear)
 thashi_act	EQU	$17 ; 橋 (bridge)
@@ -194,7 +194,7 @@ ball_act	EQU	$19
 break_act	EQU	$1a
 wave_act	EQU $1b
 bgspr_act	EQU	$1c
-;act	EQU $1d
+switch_act	EQU $1d
 buta_act	EQU	$1e	; 豚 (pig)
 kani_act	EQU	$1f	; カニ (crab)
 ;act	EQU $20

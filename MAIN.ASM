@@ -16156,7 +16156,7 @@ SpritesArray:
 		dc.l bobin	; 0x47
 		dc.l btama	; 0x48
 		dc.l taki	; 0x49
-		dc.l Sprite_SSUnusedEntry	; 0x4A
+		dc.l warp	; 0x4A
 		dc.l bigring	; 0x4B
 		dc.l myogan	; 0x4C
 		dc.l yogan	; 0x4D
@@ -24625,7 +24625,7 @@ loc_1424E:				; CODE XREF: ROM:000141E0j
 ; Special stage	unused entry effect
 ;---------------------------------------------------------------------------
 
-Sprite_SSUnusedEntry:			; DATA XREF: ROM:0000D382o
+warp:			; DATA XREF: ROM:0000D382o
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	off_14262(pc,d0.w),d1
@@ -34530,12 +34530,7 @@ byte_1ADDC:	dc.b 1			; DATA XREF: Sprite_EggPrison+252o
 byte_1ADE2:	dc.b 0			; DATA XREF: Sprite_EggPrison+252o
 		even
 ; End of function Sprite_EggPrison
-
-
-
-
-
-sub_1ADE4:				; CODE XREF: ROM:00012CB0p
+pcol:
 		nop	
 		move.w	xposi(a0),d2
 		move.w	yposi(a0),d3
@@ -34545,77 +34540,62 @@ sub_1ADE4:				; CODE XREF: ROM:00012CB0p
 		subq.b	#3,d5
 		sub.w	d5,d3
 		cmpi.b	#$39,patno(a0)
-		bne.b	loc_1AE08
+		bne.b	?jump0
 		addi.w	#$C,d3
 		moveq	#$A,d5
-
-loc_1AE08:				; CODE XREF: sub_1ADE4+1Cj
+?jump0:
 		move.w	#$10,d4
 		add.w	d5,d5
 		lea	$ffffd800,a1
 		move.w	#$1800/$40-1,d6
-
-loc_1AE16:				; CODE XREF: sub_1ADE4+42j
+?loop:
 		tst.b	actflg(a1)
-		bpl.b	loc_1AE22
+		bpl.b	?jump
 		move.b	colino(a1),d0
-		bne.b	loc_1AE76
-
-loc_1AE22:				; CODE XREF: sub_1ADE4+36j
-					; sub_1ADE4+B0j ...
+		bne.b	?jump2
+?jump:
 		lea	$40(a1),a1
-		dbf	d6,loc_1AE16
+		dbf	d6,?loop
 		moveq	#0,d0
-
-locret_1AE2C:
 		rts
-
-byte_1AE2E:	dc.b $14,$14, $C,$14,$14, $C,  4,$10, $C,$12,$10,$10,  6,  6,$18, $C; 0
-					; DATA XREF: sub_1ADE4+98t
+?colitbl:
+		dc.b $14,$14, $C,$14,$14, $C,  4,$10, $C,$12,$10,$10,  6,  6,$18, $C; 0
 		dc.b  $C,$10,$10, $C,  8,  8,$14,$10,$14,  8, $E, $E,$18,$18,$28,$10; 16
 		dc.b $10,$18,  8,$10,$20,$70,$40,$20,$80,$20,$20,$20,  8,  8,  4,  4; 32
 		dc.b $20,  8, $C, $C,  8,  4,$18,  4,$28,  4,  4,  8,  4,$18,  4,$28; 48
 		dc.b   4,$20,$18,$18, $C,$18,$48,  8; 64
-
-
-loc_1AE76:				; CODE XREF: sub_1ADE4+3Cj
+?jump2:
 		andi.w	#$3F,d0
 		add.w	d0,d0
-		lea	byte_1AE2E-2(pc,d0.w),a2
+		lea	?colitbl-2(pc,d0.w),a2
 		moveq	#0,d1
 		move.b	(a2)+,d1
 		move.w	xposi(a1),d0
 		sub.w	d1,d0
 		sub.w	d2,d0
-		bcc.b	loc_1AE98
+		bcc.b	?jump3
 		add.w	d1,d1
 		add.w	d1,d0
-		bcs.b	loc_1AE9E
-		bra.w	loc_1AE22
-
-
-loc_1AE98:				; CODE XREF: sub_1ADE4+A8j
+		bcs.b	?jump4
+		bra.w	?jump
+?jump3:
 		cmp.w	d4,d0
-		bhi.w	loc_1AE22
-
-loc_1AE9E:				; CODE XREF: sub_1ADE4+AEj
+		bhi.w	?jump
+?jump4:
 		moveq	#0,d1
 		move.b	(a2)+,d1
 		move.w	yposi(a1),d0
 		sub.w	d1,d0
 		sub.w	d3,d0
-		bcc.b	loc_1AEB6
+		bcc.b	?jump5
 		add.w	d1,d1
 		add.w	d0,d1
-		bcs.b	loc_1AEBC
-		bra.w	loc_1AE22
-
-
-loc_1AEB6:				; CODE XREF: sub_1ADE4+C6j
+		bcs.b	?atari
+		bra.w	?jump
+?jump5:
 		cmp.w	d5,d0
-		bhi.w	loc_1AE22
-
-loc_1AEBC:				; CODE XREF: sub_1ADE4+CCj
+		bhi.w	?jump
+?atari:
 		move.b	colino(a1),d1
 		andi.b	#$c0,d1
 		beq.w	loc_1AF30
@@ -34630,12 +34610,11 @@ loc_1AEBC:				; CODE XREF: sub_1ADE4+CCj
 		cmpi.w	#90,$30(a0)
 		bcc.w	locret_1AEF2
 		addq.b	#2,r_no0(a1)
-
-locret_1AEF2:				; CODE XREF: sub_1ADE4+106j
+locret_1AEF2:
 		rts
 
 
-loc_1AEF4:				; CODE XREF: sub_1ADE4+FEj
+loc_1AEF4:				; CODE XREF: pcol+FEj
 		tst.w	yspeed(a0)
 		bpl.b	loc_1AF1E
 		move.w	yposi(a0),d0
@@ -34650,25 +34629,25 @@ loc_1AEF4:				; CODE XREF: sub_1ADE4+FEj
 		rts
 
 
-loc_1AF1E:				; CODE XREF: sub_1ADE4+114j
+loc_1AF1E:				; CODE XREF: pcol+114j
 		cmpi.b	#2,mstno(a0)
 		bne.b	locret_1AF2E
 		neg.w	yspeed(a0)
 		addq.b	#2,r_no0(a1)
 
-locret_1AF2E:				; CODE XREF: sub_1ADE4+122j
-					; sub_1ADE4+132j ...
+locret_1AF2E:				; CODE XREF: pcol+122j
+					; pcol+132j ...
 		rts
 
 
-loc_1AF30:				; CODE XREF: sub_1ADE4+E0j
+loc_1AF30:				; CODE XREF: pcol+E0j
 					; ROM:0001B144j
 		tst.b	$FFFFFE2D
 		bne.b	loc_1AF40
 		cmpi.b	#2,mstno(a0)
 		bne.w	loc_1AFE0
 
-loc_1AF40:				; CODE XREF: sub_1ADE4+150j
+loc_1AF40:				; CODE XREF: pcol+150j
 		tst.b	colicnt(a1)
 		beq.b	loc_1AF6A
 		neg.w	xspeed(a0)
@@ -34680,11 +34659,11 @@ loc_1AF40:				; CODE XREF: sub_1ADE4+150j
 		bne.b	locret_1AF68
 		bset.b	#7,cddat(a1)
 
-locret_1AF68:				; CODE XREF: sub_1ADE4+17Cj
+locret_1AF68:				; CODE XREF: pcol+17Cj
 		rts
 
 
-loc_1AF6A:				; CODE XREF: sub_1ADE4+160j
+loc_1AF6A:				; CODE XREF: pcol+160j
 		bset.b	#7,cddat(a1)
 		moveq	#0,d0
 		move.w	$FFFFF7D0,d0
@@ -34693,7 +34672,7 @@ loc_1AF6A:				; CODE XREF: sub_1ADE4+160j
 		bcs.b	loc_1AF82
 		moveq	#6,d0
 
-loc_1AF82:				; CODE XREF: sub_1ADE4+19Aj
+loc_1AF82:				; CODE XREF: pcol+19Aj
 		move.w	d0,$3E(a1)
 		move.w	word_1AFD2(pc,d0.w),d0
 		cmpi.w	#$20,$FFFFF7D0
@@ -34701,7 +34680,7 @@ loc_1AF82:				; CODE XREF: sub_1ADE4+19Aj
 		move.w	#1000,d0
 		move.w	#$A,$3E(a1)
 
-loc_1AF9C:				; CODE XREF: sub_1ADE4+1ACj
+loc_1AF9C:				; CODE XREF: pcol+1ACj
 		bsr.w	scoreup
 		move.b	#$27,actno(a1)
 		move.b	#0,r_no0(a1)
@@ -34714,12 +34693,12 @@ loc_1AF9C:				; CODE XREF: sub_1ADE4+1ACj
 		rts
 
 
-loc_1AFC2:				; CODE XREF: sub_1ADE4+1CCj
+loc_1AFC2:				; CODE XREF: pcol+1CCj
 		addi.w	#$100,yspeed(a0)
 		rts
 
 
-loc_1AFCA:				; CODE XREF: sub_1ADE4+1D6j
+loc_1AFCA:				; CODE XREF: pcol+1D6j
 		subi.w	#$100,yspeed(a0)
 		rts
 
@@ -34730,22 +34709,22 @@ word_1AFD2:
 loc_1AFDA:				; CODE XREF: ROM:0001B112j
 		bset	#7,cddat(a1)
 
-loc_1AFE0:				; CODE XREF: sub_1ADE4+EEj
-					; sub_1ADE4+158j ...
+loc_1AFE0:				; CODE XREF: pcol+EEj
+					; pcol+158j ...
 		tst.b	$FFFFFE2D
 		beq.b	loc_1AFEA
 
-loc_1AFE6:				; CODE XREF: sub_1ADE4+20Cj
+loc_1AFE6:				; CODE XREF: pcol+20Cj
 		moveq	#-1,d0
 		rts
 
 
-loc_1AFEA:				; CODE XREF: sub_1ADE4+200j
+loc_1AFEA:				; CODE XREF: pcol+200j
 		nop	
 		tst.w	$30(a0)
 		bne.b	loc_1AFE6
 		movea.l	a1,a2
-; End of function sub_1ADE4
+; End of function pcol
 
 
 
@@ -34837,7 +34816,7 @@ loc_1B0EC:				; CODE XREF: sub_1B098+4j
 
 
 
-loc_1B0F0:				; CODE XREF: sub_1ADE4+E8j
+loc_1B0F0:				; CODE XREF: pcol+E8j
 		move.b	colino(a1),d1
 		andi.b	#$3F,d1
 		cmpi.b	#$B,d1

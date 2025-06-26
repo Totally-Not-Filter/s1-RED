@@ -65,7 +65,7 @@ loc_12CA6:
 		bsr.w	sub_139C4
 		tst.b	$FFFFF7C8
 		bmi.b	loc_12CB6
-		jsr	sub_1ADE4
+		jsr	pcol
 loc_12CB6:
 		bsr.w	sub_13916
 		bsr.w	playwrt

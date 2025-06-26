@@ -239,7 +239,7 @@ fblock_act	EQU	$46
 bobin_act	EQU	$47	; ボビン (bobbin)
 btama_act	EQU	$48	; 玉 (ball)
 taki_act	EQU	$49	; 滝 (waterfall)
-;act	EQU $4a
+warp_act	EQU $4a
 bigring_act	EQU $4b
 myogan_act	EQU	$4c
 yogan_act	EQU	$4d
@@ -280,14 +280,14 @@ beltc_act	EQU	$6f
 yukai_act	EQU	$70
 scoli_act	EQU	$71
 shooter_act	EQU $72
-;act	EQU $73
+;boss?_act	EQU $73
 ;act	EQU $74
-;act	EQU $75
+;boss?_act	EQU $75
 ;act	EQU $76
-;act	EQU $77
+;boss?_act	EQU $77
 imo_act		EQU	$78 ; 芋虫 (caterpillar)
 save_act	EQU	$79
-;act	EQU $7a
+;boss?_act	EQU $7a
 ;act	EQU $7b
 ebigring_act	EQU $7c
 bten_act	EQU	$7d

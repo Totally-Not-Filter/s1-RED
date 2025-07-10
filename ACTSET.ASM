@@ -154,7 +154,7 @@ loc_DA50:
 		move.w	(a0)+,xposi(a1)
 		move.w	(a0)+,d0
 		move.w	d0,d1
-		andi.w	#$0fff,d0
+		andi.w	#$fff,d0
 		move.w	d0,yposi(a1)
 		rol.w	#2,d1
 		andi.b	#3,d1

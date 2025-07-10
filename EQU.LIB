@@ -1,7 +1,9 @@
-; md planes
-plane_a	EQU	$c000
-plane_b	EQU	$e000
-sprtbl	EQU	$f800
+; md VRAM tables
+vram_window_plane	EQU $a000
+vram_plane_a	EQU	$c000
+vram_plane_b	EQU	$e000
+vram_sprtbl	EQU	$f800
+vram_hscroll	EQU $fc00
 
 ; taken from https://wiki.megadrive.org/index.php?title=IO_Registers
 REG_VERSION	EQU	$a10001
@@ -28,13 +30,17 @@ z80reset	EQU	$a11200		; z80 reset
 
 VDP_DATA	EQU	$c00000
 VDP_CTRL	EQU	$c00004
+VDP_HVCOUNT	EQU	$c00008
+VDP_DEBUG	EQU	$c0001c
 
 ; ram addresses
+ip_start	EQU	$ff0000
 mapwk		EQU	$ff0000
 mapwka		EQU	$ffffa400
 mapwkb		EQU	$ffffa440
 pbuffer		EQU	$ffffa800
-;	EQU	$ffffaa00
+bitdevwk	EQU	$ffffaa00
+spr_list	EQU	$ffffac00
 blkwk		EQU	$ffffb000
 ;	EQU	$ffffc800
 ;	EQU	$ffffcb00
@@ -50,6 +56,7 @@ hscroll		EQU	$fffff618
 hintposi	EQU	$fffff624
 startcolor	EQU	$fffff626
 colorcnt	EQU	$fffff627
+vintmode	EQU $fffff62a
 clchgcnt	EQU	$fffff632
 clchgtim	EQU	$fffff634
 ranum		EQU	$fffff636
@@ -85,6 +92,7 @@ rotdir		EQU	$fffff780
 rotspd		EQU	$fffff782
 sekichyuflag	EQU	$fffff7cb
 edplayflag	EQU	$fffff7d7
+stack		EQU	$fffffe00
 editno		EQU	$fffffe06
 editmode	EQU	$fffffe08
 edittimer	EQU	$fffffe0A
@@ -98,6 +106,7 @@ demono		EQU	$fffffff2
 enddemono	EQU	$fffffff4
 mdstatus	EQU	$fffffff8
 debugflag	EQU	$fffffffa
+intflag		EQU	$fffffffc
 
 ; misc equates
 word		EQU	$02
@@ -119,6 +128,8 @@ cd_right	EQU	3+2
 ; game mode equates
 logogamemd	EQU	$00
 titlegamemd	EQU	$04
+demogamemd	EQU	$08
+gamemd		EQU	$0c
 spgamemd	EQU	$10
 
 ; actor equates
@@ -149,6 +160,7 @@ r_no0		EQU	$24	; routine number 0
 r_no1		EQU	$25	; routine number 1
 direc		EQU	$26
 userflag	EQU	$28	; user flag
+;dummy
 ;actfree
 ;	EQU	$40
 
@@ -280,14 +292,14 @@ beltc_act	EQU	$6f
 yukai_act	EQU	$70
 scoli_act	EQU	$71
 shooter_act	EQU $72
-;boss?_act	EQU $73
+boss3_act	EQU $73
 ;act	EQU $74
-;boss?_act	EQU $75
+boss5_act	EQU $75
 ;act	EQU $76
-;boss?_act	EQU $77
+boss2_act	EQU $77
 imo_act		EQU	$78 ; 芋虫 (caterpillar)
 save_act	EQU	$79
-;boss?_act	EQU $7a
+boss4_act	EQU $7a
 ;act	EQU $7b
 ebigring_act	EQU $7c
 bten_act	EQU	$7d

@@ -75,7 +75,7 @@ play00move_tbl:
 		dc.w play00jump-play00move_tbl
 		dc.w loc_12E66-play00move_tbl
 		dc.w loc_12E86-play00move_tbl
-MusicArray2:
+bgmtbl2:
 		dc.b $81
 		dc.b $82
 		dc.b $83
@@ -108,7 +108,7 @@ loc_12CE2:
 		bne.b	loc_12D12
 		moveq	#5,d0
 loc_12D12:
-		lea	MusicArray2,a1
+		lea	bgmtbl2,a1
 		move.b	(a1,d0.w),d0
 		jsr	bgmset.l
 loc_12D22:
@@ -148,7 +148,7 @@ Sonic_Underwater:
 		bset.b	#6,cddat(a0)
 		bne.b	locret_12D80
 		bsr.w	sub_1408E
-		move.b	#$0a,$FFFFD000+$340+actno
+		move.b	#plawa_act,$FFFFD000+$340+actno
 		move.b	#$81,$FFFFD000+$340+userflag
 		move.w	#$300,plmaxspdwk
 		move.w	#6,pladdspdwk
@@ -157,7 +157,7 @@ Sonic_Underwater:
 		asr.w	yspeed(a0)
 		asr.w	yspeed(a0)
 		beq.b	locret_12D80
-		move.b	#$08,$FFFFD000+$300+actno
+		move.b	#exit2_act,$FFFFD000+$300+actno
 		move.w	#$AA,d0
 		jmp	soundset.l
 loc_12DD4:
@@ -169,7 +169,7 @@ loc_12DD4:
 		move.w	#$80,plretspdwk
 		asl.w	yspeed(a0)
 		beq.w	locret_12D80
-		move.b	#$08,$FFFFD000+$300+actno
+		move.b	#exit2_act,$FFFFD000+$300+actno
 		cmpi.w	#-$1000,yspeed(a0)
 		bgt.b	loc_12E0E
 		move.w	#-$1000,yspeed(a0)
@@ -1067,8 +1067,8 @@ loc_1387E:
 		subq.b	#1,$FFFFFE12
 		bne.b	loc_138D4
 		move.w	#0,$3A(a0)
-		move.b	#$39,$FFFFD000+$80+actno
-		move.b	#$39,$FFFFD000+$C0+actno
+		move.b	#over_act,$FFFFD000+$80+actno
+		move.b	#over_act,$FFFFD000+$C0+actno
 		move.b	#1,$FFFFD000+$C0+patno
 		clr.b	$FFFFFE1A
 loc_138C2:
@@ -1081,8 +1081,8 @@ loc_138D4:
 		tst.b	$FFFFFE1A
 		beq.b	locret_13900
 		move.w	#0,$3A(a0)
-		move.b	#$39,$FFFFD000+$80+actno
-		move.b	#$39,$FFFFD000+$C0+actno
+		move.b	#over_act,$FFFFD000+$80+actno
+		move.b	#over_act,$FFFFD000+$C0+actno
 		move.b	#2,$FFFFD000+$80+patno
 		move.b	#3,$FFFFD000+$C0+patno
 		bra.b	loc_138C2

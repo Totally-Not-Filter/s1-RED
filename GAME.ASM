@@ -1,10 +1,10 @@
 ;----------------------------------------------------------------------------
 ;Music playing array
 ;----------------------------------------------------------------------------
-MusicArray:
+bgmtbl:
 		dc.b $81,$82,$83,$84,$85,$86,$8D
 		even
-Level:
+game:
 		bset.b	#7,gmmode ; Add 80 to screen mode
 		tst.w	demoflag
 		bmi.b	loc_37B6
@@ -18,7 +18,7 @@ loc_37B6:
 		move.w	#$2700,sr
 		move.l	#$70000002,VDP_CTRL
 		lea	ArtNem_TitleCards,a0
-		bsr.w	bitdevr
+		bsr.w	bitdevdatr
 		move.w	#$2300,sr
 		moveq	#0,d0		; Clear	d0
 		move.b	stageno,d0 ; Move	level to d0
@@ -61,9 +61,9 @@ loc_383C:
 		bsr.w	scrinit
 		lea	VDP_CTRL,a6
 		move.w	#$8b00+%00000011,(a6)
-		move.w	#$8200+plane_a>>10,(a6)
-		move.w	#$8400+plane_b>>13,(a6)
-		move.w	#$8500+sprtbl>>9,(a6)
+		move.w	#$8200+vram_plane_a>>10,(a6)
+		move.w	#$8400+vram_plane_b>>13,(a6)
+		move.w	#$8500+vram_sprtbl>>9,(a6)
 		move.w	#$9000+%00000001,(a6)
 		move.w	#$8000+%00000100,(a6)
 		move.w	#$8700+$02<<4+$00,(a6)
@@ -112,12 +112,12 @@ loc_38F8:
 		bne.b	loc_3902	; If level isn't FZ, branch
 		moveq	#6,d0		; Move 6 to d0
 loc_3902:
-		lea	MusicArray.l,a1
+		lea	bgmtbl.l,a1
 		move.b	(a1,d0.w),d0
 		bsr.w	bgmset
 		move.b	#zone_act,$FFFFD000+$80+actno
 loc_3916:
-		move.b	#$c,$FFFFF62A
+		move.b	#$c,vintmode
 		bsr.w	sync
 		jsr	Sonic_Load
 		jsr	sub_D65E
@@ -182,14 +182,14 @@ loc_39E8:
 		move.b	#1,$FFFFFE1D
 		move.b	#1,$FFFFFE1E
 		move.w	#0,$FFFFF790
-		lea	DemoPointers,a1
+		lea	demotbl,a1
 		moveq	#0,d0
 		move.b	stageno,d0
 		lsl.w	#2,d0
 		movea.l	(a1,d0.w),a1
 		tst.w	demoflag
 		bpl.b	loc_3A4E
-		lea	CreditsDemoPointers,a1
+		lea	enddemotbl,a1
 		move.w	enddemono,d0
 		subq.w	#1,d0
 		lsl.w	#2,d0
@@ -216,7 +216,7 @@ loc_3A8C:
 loc_3A90:
 		move.w	#4-1,d1
 loc_3A94:
-		move.b	#8,$FFFFF62A
+		move.b	#8,vintmode
 		bsr.w	sync
 		dbf	d1,loc_3A94
 		move.w	#$202f,startcolor
@@ -239,7 +239,7 @@ loc_3ADC:
 		bclr.b	#7,gmmode ; Substract 80	from level
 loc_3AE2:
 		bsr.w	sub_13A8
-		move.b	#8,$FFFFF62A
+		move.b	#8,vintmode
 		bsr.w	sync
 		addq.w	#1,$FFFFFE04
 		bsr.w	sub_3FD0
@@ -259,11 +259,11 @@ loc_3B14:
 		bsr.w	sub_416E
 		bsr.w	sub_4206
 		bsr.w	sub_4274
-		cmpi.b	#8,gmmode
+		cmpi.b	#demogamemd,gmmode
 		beq.b	loc_3B50
 		tst.w	$FFFFFE02
-		bne.w	Level
-		cmpi.b	#$c,gmmode
+		bne.w	game
+		cmpi.b	#gamemd,gmmode
 		beq.w	loc_3AE2
 		rts
 loc_3B50:
@@ -271,12 +271,12 @@ loc_3B50:
 		bne.b	loc_3B6E
 		tst.w	$FFFFF614
 		beq.b	loc_3B6E
-		cmpi.b	#8,gmmode
+		cmpi.b	#demogamemd,gmmode
 		beq.w	loc_3AE2
 		move.b	#logogamemd,gmmode
 		rts
 loc_3B6E:
-		cmpi.b	#8,gmmode
+		cmpi.b	#demogamemd,gmmode
 		bne.b	loc_3B88
 		move.b	#logogamemd,gmmode
 		tst.w	demoflag
@@ -287,7 +287,7 @@ loc_3B88:
 		move.w	#$3f,startcolor
 		clr.w	$FFFFF794
 loc_3B98:
-		move.b	#8,$FFFFF62A
+		move.b	#8,vintmode
 		bsr.w	sync
 		bsr.w	sub_3FD0
 		jsr	Sonic_Load
@@ -295,7 +295,7 @@ loc_3B98:
 		jsr	actset
 		subq.w	#1,$FFFFF794
 		bpl.b	loc_3BC8
-		move.w	#2,$FFFFF794
+		move.w	#3-1,$FFFFF794
 		bsr.w	sub_1E72
 loc_3BC8:
 		tst.w	$FFFFF614

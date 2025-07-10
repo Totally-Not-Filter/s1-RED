@@ -10,8 +10,8 @@ title:
 		bsr.w	sub_1352
 		lea	VDP_CTRL,a6
 		move.w	#$8000+%00000100,(a6)
-		move.w	#$8200+plane_a>>10,(a6)
-		move.w	#$8400+plane_b>>13,(a6)
+		move.w	#$8200+vram_plane_a>>10,(a6)
+		move.w	#$8400+vram_plane_b>>13,(a6)
 		move.w	#$9000+%00000001,(a6)
 		move.w	#$9200+%00000000,(a6)
 		move.w	#$8B00+%00000011,(a6)
@@ -26,10 +26,10 @@ loc_2F64:
 		dbf	d1,loc_2F64	; Fill FFD000 -	FFEFFF with 00
 		move.l	#$40000000,VDP_CTRL ; RAM location to load Japanese Credits into
 		lea	ArtNem_JapCredits,a0 ; Load	Japanese Credits
-		bsr.w	bitdevr	; Decompress Japanese Credits
+		bsr.w	bitdevdatr	; Decompress Japanese Credits
 		move.l	#$54C00000,VDP_CTRL ; RAM location to load Alphabet into
 		lea	ArtNem_Alphabet,a0 ; Load Alphabet
-		bsr.w	bitdevr	; Decompress Alphabet
+		bsr.w	bitdevdatr	; Decompress Alphabet
 		lea	$FF0000,a1
 		lea	Eni_HiddenJapCreditsMappings,a0
 		move.w	#$000,d0
@@ -54,13 +54,13 @@ loc_2FC4:
 		move.w	#$2700,sr
 		move.l	#$40000001,VDP_CTRL
 		lea	titlecg,a0
-		bsr.w	bitdevr
+		bsr.w	bitdevdatr
 		move.l	#$60000001,VDP_CTRL
 		lea	titlespcg,a0
-		bsr.w	bitdevr
+		bsr.w	bitdevdatr
 		move.l	#$62000002,VDP_CTRL
 		lea	ArtNem_TitleTM,a0
-		bsr.w	bitdevr
+		bsr.w	bitdevdatr
 		lea	VDP_DATA,a6
 		move.l	#$50000003,4(a6)
 		lea	ascii.l,a5
@@ -104,7 +104,7 @@ loc_303E:
 		bsr.w	sub_1420
 		move.l	#$40000000,VDP_CTRL
 		lea	ArtNem_Ghz8_1,a0
-		bsr.w	bitdevr
+		bsr.w	bitdevdatr
 		moveq	#1,d0
 		bsr.w	PalLoad_Unk1
 		move.b	#$8A,d0
@@ -113,16 +113,16 @@ loc_303E:
 		move.w	#376,$FFFFF614
 		lea	$FFFFD000+$80,a1
 		moveq	#0,d0
-		move.w	#$200/$40-1,d1	; This line has a slight error to it, the base value should be $400 instead of $200, resulting in the PRESS START BUTTON text not appearing in-game.
+		move.w	#$200/$40-1,d1	; This line has a oversight, the base value should be $400 instead of $200, resulting in the PRESS START BUTTON text not appearing in-game.
 loc_311E:
 		move.l	d0,(a1)+
 		dbf	d1,loc_311E
 		move.b	#$0e,$FFFFD000+$40+actno
 		move.b	#$0f,$FFFFD000+$80+actno
 		move.b	#$0f,$FFFFD000+$C0+actno
-		move.b	#$03,$FFFFD000+$C0+patno
+		move.b	#3,$FFFFD000+$C0+patno
 		move.b	#$0f,$FFFFD000+$100+actno
-		move.b	#$02,$FFFFD000+$100+patno
+		move.b	#2,$FFFFD000+$100+patno
 		jsr	Sonic_Load
 		bsr.w	sub_6286
 		jsr	sub_D65E
@@ -135,7 +135,7 @@ loc_311E:
 		move.w	d0,VDP_CTRL
 		bsr.w	sub_1DAC
 loc_317C:
-		move.b	#4,$FFFFF62A
+		move.b	#4,vintmode
 		bsr.w	sync
 		jsr	Sonic_Load
 		bsr.w	sub_6286
@@ -220,7 +220,7 @@ loc_3286:
 		dbf	d1,loc_3286
 		bsr.w	sub_34E6
 loc_3290:
-		move.b	#4,$FFFFF62A
+		move.b	#4,vintmode
 		bsr.w	sync
 		bsr.w	sub_3460
 		bsr.w	sub_15EC
@@ -276,7 +276,7 @@ LSelect_Level:
 		andi.w	#$3fff,d0	; Selected level AND $3FFF
 		move.w	d0,stageno ; Set level
 PlayLevel:
-		move.b	#$c,gmmode ; Set	screen mode to 0C (level)
+		move.b	#gamemd,gmmode ; Set	screen mode to 0C (level)
 		move.b	#3,$FFFFFE12 ; Set lives to	3
 		moveq	#0,d0
 		move.w	d0,$FFFFFE20 ; Clear rings
@@ -339,7 +339,7 @@ LevelSelectCode_US:
 loc_33B0:
 		move.w	#30,$FFFFF614
 loc_33B6:
-		move.b	#4,$FFFFF62A
+		move.b	#4,vintmode
 		bsr.w	sync
 		bsr.w	sub_6286
 		bsr.w	clchgctr
@@ -349,7 +349,7 @@ loc_33B6:
 		move.w	d0,playerwk+xposi
 		cmpi.w	#$1c00,d0
 		bcs.b	loc_33E4
-		move.b	#0,gmmode
+		move.b	#logogamemd,gmmode
 		rts
 loc_33E4:
 		andi.b	#$80,swdata1+1
@@ -369,7 +369,7 @@ loc_33E4:
 		move.w	#0,demono ; Clear demo level
 loc_3422:
 		move.w	#1,demoflag ; Turn	demo mode on
-		move.b	#8,gmmode ; Set screen mode to 08 (demo)
+		move.b	#demogamemd,gmmode ; Set screen mode to 08 (demo)
 		cmpi.w	#$600,d0
 		bne.b	loc_3442	; If level isn't 0600 (special stage), branch
 		move.b	#spgamemd,gmmode ; Set screen	mode to	10 (special stage)

@@ -5,6 +5,10 @@
 align	macro
 	dcb.b (\1-(*%\1))%\1,$ff
 	endm
+	
+align0	macro
+	dcb.b (\1-(*%\1))%\1,0
+	endm
 
 ;=======================================;
 ;	   Z80 BUS REQUEST ON		;

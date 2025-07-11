@@ -4238,7 +4238,7 @@ loc_5420:				; CODE XREF: ROM:00005410j
 		move.l	#Map_5680,4(a0)
 		move.w	#$03E1,2(a0)
 		move.b	#4,1(a0)
-		clr.b	$22(a0)
+		clr.b	cddat(a0)
 		move.b	#2,$18(a0)
 		move.b	#0,$1A(a0)
 		move.w	#80,$30(a0) ; 'P'
@@ -4292,7 +4292,7 @@ loc_54D8:				; DATA XREF: ROM:000053F6o
 		move.l	#Map_5680,4(a0)
 		move.w	#$03E1,2(a0)
 		move.b	#4,1(a0)
-		clr.b	$22(a0)
+		clr.b	cddat(a0)
 		move.b	#2,$18(a0)
 		move.b	#5,$1A(a0)
 		move.b	#2,$1C(a0)
@@ -7163,14 +7163,14 @@ loc_7474:				; CODE XREF: sub_7520+38j sub_755C+28j
 
 
 sub_74AE:				; CODE XREF: ROM:0000A212p
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		beq.b	loc_74DC
 		moveq	#0,d0
 		move.b	$3D(a1),d0
 		lsl.w	#6,d0	; 2^6 (0x40)
 		addi.l	#actwk&$ffffff,d0
 		movea.l	d0,a2
-		bclr.b	#3,$22(a2)
+		bclr.b	#3,cddat(a2)
 		clr.b	$25(a2)
 		cmpi.b	#4,$24(a2)
 		bne.b	loc_74DC
@@ -7185,7 +7185,7 @@ loc_74DC:				; CODE XREF: sub_74AE+6j sub_74AE+28j
 		move.b	#0,$26(a1)
 		move.w	#0,yspeed(a1)
 		move.w	xspeed(a1),mspeed(a1)
-		btst.b	#1,$22(a1)
+		btst.b	#1,cddat(a1)
 		beq.b	loc_7512
 		move.l	a0,-(sp)
 		movea.l	a1,a0
@@ -7193,8 +7193,8 @@ loc_74DC:				; CODE XREF: sub_74AE+6j sub_74AE+28j
 		movea.l	(sp)+,a0
 
 loc_7512:				; CODE XREF: sub_74AE+56j
-		bset.b	#3,$22(a1)
-		bset.b	#3,$22(a0)
+		bset.b	#3,cddat(a1)
+		bset.b	#3,cddat(a0)
 
 locret_751E:				; CODE XREF: sub_741C+16j sub_741C+24j ...
 		rts
@@ -7294,7 +7294,7 @@ sub_75C0:				; CODE XREF: ROM:00007AFEp
 loc_75C2:				; CODE XREF: sub_7592+Cp
 		add.w	d2,d2
 		lea	playerwk,a1
-		btst.b	#1,$22(a1)
+		btst.b	#1,cddat(a1)
 		bne.b	loc_75E0
 		move.w	xposi(a1),d0
 		sub.w	xposi(a0),d0
@@ -7304,9 +7304,9 @@ loc_75C2:				; CODE XREF: sub_7592+Cp
 		bcs.b	locret_75F2
 
 loc_75E0:				; CODE XREF: sub_75C0+Ej sub_75C0+1Aj
-		bclr.b	#3,$22(a1)
+		bclr.b	#3,cddat(a1)
 		move.b	#2,$24(a0)
-		bclr.b	#3,$22(a0)
+		bclr.b	#3,cddat(a0)
 
 locret_75F2:				; CODE XREF: sub_75C0+1Ej
 		rts
@@ -7679,7 +7679,7 @@ locret_7B62:
 sub_7B64:
 		move.b	$FFFFFE78,d0
 		move.w	#$80,d1
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_7B78
 		neg.w	d0
 		add.w	d1,d0
@@ -7837,7 +7837,7 @@ loc_7CBA:				; DATA XREF: ROM:00007CB0o
 		addq.b	#word,$24(a0)
 		move.l	#Map_7DF8,4(a0)
 		move.w	#$4398,2(a0)
-		move.b	#7,$22(a0)
+		move.b	#7,cddat(a0)
 		move.b	#4,1(a0)
 		move.b	#3,$18(a0)
 		move.b	#8,$19(a0)
@@ -8178,7 +8178,7 @@ loc_7FD8:				; CODE XREF: ROM:00007FACj
 loc_7FE4:				; DATA XREF: ROM:00007F5Ao
 		tst.w	$3A(a0)
 		bne.b	loc_7FFA
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	locret_7FF8
 		move.w	#$1E,$3A(a0)
 
@@ -8200,12 +8200,12 @@ loc_800C:				; DATA XREF: ROM:00007F5Ao
 		beq.b	loc_8048
 		subq.w	#1,$3A(a0)
 		bne.b	loc_8048
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_8042
-		bset.b	#1,$22(a1)
-		bclr.b	#3,$22(a1)
+		bset.b	#1,cddat(a1)
+		bclr.b	#3,cddat(a1)
 		move.b	#2,$24(a1)
-		bclr.b	#3,$22(a0)
+		bclr.b	#3,cddat(a0)
 		clr.b	$25(a0)
 		move.w	yspeed(a0),yspeed(a1)
 
@@ -8463,12 +8463,12 @@ loc_82D0:				; CODE XREF: ROM:000082C4j
 		subq.b	#1,$38(a0)
 		bsr.w	sub_829C
 		lea	playerwk,a1
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		beq.b	loc_82FC
 		tst.b	$38(a0)
 		bne.b	locret_8308
-		bclr.b	#3,$22(a1)
-		bclr.b	#5,$22(a1)
+		bclr.b	#3,cddat(a1)
+		bclr.b	#5,cddat(a1)
 		move.b	#1,$1D(a1)
 
 loc_82FC:				; CODE XREF: ROM:000082E2j
@@ -8540,7 +8540,7 @@ loc_8396:				; CODE XREF: ROM:00008388j
 		bsr.w	sub_744C
 		tst.b	$28(a0)
 		bpl.b	loc_83C2
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		beq.b	loc_83C2
 		bclr.b	#0,1(a0)
 		move.w	xposi(a1),d0
@@ -8586,12 +8586,12 @@ loc_8402:				; CODE XREF: ROM:000083F6j
 		subq.b	#1,$38(a0)
 		bsr.w	sub_83D8
 		lea	playerwk,a1
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		beq.b	loc_842E
 		tst.b	$38(a0)
 		bne.b	locret_843A
-		bclr.b	#3,$22(a1)
-		bclr.b	#5,$22(a1)
+		bclr.b	#3,cddat(a1)
+		bclr.b	#5,cddat(a1)
 		move.b	#1,$1D(a1)
 
 loc_842E:				; CODE XREF: ROM:00008414j
@@ -8698,7 +8698,7 @@ byte_8522:
 sub_852A:				; CODE XREF: sub_829C+16p
 					; ROM:0000AF6Ep ...
 		lea	playerwk,a1
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		beq.b	locret_856E
 		move.w	xposi(a1),d0
 		sub.w	xposi(a0),d0
@@ -9049,13 +9049,13 @@ loc_896A:				; DATA XREF: ROM:00008942o
 		add.w	d1,d0
 		cmp.w	xposi(a0),d0
 		bcc.b	loc_899A
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_89A8
 		bra.b	loc_89A2
 
 
 loc_899A:				; CODE XREF: ROM:0000898Ej
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_89A8
 
 loc_89A2:				; CODE XREF: ROM:00008998j
@@ -9150,21 +9150,21 @@ loc_8A82:				; CODE XREF: sub_8A62+18j
 		move.w	#0,xspeed(a1)
 
 loc_8A92:				; CODE XREF: sub_8A62+Cj sub_8A62+16j	...
-		btst.b	#1,$22(a1)
+		btst.b	#1,cddat(a1)
 		bne.b	loc_8AB6
-		bset.b	#5,$22(a1)
-		bset.b	#5,$22(a0)
+		bset.b	#5,cddat(a1)
+		bset.b	#5,cddat(a0)
 		rts
 
 
 loc_8AA8:				; CODE XREF: sub_8A62+4j
-		btst.b	#5,$22(a0)
+		btst.b	#5,cddat(a0)
 		beq.b	locret_8AC2
 		move.w	#1,$1C(a1)
 
 loc_8AB6:				; CODE XREF: sub_8A62+36j
-		bclr.b	#5,$22(a0)
-		bclr.b	#5,$22(a1)
+		bclr.b	#5,cddat(a0)
+		bclr.b	#5,cddat(a1)
 
 locret_8AC2:				; CODE XREF: sub_8A62+4Cj
 		rts
@@ -9308,7 +9308,7 @@ loc_8BD0:				; CODE XREF: ROM:00008BC4j
 		move.w	#-$100,xspeed(a1)
 		move.w	#0,yspeed(a1)
 		moveq	#-4,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_8C0A
 		neg.w	d0
 		neg.w	xspeed(a1)
@@ -10206,7 +10206,7 @@ loc_9590:				; CODE XREF: ROM:00009586j
 		bsr.w	sub_9688
 		addq.b	#3,d0
 		move.b	d0,$1C(a0)
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		bne.b	locret_95B6
 		neg.w	xspeed(a0)
 
@@ -10251,7 +10251,7 @@ loc_961A:				; DATA XREF: ROM:00009578o
 		bne.b	loc_9654
 		move.w	xposi(a0),d3
 		addi.w	#$10,d3
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_9640
 		subi.w	#$20,d3
 
@@ -10294,7 +10294,7 @@ sub_9688:				; CODE XREF: ROM:000095A0p
 		cmpi.b	#6,d3
 		bcs.b	locret_96A2
 		moveq	#1,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	locret_96A2
 		moveq	#2,d0
 
@@ -10306,7 +10306,7 @@ loc_96A4:				; CODE XREF: sub_9688+6j
 		cmpi.b	#-6,d3
 		bhi.b	locret_96B6
 		moveq	#2,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	locret_96B6
 		moveq	#1,d0
 
@@ -10458,7 +10458,7 @@ loc_983C:				; DATA XREF: ROM:00009838o
 		move.w	#128-1,$32(a0) ; ''
 		move.w	#$400,xspeed(a0)
 		move.b	#1,$1C(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	locret_986C
 		neg.w	xspeed(a0)
 
@@ -10477,14 +10477,14 @@ loc_986E:				; CODE XREF: ROM:00009848j
 		move.w	#$200,yspeed(a1)
 		move.w	#$200,xspeed(a1)
 		move.w	#$18,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_98AA
 		neg.w	d0
 		neg.w	xspeed(a1)
 
 loc_98AA:				; CODE XREF: ROM:000098A2j
 		add.w	d0,xposi(a1)
-		move.b	$22(a0),$22(a1)
+		move.b	cddat(a0),cddat(a1)
 		move.w	#15-1,$32(a1)
 		move.l	a0,$3C(a1)
 		move.b	#1,$34(a0)
@@ -10518,7 +10518,7 @@ loc_98EE:				; CODE XREF: ROM:000098EAj
 
 loc_9908:				; CODE XREF: ROM:000098D6j
 		move.b	#0,$34(a0)
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		move.w	#60-1,$32(a0) ; ';'
 
 loc_991A:				; CODE XREF: ROM:00009906j
@@ -10559,7 +10559,7 @@ loc_994A:				; DATA XREF: ROM:00009940o
 		move.b	#4,1(a0)
 		move.b	#3,$18(a0)
 		move.b	#8,$19(a0)
-		andi.b	#3,$22(a0)
+		andi.b	#3,cddat(a0)
 		tst.b	$28(a0)
 		beq.b	loc_9994
 		move.b	#8,$24(a0)
@@ -10587,7 +10587,7 @@ sub_99A4:				; CODE XREF: ROM:0000994Ej
 
 
 loc_99B2:				; DATA XREF: ROM:00009940o
-		btst.b	#7,$22(a0)
+		btst.b	#7,cddat(a0)
 		bne.b	loc_99E8
 		move.b	#-$79,$20(a0)
 		move.b	#1,$1C(a0)
@@ -11299,7 +11299,7 @@ loc_A192:				; DATA XREF: ROM:0000A126o
 		move.b	$19(a0),d1
 		addi.w	#$B,d1
 		bsr.w	sub_75C0
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		bne.w	loc_A1BC
 		clr.b	$25(a0)
 		bra.w	loc_A276
@@ -11362,22 +11362,22 @@ loc_A236:				; CODE XREF: ROM:0000A22Ej
 
 loc_A246:				; CODE XREF: ROM:0000A222j
 					; ROM:0000A22Cj ...
-		btst.b	#1,$22(a1)
+		btst.b	#1,cddat(a1)
 		bne.b	loc_A26A
-		bset.b	#5,$22(a1)
-		bset.b	#5,$22(a0)
+		bset.b	#5,cddat(a1)
+		bset.b	#5,cddat(a0)
 		bra.b	loc_A276
 
 
 loc_A25C:				; CODE XREF: ROM:0000A1F8j
 					; ROM:0000A208j
-		btst.b	#5,$22(a0)
+		btst.b	#5,cddat(a0)
 		beq.b	loc_A276
 		move.w	#1,$1C(a1)
 
 loc_A26A:				; CODE XREF: ROM:0000A24Cj
-		bclr.b	#5,$22(a0)
-		bclr.b	#5,$22(a1)
+		bclr.b	#5,cddat(a0)
+		bclr.b	#5,cddat(a1)
 
 loc_A276:				; CODE XREF: ROM:0000A1B8j
 					; ROM:0000A1C8j ...
@@ -12176,7 +12176,7 @@ loc_ABEC:				; DATA XREF: ROM:0000ABE8o
 		move.w	d0,$30(a0)
 		move.w	d0,$32(a0)
 		move.w	#-$40,xspeed(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_AC3A
 		neg.w	xspeed(a0)
 
@@ -12186,7 +12186,7 @@ loc_AC3A:				; CODE XREF: ROM:0000AC34j
 		bpl.b	loc_AC56
 		move.w	$32(a0),$30(a0)
 		neg.w	xspeed(a0)
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		move.b	#1,$1D(a0)
 
 loc_AC56:				; CODE XREF: ROM:0000AC3Ej
@@ -12266,7 +12266,7 @@ loc_AD1A:				; DATA XREF: ROM:0000AD12o
 		move.w	#256-1,$30(a0)
 		move.w	#$80,xspeed(a0) ; '€'
 		move.b	#1,$1C(a0)
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		beq.b	locret_AD42
 		neg.w	xspeed(a0)
 
@@ -12283,7 +12283,7 @@ loc_AD44:				; DATA XREF: ROM:0000AD12o
 		bne.b	loc_AD78
 		move.w	xposi(a0),d3
 		addi.w	#$C,d3
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_AD6A
 		subi.w	#$18,d3
 
@@ -12363,13 +12363,13 @@ locret_AE20:				; CODE XREF: ROM:0000ADFAj
 sub_AE22:				; CODE XREF: ROM:0000ADECp
 					; ROM:0000ADF6p
 		move.w	#$80,d1
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		move.w	playerwk+xposi,d0
 		sub.w	xposi(a0),d0
 		bcc.b	loc_AE40
 		neg.w	d0
 		neg.w	d1
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 
 loc_AE40:				; CODE XREF: sub_AE22+12j
 		cmp.w	d2,d0
@@ -12465,7 +12465,7 @@ loc_AF34:				; DATA XREF: ROM:0000AEC6o
 		move.b	$19(a0),d1
 		addi.w	#$B,d1
 		bsr.w	sub_75C0
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		bne.w	loc_AF5C
 		clr.b	$25(a0)
 		bra.b	loc_AF96
@@ -12997,7 +12997,7 @@ loc_B52A:				; DATA XREF: ROM:0000B4F2o
 
 
 loc_B53E:				; CODE XREF: ROM:0000B530j
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		bne.b	loc_B54E
 		bclr.b	#0,$34(a0)
 		bra.b	loc_B582
@@ -13216,7 +13216,7 @@ loc_B798:				; CODE XREF: ROM:0000B790j
 		move.w	#$D,d3
 		move.w	xposi(a0),d4
 		bsr.w	sub_F9D6
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_B7DA
 		cmpi.b	#$10,$32(a0)
 		bcc.b	loc_B7DA
@@ -14018,7 +14018,7 @@ loc_C046:				; CODE XREF: ROM:0000BF72j
 		bsr.w	speedset2
 
 loc_C056:				; CODE XREF: ROM:0000C050j
-		btst.b	#1,$22(a0)
+		btst.b	#1,cddat(a0)
 		beq.b	loc_C0A0
 		addi.w	#$18,yspeed(a0)
 		jsr	sub_14E18
@@ -14144,7 +14144,7 @@ loc_C186:				; CODE XREF: ROM:0000BF8Cp
 		subq.b	#2,d0
 		bne.b	loc_C1AA
 		bsr.w	sub_75C0
-		btst.b	#3,$22(a1)
+		btst.b	#3,cddat(a1)
 		bne.b	loc_C1A4
 		clr.b	$25(a0)
 		rts
@@ -22056,7 +22056,7 @@ loc_11A0C:				; DATA XREF: ROM:00011A04o
 
 loc_11A3C:				; CODE XREF: ROM:00011A34j
 		move.b	#$9a,$20(a0)
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 
 loc_11A48:				; DATA XREF: ROM:00011A04o
 		moveq	#0,d0
@@ -22081,7 +22081,7 @@ loc_11A6A:				; DATA XREF: ROM:00011A64o
 		move.w	#1536-1,$30(a0)
 		move.w	#$10,xspeed(a0)
 		move.b	#1,$1C(a0)
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		beq.b	locret_11A96
 		neg.w	xspeed(a0)
 
@@ -22146,11 +22146,11 @@ loc_11AF0:				; CODE XREF: ROM:00011AECj
 		move.w	xposi(a0),xposi(a1)
 		move.w	yposi(a0),yposi(a1)
 		move.w	yposi(a0),$34(a1)
-		move.b	$22(a0),$22(a1)
+		move.b	cddat(a0),cddat(a1)
 		move.b	#4,$28(a1)
 		move.b	#3,$1C(a1)
 		move.w	#$10,yspeed(a1)
-		btst.b	#1,$22(a0)
+		btst.b	#1,cddat(a0)
 		beq.b	loc_11B54
 		neg.w	yspeed(a1)
 
@@ -22344,7 +22344,7 @@ loc_11D34:				; CODE XREF: ROM:00011D8Cj
 
 loc_11D90:				; CODE XREF: ROM:00011D38j
 		moveq	#1,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_11D9C
 		neg.w	d0
 
@@ -22353,7 +22353,7 @@ loc_11D9C:				; CODE XREF: ROM:00011D98j
 		move.b	$28(a0),$24(a0)
 		addq.b	#word,$24(a0)
 		move.w	#-$40,$10(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	locret_11DBC
 		neg.w	xspeed(a0)
 
@@ -22446,7 +22446,7 @@ loc_11E5A:				; DATA XREF: ROM:00011CDCo
 
 loc_11E86:				; CODE XREF: ROM:00011E80j
 		move.w	#-$200,$10(a0)
-		btst.b	#0,$22(a1)
+		btst.b	#0,cddat(a1)
 		beq.b	loc_11E98
 		neg.w	$10(a0)
 
@@ -22669,7 +22669,7 @@ locret_120BE:				; DATA XREF: ROM:000120AEo
 loc_120C0:				; DATA XREF: ROM:000120AEo
 		tst.w	$36(a0)
 		bne.b	loc_120D6
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	locret_120D4
 		move.w	#30,$36(a0)
 
@@ -22766,7 +22766,7 @@ locret_1217E:				; CODE XREF: ROM:00012142j
 loc_12180:				; CODE XREF: ROM:00012088p
 		tst.b	$38(a0)
 		beq.b	locret_121C0
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		bne.b	loc_1219A
 		tst.b	$3E(a0)
 		beq.b	locret_121C0
@@ -22850,7 +22850,7 @@ loc_12248:				; DATA XREF: ROM:000121FAo
 		move.w	xposi(a0),xposi(a1)
 		move.w	yposi(a0),yposi(a1)
 		move.b	1(a0),1(a1)
-		move.b	$22(a0),$22(a1)
+		move.b	cddat(a0),cddat(a1)
 
 locret_12282:				; CODE XREF: ROM:0001224Cj
 					; ROM:00012258j ...
@@ -22870,7 +22870,7 @@ loc_12284:				; DATA XREF: ROM:000121FAo
 		move.b	#2,$1A(a0)
 		addq.w	#8,yposi(a0)
 		move.w	#$200,xspeed(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_122D6
 		neg.w	xspeed(a0)
 
@@ -22886,7 +22886,7 @@ loc_122E0:				; DATA XREF: ROM:000121FAo
 
 loc_122F0:				; CODE XREF: ROM:000122E8j
 		bsr.w	speedset2
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_1230A
 		moveq	#-8,d3
 		bsr.w	sub_1506C
@@ -23372,11 +23372,11 @@ loc_1274E:				; CODE XREF: ROM:0001273Ej
 		move.b	#$15,$1C(a1)
 		move.w	#$23,$3E(a1)
 		move.b	#0,$3C(a1)
-		bclr.b	#5,$22(a1)
-		bclr.b	#4,$22(a1)
-		btst.b	#2,$22(a1)
+		bclr.b	#5,cddat(a1)
+		bclr.b	#4,cddat(a1)
+		btst.b	#2,cddat(a1)
 		beq.w	loc_12740
-		bclr.b	#2,$22(a1)
+		bclr.b	#2,cddat(a1)
 		move.b	#$13,$16(a1)
 		move.b	#9,$17(a1)
 		subq.w	#5,yposi(a1)
@@ -23928,7 +23928,7 @@ loc_13E9C:				; CODE XREF: ROM:00013CFCj
 		bne.w	loc_13F86
 		cmpi.b	#6,playerwk+$24
 		bcc.w	locret_1408C
-		btst.b	#6,playerwk+$22
+		btst.b	#6,playerwk+cddat
 		beq.w	locret_1408C
 		subq.w	#1,$38(a0)
 		bpl.w	loc_13FAC
@@ -23978,7 +23978,7 @@ loc_13F20:				; CODE XREF: ROM:00013EF4j
 		lea	playerwk,a0
 		bsr.w	sub_137A0
 		move.b	#$17,$1C(a0)
-		bset.b	#1,$22(a0)
+		bset.b	#1,cddat(a0)
 		bset.b	#7,2(a0)
 		move.w	#0,$12(a0)
 		move.w	#0,$10(a0)
@@ -24023,7 +24023,7 @@ loc_13FBC:				; CODE XREF: ROM:00013FAAj
 		move.b	#$A,actno(a1)
 		move.w	playerwk+xposi,xposi(a1)
 		moveq	#6,d0
-		btst.b	#0,playerwk+$22
+		btst.b	#0,playerwk+cddat
 		beq.b	loc_13FF2
 		neg.w	d0
 		move.b	#$40,$26(a1) ; '@'
@@ -24186,7 +24186,7 @@ loc_141A4:				; DATA XREF: ROM:00014166o
 		beq.b	loc_141D6
 		move.w	playerwk+xposi,xposi(a0)
 		move.w	playerwk+yposi,yposi(a0)
-		move.b	playerwk+$22,$22(a0)
+		move.b	playerwk+cddat,cddat(a0)
 		lea	off_1434C,a1
 		jsr	patchg
 		jmp	actionsub
@@ -24241,7 +24241,7 @@ loc_14226:				; CODE XREF: ROM:00014204j
 		lea	(a1,d0.w),a1
 		move.w	(a1)+,xposi(a0)
 		move.w	(a1)+,yposi(a0)
-		move.b	playerwk+$22,$22(a0)
+		move.b	playerwk+cddat,cddat(a0)
 		lea	off_1434C,a1
 		jsr	patchg
 		jmp	actionsub
@@ -24286,7 +24286,7 @@ loc_14270:				; CODE XREF: ROM:0001426Cj
 loc_1429A:				; DATA XREF: ROM:00014262o
 		move.w	playerwk+xposi,xposi(a0)
 		move.w	playerwk+yposi,yposi(a0)
-		move.b	playerwk+$22,$22(a0)
+		move.b	playerwk+cddat,cddat(a0)
 		lea	off_14456,a1
 		jsr	patchg
 		cmpi.b	#2,$1A(a0)
@@ -24519,7 +24519,7 @@ byte_145E8:	dc.b 1			; DATA XREF: ROM:000145CCo
 
 sub_145EE:				; CODE XREF: ROM:00012E32p
 					; ROM:00012E7Cp
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_14602
 		moveq	#0,d0
 		move.b	d0,$FFFFF768
@@ -24614,8 +24614,8 @@ loc_146C6:				; CODE XREF: sub_145EE+E2j
 loc_146CC:				; CODE XREF: sub_145EE+D6j
 		tst.b	$38(a0)
 		bne.b	loc_146C6
-		bset.b	#1,$22(a0)
-		bclr.b	#5,$22(a0)
+		bset.b	#1,cddat(a0)
+		bclr.b	#5,cddat(a0)
 		move.b	#1,$1D(a0)
 		rts
 
@@ -24742,8 +24742,8 @@ loc_147F8:				; CODE XREF: ROM:00014802j
 loc_147FE:				; CODE XREF: ROM:000147F6j
 		tst.b	$38(a0)
 		bne.b	loc_147F8
-		bset.b	#1,$22(a0)
-		bclr.b	#5,$22(a0)
+		bset.b	#1,cddat(a0)
+		bclr.b	#5,cddat(a0)
 		move.b	#1,$1D(a0)
 		rts
 
@@ -24805,8 +24805,8 @@ loc_1489A:				; CODE XREF: ROM:000148A4j
 loc_148A0:				; CODE XREF: ROM:00014898j
 		tst.b	$38(a0)
 		bne.b	loc_1489A
-		bset.b	#1,$22(a0)
-		bclr.b	#5,$22(a0)
+		bset.b	#1,cddat(a0)
+		bclr.b	#5,cddat(a0)
 		move.b	#1,$1D(a0)
 		rts
 
@@ -24868,8 +24868,8 @@ loc_1493C:				; CODE XREF: ROM:00014946j
 loc_14942:				; CODE XREF: ROM:0001493Aj
 		tst.b	$38(a0)
 		bne.b	loc_1493C
-		bset.b	#1,$22(a0)
-		bclr.b	#5,$22(a0)
+		bset.b	#1,cddat(a0)
+		bclr.b	#5,cddat(a0)
 		move.b	#1,$1D(a0)
 		rts
 
@@ -25818,7 +25818,7 @@ loc_15120:				; DATA XREF: ROM:000150A8o
 		addq.w	#1,d3
 		move.w	xposi(a0),d4
 		bsr.w	sub_F9D6
-		btst.b	#5,$22(a0)
+		btst.b	#5,cddat(a0)
 		beq.w	loc_151B4
 		lea	playerwk,a1
 		moveq	#$E,d1
@@ -25837,9 +25837,9 @@ loc_1515A:				; CODE XREF: ROM:00015156j
 		move.w	#$800,mspeed(a1)
 		move.w	#0,xspeed(a1)
 		move.w	#0,yspeed(a1)
-		bclr.b	#5,$22(a0)
-		bclr.b	#5,$22(a1)
-		bset.b	#1,$22(a1)
+		bclr.b	#5,cddat(a0)
+		bclr.b	#5,cddat(a1)
+		bset.b	#1,cddat(a1)
 		move.w	xposi(a1),d2
 		move.w	yposi(a1),d3
 		bsr.w	sub_15248
@@ -26117,7 +26117,7 @@ loc_15546:				; CODE XREF: ROM:00015538j
 		ext.w	d1
 		asl.w	#3,d1
 		move.w	d1,$36(a0)
-		move.b	$22(a0),d0
+		move.b	cddat(a0),d0
 		ror.b	#2,d0
 		andi.b	#$c0,d0
 		move.b	d0,$26(a0)
@@ -26144,7 +26144,7 @@ loc_15570:				; CODE XREF: ROM:00015564p
 		add.w	d2,d1
 		cmp.w	d3,d1
 		bcc.b	loc_155A8
-		btst.b	#1,$22(a1)
+		btst.b	#1,cddat(a1)
 		beq.b	loc_155B8
 		clr.b	$3A(a0)
 		rts
@@ -26165,12 +26165,12 @@ loc_155B8:				; CODE XREF: ROM:000155A0j
 		tst.b	$3A(a0)
 		bne.b	loc_155E2
 		move.b	#1,$3A(a0)
-		btst.b	#2,$22(a1)
+		btst.b	#2,cddat(a1)
 		bne.b	loc_155D0
 		clr.b	$1C(a1)
 
 loc_155D0:				; CODE XREF: ROM:000155CAj
-		bclr.b	#5,$22(a1)
+		bclr.b	#5,cddat(a1)
 		move.b	#1,$1D(a1)
 		move.b	#1,$38(a1)
 
@@ -26312,7 +26312,7 @@ loc_156F0:				; CODE XREF: ROM:000156CAp
 		addi.w	#$30,d1
 		cmpi.w	#$30,d1
 		bcc.b	locret_1572E
-		btst.b	#1,$22(a1)
+		btst.b	#1,cddat(a1)
 		bne.b	locret_1572E
 		move.w	$36(a0),d0
 		add.w	d0,xposi(a1)
@@ -26394,11 +26394,11 @@ loc_157E4:				; CODE XREF: ROM:000157C6j
 
 
 loc_1580E:				; CODE XREF: ROM:000157F4j
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_1582A
 		lea	playerwk,a1
-		bclr.b	#3,$22(a1)
-		bclr.b	#3,$22(a0)
+		bclr.b	#3,cddat(a1)
+		bclr.b	#3,cddat(a0)
 		clr.b	$25(a0)
 
 loc_1582A:				; CODE XREF: ROM:00015814j
@@ -26437,11 +26437,11 @@ loc_1585A:				; CODE XREF: ROM:00015842j
 
 
 loc_15884:				; CODE XREF: ROM:0001586Aj
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_158A0
 		lea	playerwk,a1
-		bclr.b	#3,$22(a1)
-		bclr.b	#3,$22(a0)
+		bclr.b	#3,cddat(a1)
+		bclr.b	#3,cddat(a0)
 		clr.b	$25(a0)
 
 loc_158A0:				; CODE XREF: ROM:0001588Aj
@@ -26570,7 +26570,7 @@ loc_15A14:				; DATA XREF: ROM:00015A08o
 		move.w	#$60,d1	; '`'
 		moveq	#0,d0
 		move.b	$FFFFFE6C,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_15A2A
 		neg.w	d0
 		add.w	d1,d0
@@ -26602,7 +26602,7 @@ loc_15A62:				; DATA XREF: ROM:00015A08o
 		move.w	#$30,d1
 		moveq	#0,d0
 		move.b	$FFFFFE64,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_15A7A
 		neg.w	d0
 		addi.w	#$80,d0
@@ -26909,7 +26909,7 @@ loc_15DB4:				; CODE XREF: ROM:00015D9Aj
 loc_15DC2:				; CODE XREF: ROM:00015DACj
 					; ROM:00015DF8j ...
 		move.w	$3A(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_15DD4
 		neg.w	d0
 		addi.w	#$80,d0
@@ -26948,7 +26948,7 @@ loc_15E14:				; CODE XREF: ROM:00015E06j
 loc_15E1E:				; CODE XREF: ROM:00015E0Cj
 					; ROM:00015E4Ej ...
 		move.w	$3A(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_15E30
 		neg.w	d0
 		addi.w	#$80,d0
@@ -26996,7 +26996,7 @@ loc_15E7C:				; CODE XREF: ROM:00015E5Cj
 loc_15E8E:				; CODE XREF: ROM:00015E68j
 					; ROM:00015E6Ej ...
 		move.w	$3A(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_15EA0
 		neg.w	d0
 		addi.w	#$38,d0
@@ -27040,7 +27040,7 @@ loc_15EE0:				; CODE XREF: ROM:00015ED8j
 loc_15EF0:				; CODE XREF: ROM:00015EBCj
 					; ROM:00015EC2j ...
 		move.w	$3A(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_15F02
 		neg.w	d0
 		addi.w	#$38,d0
@@ -27211,11 +27211,11 @@ loc_160D6:				; CODE XREF: ROM:000160C4j
 
 
 loc_160F0:				; CODE XREF: ROM:000160BCj
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_16112
 		lea	playerwk,a1
-		bclr.b	#3,$22(a1)
-		bclr.b	#3,$22(a0)
+		bclr.b	#3,cddat(a1)
+		bclr.b	#3,cddat(a0)
 		move.b	#2,$24(a0)
 		clr.b	$25(a0)
 
@@ -27489,11 +27489,11 @@ loc_163D8:				; CODE XREF: ROM:0001637Cj
 
 
 loc_16404:				; CODE XREF: ROM:000163E8j
-		btst.b	#3,$22(a0)
+		btst.b	#3,cddat(a0)
 		beq.b	loc_16420
 		lea	playerwk,a1
-		bclr.b	#3,$22(a1)
-		bclr.b	#3,$22(a0)
+		bclr.b	#3,cddat(a1)
+		bclr.b	#3,cddat(a0)
 		clr.b	$25(a0)
 
 loc_16420:				; CODE XREF: ROM:0001640Aj
@@ -27721,7 +27721,7 @@ loc_166C8:				; DATA XREF: ROM:0001669Ao
 		lea	playerwk,a1
 		move.w	xposi(a1),d0
 		sub.w	xposi(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_166E0
 		addi.w	#$F,d0
 
@@ -27747,9 +27747,9 @@ loc_1670E:				; CODE XREF: ROM:00016704j
 		move.w	#$800,mspeed(a1)
 		move.w	#0,xspeed(a1)
 		move.w	#0,yspeed(a1)
-		bclr.b	#5,$22(a0)
-		bclr.b	#5,$22(a1)
-		bset.b	#1,$22(a1)
+		bclr.b	#5,cddat(a0)
+		bclr.b	#5,cddat(a1)
+		bset.b	#1,cddat(a1)
 		move.w	xposi(a0),xposi(a1)
 		move.w	yposi(a0),yposi(a1)
 		clr.b	$32(a0)
@@ -27968,13 +27968,13 @@ loc_16952:				; DATA XREF: ROM:00016942o
 loc_16996:				; CODE XREF: ROM:0001698Ej
 		andi.b	#3,1(a0)
 		ori.b	#4,1(a0)
-		move.b	1(a0),$22(a0)
+		move.b	1(a0),cddat(a0)
 		move.b	#4,$18(a0)
 		move.b	#8,$19(a0)
 		move.b	#$B,$20(a0)
 		move.w	xposi(a0),d2
 		moveq	#$C,d5
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_169CA
 		neg.w	d5
 
@@ -27999,8 +27999,8 @@ loc_169D6:				; CODE XREF: ROM:00016A32j
 		add.w	d5,d2
 		move.w	d2,xposi(a1)
 		move.w	yposi(a0),yposi(a1)
-		move.b	$22(a0),$22(a1)
-		move.b	$22(a0),1(a1)
+		move.b	cddat(a0),cddat(a1)
+		move.b	cddat(a0),1(a1)
 		move.b	#8,$1A(a1)
 		move.l	a2,$3C(a1)
 		move.b	d4,$3C(a1)
@@ -28013,7 +28013,7 @@ loc_16A32:				; CODE XREF: ROM:000169DCj
 		clr.b	$3C(a0)
 
 loc_16A40:				; DATA XREF: ROM:00016942o
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.w	loc_16C96
 		moveq	#0,d0
 		move.b	$25(a0),d0
@@ -28095,7 +28095,7 @@ loc_16B02:				; DATA XREF: ROM:00016ACAo
 		move.l	xposi(a0),-(sp)
 		move.l	xposi(a0),d2
 		move.w	xspeed(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_16B1E
 		neg.w	d0
 
@@ -28134,8 +28134,8 @@ loc_16B5E:				; CODE XREF: ROM:00016B06j
 loc_16B70:				; CODE XREF: ROM:00016B34j
 					; ROM:00016B3Aj
 		move.l	d2,xposi(a0)
-		bchg.b	#0,$22(a0)
-		move.b	$22(a0),1(a0)
+		bchg.b	#0,cddat(a0)
+		move.b	cddat(a0),1(a0)
 		moveq	#0,d0
 		move.b	$3C(a0),d0
 		move.b	#$80,$2C(a0,d0.w)
@@ -28164,7 +28164,7 @@ loc_16BC0:				; CODE XREF: ROM:00016BBAj
 loc_16BCA:				; CODE XREF: ROM:00016BA2j
 					; DATA XREF: ROM:00016942o
 		movea.l	$3C(a0),a1
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.w	loc_16C90
 		move.b	$2B(a1),$2B(a0)
 		move.b	$25(a1),$25(a0)
@@ -28176,7 +28176,7 @@ loc_16BCA:				; CODE XREF: ROM:00016BA2j
 		move.l	xposi(a0),d2
 		move.l	d2,d3
 		move.w	xspeed(a0),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_16C0C
 		neg.w	d0
 
@@ -28196,8 +28196,8 @@ loc_16C0C:				; CODE XREF: ROM:00016C08j
 		swap	d3
 		move.l	d3,xposi(a0)
 		move.b	d1,$2C(a0,d0.w)
-		bchg.b	#0,$22(a0)
-		move.b	$22(a0),1(a0)
+		bchg.b	#0,cddat(a0)
+		move.b	cddat(a0),1(a0)
 		addq.b	#1,$3C(a0)
 		andi.b	#$F,$3C(a0)
 		bra.b	loc_16C64
@@ -28232,13 +28232,13 @@ word_16C88:
 		dc.w $200
 loc_16C90:				; CODE XREF: ROM:00016BD2j
 					; ROM:00016C6Aj
-		bset.b	#7,$22(a1)
+		bset.b	#7,cddat(a1)
 
 loc_16C96:				; CODE XREF: ROM:00016A44j
 		moveq	#0,d0
 		move.b	$24(a0),d0
 		move.w	word_16C88-2(pc,d0.w),d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_16CAA
 		neg.w	d0
 
@@ -29029,7 +29029,7 @@ loc_177E6:
 		addq.b	#2,$3F(a0)
 		cmpi.b	#8,$25(a0)
 		bcc.b	locret_1784A
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.b	loc_1784C
 		tst.b	$20(a0)
 		bne.b	locret_1784A
@@ -29154,7 +29154,7 @@ loc_1791A:				; DATA XREF: ROM:000177BCo
 
 loc_17944:				; CODE XREF: ROM:0001791Ej
 					; ROM:00017936j
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_17950
 		neg.w	xspeed(a0)
 
@@ -29170,7 +29170,7 @@ loc_17954:				; DATA XREF: ROM:000177BCo
 
 
 loc_17960:				; CODE XREF: ROM:00017958j
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		move.w	#64-1,$3C(a0)
 		subq.b	#word,r_no1(a0)
 		move.w	#0,xspeed(a0)
@@ -29186,8 +29186,8 @@ loc_1797A:				; DATA XREF: ROM:000177BCo
 
 
 loc_17984:				; CODE XREF: ROM:0001797Ej
-		bset.b	#0,$22(a0)
-		bclr.b	#7,$22(a0)
+		bset.b	#0,cddat(a0)
+		bclr.b	#7,cddat(a0)
 		clr.w	xspeed(a0)
 		addq.b	#word,r_no1(a0)
 		move.w	#-$26,$3C(a0)
@@ -29338,10 +29338,10 @@ loc_17AAA:				; CODE XREF: ROM:00017A6Ej
 		movea.l	$34(a0),a1
 		move.w	xposi(a1),xposi(a0)
 		move.w	yposi(a1),yposi(a0)
-		move.b	$22(a1),$22(a0)
+		move.b	cddat(a1),cddat(a0)
 		lea	off_17CBC,a1
 		jsr	patchg
-		move.b	$22(a0),d0
+		move.b	cddat(a0),d0
 		andi.b	#3,d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
@@ -29469,8 +29469,8 @@ loc_17C3C:				; CODE XREF: ROM:00017C34j
 		move.w	yposi(a1),d0
 		add.w	$32(a0),d0
 		move.w	d0,$38(a0)
-		move.b	$22(a1),$22(a0)
-		tst.b	$22(a1)
+		move.b	cddat(a1),cddat(a0)
+		tst.b	cddat(a1)
 		bpl.b	locret_17C66
 		move.b	#$3F,actno(a0)
 		move.b	#0,$24(a0)
@@ -29481,7 +29481,7 @@ locret_17C66:				; CODE XREF: ROM:00017C58j
 
 loc_17C68:				; DATA XREF: ROM:00017AF2o
 		movea.l	$34(a0),a1
-		tst.b	$22(a1)
+		tst.b	cddat(a1)
 		bpl.b	loc_17C7E
 		move.b	#$3F,actno(a0)
 		move.b	#0,$24(a0)
@@ -29499,7 +29499,7 @@ loc_17C84:				; DATA XREF: ROM:00017AF2o
 loc_17C8E:				; CODE XREF: ROM:00017C8Aj
 		move.b	d0,$1A(a0)
 		movea.l	$34(a0),a1
-		tst.b	$22(a1)
+		tst.b	cddat(a1)
 		bpl.b	loc_17CB6
 		move.b	#0,$20(a0)
 		bsr.w	sub_17860
@@ -29675,7 +29675,7 @@ loc_17E86:				; CODE XREF: ROM:00017ED6j
 		move.w	yposi(a0),yposi(a1)
 
 loc_17EA0:				; CODE XREF: ROM:00017E84j
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		clr.b	$25(a1)
 		move.b	(a2)+,$24(a1)
 		move.b	(a2)+,$1C(a1)
@@ -29697,7 +29697,7 @@ loc_17EDA:				; CODE XREF: ROM:00017E8Cj
 		lea	off_17CBC,a1
 		jsr	patchg
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -29730,7 +29730,7 @@ loc_17F38:				; CODE XREF: ROM:00017F26j
 loc_17F48:				; CODE XREF: ROM:000180B8j
 		tst.b	$3D(a0)
 		bne.b	loc_17F8E
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.b	loc_17F92
 		tst.b	$20(a0)
 		bne.b	locret_17F8C
@@ -29836,13 +29836,13 @@ loc_18046:				; CODE XREF: ROM:0001803Cj
 
 
 loc_1804E:				; CODE XREF: ROM:00018024j
-		bset	#0,$22(a0)
+		bset	#0,cddat(a0)
 		addq.b	#2,$3F(a0)
 		move.b	$3F(a0),d0
 		jsr	sinset.l
 		tst.w	d1
 		bpl.b	loc_1806C
-		bclr	#0,$22(a0)
+		bclr	#0,cddat(a0)
 
 loc_1806C:				; CODE XREF: ROM:00018064j
 		asr.w	#4,d0
@@ -29897,7 +29897,7 @@ loc_180D2:				; CODE XREF: ROM:000180C4j
 loc_180E6:				; CODE XREF: ROM:000180D8j
 		bne.b	loc_180F2
 		addq.b	#2,$25(a0)
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 
 loc_180F2:				; CODE XREF: ROM:000180E6j
 		bra.w	loc_17F38
@@ -29915,7 +29915,7 @@ loc_180F6:				; DATA XREF: ROM:00017F0Eo
 loc_18112:				; CODE XREF: ROM:000180FAj
 		move.w	#$82,d0
 		jsr	bgmset.l
-		bset	#0,$22(a0)
+		bset	#0,cddat(a0)
 		addq.b	#2,$25(a0)
 
 loc_18126:				; CODE XREF: ROM:00018102j
@@ -30037,9 +30037,9 @@ loc_181F8:				; CODE XREF: ROM:000181B6j
 		movea.l	$34(a0),a1
 		move.w	xposi(a1),xposi(a0)
 		move.w	yposi(a1),yposi(a0)
-		move.b	$22(a1),$22(a0)
+		move.b	cddat(a1),cddat(a0)
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -30080,7 +30080,7 @@ loc_18276:				; CODE XREF: ROM:000182C4j
 		move.w	yposi(a0),yposi(a1)
 
 loc_18290:				; CODE XREF: ROM:00018274j
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		clr.b	$25(a1)
 		move.b	(a2)+,$24(a1)
 		move.b	(a2)+,$1C(a1)
@@ -30101,7 +30101,7 @@ loc_182C8:				; CODE XREF: ROM:0001827Cj
 		lea	off_17CBC,a1
 		jsr	patchg
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -30138,7 +30138,7 @@ loc_1833E:				; CODE XREF: ROM:000183BEj
 		move.w	$30(a0),xposi(a0)
 		cmpi.b	#4,$25(a0)
 		bcc.b	locret_18390
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.b	loc_18392
 		tst.b	$20(a0)
 		bne.b	locret_18390
@@ -30207,7 +30207,7 @@ loc_183DE:				; CODE XREF: ROM:000183DAj
 loc_183E6:				; CODE XREF: ROM:000183D8j
 		move.w	#$200,xspeed(a0)
 		move.w	#$100,yspeed(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_183FE
 		neg.w	xspeed(a0)
 
@@ -30241,7 +30241,7 @@ loc_1844A:				; CODE XREF: ROM:0001841Aj
 		move.b	d0,$34(a0)
 
 loc_1845C:				; CODE XREF: ROM:00018412j
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_18474
 		cmpi.w	#$1910,$30(a0)
 		blt.b	locret_1849C
@@ -30279,7 +30279,7 @@ loc_1849E:				; DATA XREF: ROM:000183C2o
 		beq.b	loc_184EA
 		clr.w	yspeed(a0)
 		move.w	#$50,$3C(a0) ; 'P'
-		bchg	#0,$22(a0)
+		bchg	#0,cddat(a0)
 		jsr	actwkchk
 		bne.b	loc_184EA
 		move.w	$30(a0),xposi(a1)
@@ -30306,8 +30306,8 @@ loc_184F6:				; DATA XREF: ROM:000182F8o
 
 
 loc_18500:				; CODE XREF: ROM:000184FAj
-		bset.b	#0,$22(a0)
-		bclr.b	#7,$22(a0)
+		bset.b	#0,cddat(a0)
+		bclr.b	#7,cddat(a0)
 		clr.w	xspeed(a0)
 		addq.b	#2,$25(a0)
 		move.w	#-$26,$3C(a0)
@@ -30471,9 +30471,9 @@ loc_1864A:				; CODE XREF: ROM:0001869Cj
 		movea.l	$34(a0),a1
 		move.w	xposi(a1),xposi(a0)
 		move.w	yposi(a1),yposi(a0)
-		move.b	$22(a1),$22(a0)
+		move.b	cddat(a1),cddat(a0)
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -30557,13 +30557,13 @@ off_1874A:	dc.w loc_18752-off_1874A; 0 ; DATA XREF: ROM:0001874Ao
 
 
 loc_18752:				; DATA XREF: ROM:0001874Ao
-		bset.b	#1,$22(a0)
+		bset.b	#1,cddat(a0)
 		subq.b	#1,$29(a0)
 		bpl.b	locret_18780
 		move.b	#-$75,$20(a0)
 		clr.b	$28(a0)
 		addi.w	#$18,yspeed(a0)
-		bclr.b	#1,$22(a0)
+		bclr.b	#1,cddat(a0)
 		bsr.w	sub_14E18
 		tst.w	d1
 		bpl.b	locret_18780
@@ -30652,7 +30652,7 @@ loc_1882C:				; CODE XREF: ROM:00018800j
 
 
 loc_18832:				; DATA XREF: ROM:0001874Ao
-		bclr.b	#1,$22(a0)
+		bclr.b	#1,cddat(a0)
 		addi.w	#$24,yspeed(a0)
 		move.w	xposi(a0),d0
 		sub.w	$32(a0),d0
@@ -30744,7 +30744,7 @@ loc_1890A:				; CODE XREF: ROM:00018958j
 		move.w	yposi(a0),yposi(a1)
 
 loc_18924:				; CODE XREF: ROM:00018908j
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		clr.b	$25(a1)
 		move.b	(a2)+,$24(a1)
 		move.b	(a2)+,$1C(a1)
@@ -30782,7 +30782,7 @@ loc_1897C:				; DATA XREF: ROM:000188C6o
 		lea	off_17CBC,a1
 		jsr	patchg
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -30824,7 +30824,7 @@ loc_189FE:				; CODE XREF: ROM:000189ECj
 					; ROM:00018B3Cj ...
 		cmpi.b	#6,$25(a0)
 		bcc.b	locret_18A44
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.b	loc_18A46
 		tst.b	$20(a0)
 		bne.b	locret_18A44
@@ -30864,7 +30864,7 @@ loc_18A46:				; CODE XREF: ROM:00018A0Aj
 loc_18A5E:				; DATA XREF: ROM:000189ACo
 		move.w	$30(a0),d0
 		move.w	#$200,xspeed(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_18A7C
 		neg.w	xspeed(a0)
 		cmpi.w	#$2008,d0
@@ -30877,7 +30877,7 @@ loc_18A7C:				; CODE XREF: ROM:00018A6Ej
 		blt.b	loc_18A88
 
 loc_18A82:				; CODE XREF: ROM:00018A7Aj
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 
 loc_18A88:				; CODE XREF: ROM:00018A78j
 					; ROM:00018A80j
@@ -30894,7 +30894,7 @@ loc_18A9E:				; CODE XREF: ROM:00018A9Aj
 					; ROM:00018AB4j
 		move.w	(a2)+,d1
 		movea.l	d1,a3
-		btst.b	#3,$22(a3)
+		btst.b	#3,cddat(a3)
 		bne.b	loc_18AB4
 		move.w	xposi(a3),d3
 		add.w	d4,d3
@@ -30944,7 +30944,7 @@ loc_18AFA:				; CODE XREF: ROM:00018B04j
 		move.w	xposi(a0),xposi(a1)
 		move.w	yposi(a0),yposi(a1)
 		addi.w	#$20,yposi(a1)
-		move.b	$22(a2),$22(a1)
+		move.b	cddat(a2),cddat(a1)
 		move.l	a2,$3C(a1)
 
 loc_18B36:				; CODE XREF: ROM:00018AD8j
@@ -30968,8 +30968,8 @@ loc_18B48:				; DATA XREF: ROM:000189ACo
 loc_18B52:				; CODE XREF: ROM:00018B4Cj
 		addq.b	#2,$25(a0)
 		clr.w	yspeed(a0)
-		bset.b	#0,$22(a0)
-		bclr.b	#7,$22(a0)
+		bset.b	#0,cddat(a0)
+		bclr.b	#7,cddat(a0)
 		clr.w	xspeed(a0)
 		move.b	#-$18,$3C(a0)
 		tst.b	$FFFFF7A7
@@ -31099,9 +31099,9 @@ loc_18C78:				; CODE XREF: ROM:00018CCCj
 		movea.l	$34(a0),a1
 		move.w	xposi(a1),xposi(a0)
 		move.w	yposi(a1),yposi(a0)
-		move.b	$22(a1),$22(a0)
+		move.b	cddat(a1),cddat(a0)
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -31157,11 +31157,11 @@ loc_18D10:				; DATA XREF: ROM:00018D04o
 		movea.l	$3C(a0),a1
 		move.w	xposi(a1),$30(a0)
 		move.w	yposi(a1),$34(a0)
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		move.w	xposi(a0),d0
 		cmp.w	xposi(a1),d0
 		bgt.b	loc_18D68
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		move.b	#2,$3A(a0)
 
 loc_18D68:				; CODE XREF: ROM:00018D5Aj
@@ -31186,7 +31186,7 @@ loc_18D8E:				; CODE XREF: ROM:00018D8Aj
 		bgt.b	locret_18DC4
 		movea.l	$3C(a0),a1
 		moveq	#2,d1
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		beq.b	loc_18DAE
 		moveq	#0,d1
 
@@ -31347,7 +31347,7 @@ loc_18ED0:
 		clr.b	$20(a1)
 		subq.b	#1,$21(a1)
 		bne.b	loc_18F38
-		bset	#7,$22(a1)
+		bset	#7,cddat(a1)
 		clr.w	xspeed(a0)
 		clr.w	yspeed(a0)
 
@@ -31398,7 +31398,7 @@ loc_18FA2:				; CODE XREF: ROM:00018DC0j
 		move.b	d1,$3A(a0)
 		cmp.b	$1A(a1),d1
 		beq.b	loc_19008
-		bclr.b	#3,$22(a1)
+		bclr.b	#3,cddat(a1)
 		beq.b	loc_19008
 		clr.b	$25(a1)
 		move.b	#2,$24(a1)
@@ -31410,8 +31410,8 @@ loc_18FA2:				; CODE XREF: ROM:00018DC0j
 		asr.w	yspeed(a2)
 
 loc_18FDC:				; CODE XREF: ROM:00018FD6j
-		bset.b	#1,$22(a2)
-		bclr.b	#3,$22(a2)
+		bset.b	#1,cddat(a2)
+		bclr.b	#3,cddat(a2)
 		clr.b	$3C(a2)
 		move.l	a0,-(sp)
 		lea	(a2),a0
@@ -31531,7 +31531,7 @@ loc_19140:				; CODE XREF: ROM:0001918Cj
 		move.w	yposi(a0),yposi(a1)
 
 loc_19158:				; CODE XREF: ROM:0001913Ej
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		clr.b	$25(a1)
 		move.b	(a2)+,$24(a1)
 		move.b	(a2)+,$1C(a1)
@@ -31552,7 +31552,7 @@ loc_19190:				; CODE XREF: ROM:00019146j
 		lea	off_17CBC,a1
 		jsr	patchg
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -31594,7 +31594,7 @@ loc_19202:				; CODE XREF: ROM:0001938Aj
 		move.b	d0,$34(a0)
 		cmpi.b	#6,$25(a0)
 		bcc.b	locret_19256
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bmi.b	loc_19258
 		tst.b	$20(a0)
 		bne.b	locret_19256
@@ -31634,7 +31634,7 @@ loc_19258:				; CODE XREF: ROM:0001921Cj
 loc_19270:				; DATA XREF: ROM:000191C0o
 		move.w	$30(a0),d0
 		move.w	#$140,xspeed(a0)
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_1928E
 		neg.w	xspeed(a0)
 		cmpi.w	#$2C08,d0
@@ -31647,7 +31647,7 @@ loc_1928E:				; CODE XREF: ROM:00019280j
 		blt.b	loc_1929E
 
 loc_19294:				; CODE XREF: ROM:0001928Cj
-		bchg.b	#0,$22(a0)
+		bchg.b	#0,cddat(a0)
 		clr.b	$3D(a0)
 
 loc_1929E:				; CODE XREF: ROM:0001928Aj
@@ -31879,8 +31879,8 @@ loc_19474:				; DATA XREF: ROM:000191C0o
 loc_1947E:				; CODE XREF: ROM:00019478j
 		addq.b	#2,$25(a0)
 		clr.w	yspeed(a0)
-		bset.b	#0,$22(a0)
-		bclr.b	#7,$22(a0)
+		bset.b	#0,cddat(a0)
+		bclr.b	#7,cddat(a0)
 		clr.w	xspeed(a0)
 		move.w	#-1,$3C(a0)
 		tst.b	$FFFFF7A7
@@ -32058,9 +32058,9 @@ loc_195BE:				; CODE XREF: ROM:0001953Ej
 		move.w	yposi(a1),yposi(a0)
 
 loc_195DA:				; CODE XREF: ROM:00019688j
-		move.b	$22(a1),$22(a0)
+		move.b	cddat(a1),cddat(a0)
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -32313,7 +32313,7 @@ loc_1984C:				; DATA XREF: ROM:00019840o
 		move.w	#$5A4,yposi(a0)
 		move.b	#$F,$20(a0)
 		move.b	#$10,$21(a0)
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		clr.b	$25(a0)
 		move.b	(a2)+,$24(a0)
 		move.b	(a2)+,$1C(a0)
@@ -32648,8 +32648,8 @@ loc_19C60:				; CODE XREF: ROM:00019C3Cj
 
 loc_19C62:				; CODE XREF: ROM:00019C5Ej
 					; DATA XREF: ROM:00019B6Eo
-		bclr.b	#3,$22(a0)
-		bclr.b	#3,playerwk+$22
+		bclr.b	#3,cddat(a0)
+		bclr.b	#3,playerwk+cddat
 		bra.w	loc_1982C
 
 
@@ -32907,11 +32907,11 @@ loc_19EC6:				; CODE XREF: ROM:00019EC2j
 loc_19F10:				; CODE XREF: ROM:00019EACj
 		tst.w	$32(a0)
 		bmi.w	loc_19FA6
-		bclr.b	#0,$22(a0)
+		bclr.b	#0,cddat(a0)
 		move.w	playerwk+xposi,d0
 		sub.w	xposi(a0),d0
 		bcs.b	loc_19F2E
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 
 loc_19F2E:				; CODE XREF: ROM:00019F26j
 		move.w	#$2B,d1	; '+'
@@ -32933,7 +32933,7 @@ loc_19F50:				; CODE XREF: ROM:00019F46j
 		cmpi.b	#2,playerwk+$1C
 		bne.b	loc_19F48
 		move.w	#$300,d0
-		btst.b	#0,$22(a0)
+		btst.b	#0,cddat(a0)
 		bne.b	loc_19F6A
 		neg.w	d0
 
@@ -33021,7 +33021,7 @@ sub_1A020:				; CODE XREF: ROM:00019FFEp
 
 loc_1A02A:				; DATA XREF: ROM:00019E80o
 		move.b	#$30,$17(a0) ; '0'
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		jsr	speedset2
 		move.b	#6,$1A(a0)
 		addi.w	#$10,yspeed(a0)
@@ -33039,7 +33039,7 @@ loc_1A070:				; CODE XREF: ROM:0001A04Ej
 
 
 loc_1A074:				; DATA XREF: ROM:00019E80o
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		move.b	#4,$1C(a0)
 		jsr	speedset2
 		addi.w	#$10,yspeed(a0)
@@ -33141,7 +33141,7 @@ loc_1A192:				; DATA XREF: ROM:00019E80o
 		move.l	#Map_RobotnikShip,4(a0)
 		move.w	#$0400,2(a0)
 		move.b	#0,$1C(a0)
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		jsr	speedset2
 		cmpi.w	#$544,yposi(a0)
 		bcc.b	loc_1A1D0
@@ -33155,7 +33155,7 @@ loc_1A1D0:				; CODE XREF: ROM:0001A1B8j
 
 
 loc_1A1D4:				; DATA XREF: ROM:00019E80o
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		jsr	speedset2
 		tst.w	$30(a0)
 		bne.b	loc_1A1FC
@@ -33168,7 +33168,7 @@ loc_1A1D4:				; DATA XREF: ROM:00019E80o
 loc_1A1FC:				; CODE XREF: ROM:0001A1E4j
 		subq.w	#1,$30(a0)
 		bne.b	loc_1A216
-		tst.b	$22(a0)
+		tst.b	cddat(a0)
 		bpl.b	loc_1A210
 		move.w	#$60,yspeed(a0) ; '`'
 		bra.b	loc_1A216
@@ -33237,9 +33237,9 @@ loc_1A296:				; CODE XREF: ROM:0001A30Ej
 loc_1A2A6:				; CODE XREF: ROM:0001A27Ej
 					; ROM:0001A2E2j ...
 		movea.l	$34(a0),a1
-		move.b	$22(a1),$22(a0)
+		move.b	cddat(a1),cddat(a0)
 		moveq	#3,d0
-		and.b	$22(a0),d0
+		and.b	cddat(a0),d0
 		andi.b	#-4,1(a0)
 		or.b	d0,1(a0)
 		jmp	actionsub
@@ -33282,7 +33282,7 @@ loc_1A312:				; CODE XREF: ROM:0001A2EEj
 
 
 loc_1A346:				; DATA XREF: ROM:00019D66o
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		movea.l	$34(a0),a1
 		cmpi.l	#Map_RobotnikShip,4(a1)
 		beq.b	loc_1A35E
@@ -33321,7 +33321,7 @@ loc_1A3A6:				; CODE XREF: ROM:0001A39Cj
 
 loc_1A3AC:				; DATA XREF: ROM:00019D66o
 		move.b	#0,$1A(a0)
-		bset.b	#0,$22(a0)
+		bset.b	#0,cddat(a0)
 		movea.l	$34(a0),a1
 		cmpi.b	#$C,$34(a1)
 		bne.b	loc_1A3D0
@@ -34009,8 +34009,8 @@ loc_1ABE0:				; CODE XREF: Sprite_EggPrison+A6j
 		tst.b	$25(a0)
 		beq.b	loc_1ABF6
 		clr.b	$25(a0)
-		bclr.b	#3,playerwk+$22
-		bset.b	#1,playerwk+$22
+		bclr.b	#3,playerwk+cddat
+		bset.b	#1,playerwk+cddat
 
 loc_1ABF6:				; CODE XREF: Sprite_EggPrison+C2j
 		move.b	#2,$1A(a0)
@@ -34029,15 +34029,15 @@ loc_1ABFE:				; DATA XREF: Sprite_EggPrison+36o
 		tst.b	$25(a0)
 		beq.b	locret_1AC60
 		addq.w	#8,yposi(a0)
-		move.b	#$A,$24(a0)
+		move.b	#$A,r_no0(a0)
 		move.w	#$3C,$1E(a0)
 		clr.b	$FFFFFE1E
 		clr.b	$FFFFF7AA
 		move.b	#1,$FFFFF7CC
 		move.w	#$800,swdata
 		clr.b	$25(a0)
-		bclr.b	#3,playerwk+$22
-		bset.b	#1,playerwk+$22
+		bclr.b	#3,playerwk+cddat
+		bset.b	#1,playerwk+cddat
 
 locret_1AC60:				; CODE XREF: Sprite_EggPrison+108j
 		rts
@@ -34071,7 +34071,7 @@ loc_1ACA0:				; CODE XREF: Sprite_EggPrison+146j
 
 loc_1ACA8:				; CODE XREF: Sprite_EggPrison+182j
 		move.b	#2,$FFFFF7A7
-		move.b	#$C,$24(a0)
+		move.b	#$C,r_no0(a0)
 		move.b	#6,$1A(a0)
 		move.w	#$96,$1E(a0)
 		addi.w	#$20,yposi(a0)
@@ -34082,7 +34082,7 @@ loc_1ACA8:				; CODE XREF: Sprite_EggPrison+182j
 loc_1ACCE:				; CODE XREF: Sprite_EggPrison+1D2j
 		jsr	actwkchk
 		bne.b	locret_1ACF8
-		move.b	#$28,actno(a1)
+		move.b	#usagi_act,actno(a1)
 		move.w	xposi(a0),xposi(a1)
 		move.w	yposi(a0),yposi(a1)
 		add.w	d4,xposi(a1)
@@ -34183,7 +34183,6 @@ byte_1ADDC:	dc.b 1			; DATA XREF: Sprite_EggPrison+252o
 		dc.b $F0,  7,$20,$6D,$F8; 0
 byte_1ADE2:	dc.b 0			; DATA XREF: Sprite_EggPrison+252o
 		even
-; End of function Sprite_EggPrison
 pcol:
 		nop	
 		move.w	xposi(a0),d2
@@ -34266,9 +34265,7 @@ pcol:
 		addq.b	#2,r_no0(a1)
 locret_1AEF2:
 		rts
-
-
-loc_1AEF4:				; CODE XREF: pcol+FEj
+loc_1AEF4:
 		tst.w	yspeed(a0)
 		bpl.b	loc_1AF1E
 		move.w	yposi(a0),d0
@@ -34281,27 +34278,19 @@ loc_1AEF4:				; CODE XREF: pcol+FEj
 		bne.b	locret_1AF2E
 		addq.b	#4,r_no1(a1)
 		rts
-
-
-loc_1AF1E:				; CODE XREF: pcol+114j
+loc_1AF1E:
 		cmpi.b	#2,mstno(a0)
 		bne.b	locret_1AF2E
 		neg.w	yspeed(a0)
 		addq.b	#2,r_no0(a1)
-
-locret_1AF2E:				; CODE XREF: pcol+122j
-					; pcol+132j ...
+locret_1AF2E:
 		rts
-
-
-loc_1AF30:				; CODE XREF: pcol+E0j
-					; ROM:0001B144j
+loc_1AF30:
 		tst.b	$FFFFFE2D
 		bne.b	loc_1AF40
 		cmpi.b	#2,mstno(a0)
 		bne.w	loc_1AFE0
-
-loc_1AF40:				; CODE XREF: pcol+150j
+loc_1AF40:
 		tst.b	colicnt(a1)
 		beq.b	loc_1AF6A
 		neg.w	xspeed(a0)
@@ -34312,12 +34301,9 @@ loc_1AF40:				; CODE XREF: pcol+150j
 		subq.b	#1,colicnt(a1)
 		bne.b	locret_1AF68
 		bset.b	#7,cddat(a1)
-
-locret_1AF68:				; CODE XREF: pcol+17Cj
+locret_1AF68:
 		rts
-
-
-loc_1AF6A:				; CODE XREF: pcol+160j
+loc_1AF6A:
 		bset.b	#7,cddat(a1)
 		moveq	#0,d0
 		move.w	$FFFFF7D0,d0
@@ -34325,16 +34311,14 @@ loc_1AF6A:				; CODE XREF: pcol+160j
 		cmpi.w	#6,d0
 		bcs.b	loc_1AF82
 		moveq	#6,d0
-
-loc_1AF82:				; CODE XREF: pcol+19Aj
+loc_1AF82:
 		move.w	d0,$3E(a1)
 		move.w	word_1AFD2(pc,d0.w),d0
 		cmpi.w	#$20,$FFFFF7D0
 		bcs.b	loc_1AF9C
 		move.w	#1000,d0
 		move.w	#$A,$3E(a1)
-
-loc_1AF9C:				; CODE XREF: pcol+1ACj
+loc_1AF9C:
 		bsr.w	scoreup
 		move.b	#$27,actno(a1)
 		move.b	#0,r_no0(a1)
@@ -34345,46 +34329,28 @@ loc_1AF9C:				; CODE XREF: pcol+1ACj
 		bcc.b	loc_1AFCA
 		neg.w	yspeed(a0)
 		rts
-
-
-loc_1AFC2:				; CODE XREF: pcol+1CCj
+loc_1AFC2:
 		addi.w	#$100,yspeed(a0)
 		rts
-
-
-loc_1AFCA:				; CODE XREF: pcol+1D6j
+loc_1AFCA:
 		subi.w	#$100,yspeed(a0)
 		rts
-
 word_1AFD2:
 		dc.w	10,   20,   50,	 100
-
-
-loc_1AFDA:				; CODE XREF: ROM:0001B112j
+loc_1AFDA:
 		bset	#7,cddat(a1)
-
-loc_1AFE0:				; CODE XREF: pcol+EEj
-					; pcol+158j ...
+loc_1AFE0:
 		tst.b	$FFFFFE2D
 		beq.b	loc_1AFEA
-
-loc_1AFE6:				; CODE XREF: pcol+20Cj
+loc_1AFE6:
 		moveq	#-1,d0
 		rts
-
-
-loc_1AFEA:				; CODE XREF: pcol+200j
+loc_1AFEA:
 		nop	
 		tst.w	$30(a0)
 		bne.b	loc_1AFE6
 		movea.l	a1,a2
-; End of function pcol
-
-
-
-
-
-Sonic_Hit:				; CODE XREF: ROM:0000CF1Ap
+Sonic_Hit:
 		tst.b	$FFFFFE2C
 		bne.b	loc_1B01C
 		tst.w	$FFFFFE20
@@ -34394,9 +34360,7 @@ Sonic_Hit:				; CODE XREF: ROM:0000CF1Ap
 		move.b	#flyring_act,actno(a1)
 		move.w	xposi(a0),xposi(a1)
 		move.w	yposi(a0),yposi(a1)
-
-loc_1B01C:				; CODE XREF: Sonic_Hit+4j
-					; Sonic_Hit+14j ...
+loc_1B01C:
 		move.b	#0,$FFFFFE2C
 		move.b	#4,r_no0(a0)
 		bsr.w	sub_137A0
@@ -34407,14 +34371,12 @@ loc_1B01C:				; CODE XREF: Sonic_Hit+4j
 		beq.b	loc_1B052
 		move.w	#-$200,yspeed(a0)
 		move.w	#-$100,xspeed(a0)
-
-loc_1B052:				; CODE XREF: Sonic_Hit+50j
+loc_1B052:
 		move.w	xposi(a0),d0
 		cmp.w	xposi(a2),d0
 		bcs.b	loc_1B060
 		neg.w	xspeed(a0)
-
-loc_1B060:				; CODE XREF: Sonic_Hit+66j
+loc_1B060:
 		move.w	#0,mspeed(a0)
 		move.b	#$1A,mstno(a0)
 		move.w	#120,$30(a0)
@@ -34424,25 +34386,14 @@ loc_1B060:				; CODE XREF: Sonic_Hit+66j
 		cmpi.b	#yari_act,(a2)
 		bne.b	loc_1B086
 		move.w	#$A6,d0
-
-loc_1B086:				; CODE XREF: Sonic_Hit+86j
-					; Sonic_Hit+8Cj
+loc_1B086:
 		jsr	soundset.l
 		moveq	#-1,d0
 		rts
-
-
-loc_1B090:				; CODE XREF: Sonic_Hit+Aj
+loc_1B090:
 		tst.w	debugflag
 		bne.w	loc_1B01C
-; End of function Sonic_Hit
-
-
-
-
-
-sub_1B098:				; CODE XREF: ROM:0000B7D2p
-					; ROM:0000FBE2p ...
+sub_1B098:
 		tst.w	editmode
 		bne.b	loc_1B0EC
 		move.b	#0,$FFFFFE2D
@@ -34459,18 +34410,12 @@ sub_1B098:				; CODE XREF: ROM:0000B7D2p
 		cmpi.b	#toge_act,(a2)
 		bne.b	loc_1B0E6
 		move.w	#$A6,d0
-
-loc_1B0E6:				; CODE XREF: sub_1B098+48j
+loc_1B0E6:
 		jsr	soundset.l
-
-loc_1B0EC:				; CODE XREF: sub_1B098+4j
+loc_1B0EC:
 		moveq	#-1,d0
 		rts
-; End of function sub_1B098
-
-
-
-loc_1B0F0:				; CODE XREF: pcol+E8j
+loc_1B0F0:
 		move.b	colino(a1),d1
 		andi.b	#$3F,d1
 		cmpi.b	#$B,d1
@@ -34482,13 +34427,9 @@ loc_1B0F0:				; CODE XREF: pcol+E8j
 		cmpi.b	#$21,d1
 		beq.b	loc_1B148
 		rts
-
-
-loc_1B112:				; CODE XREF: ROM:0001B0FCj
+loc_1B112:
 		bra.w	loc_1AFDA
-
-
-loc_1B116:				; CODE XREF: ROM:0001B102j
+loc_1B116:
 		sub.w	d0,d5
 		cmpi.w	#8,d5
 		bcc.b	loc_1B144
@@ -34497,36 +34438,22 @@ loc_1B116:				; CODE XREF: ROM:0001B102j
 		btst.b	#0,cddat(a1)
 		beq.b	loc_1B130
 		subi.w	#$10,d0
-
-loc_1B130:				; CODE XREF: ROM:0001B12Aj
+loc_1B130:
 		sub.w	d2,d0
 		bcc.b	loc_1B13C
 		addi.w	#$18,d0
 		bcs.b	loc_1B140
 		bra.b	loc_1B144
-
-
-loc_1B13C:				; CODE XREF: ROM:0001B132j
+loc_1B13C:
 		cmp.w	d4,d0
 		bhi.b	loc_1B144
-
-loc_1B140:				; CODE XREF: ROM:0001B138j
+loc_1B140:
 		bra.w	loc_1AFE0
-
-
-loc_1B144:				; CODE XREF: ROM:0001B11Cj
-					; ROM:0001B13Aj ...
+loc_1B144:
 		bra.w	loc_1AF30
-
-
-loc_1B148:				; CODE XREF: ROM:0001B108j
-					; ROM:0001B10Ej
+loc_1B148:
 		addq.b	#1,colicnt(a1)
 		rts
-
-
-
-
 sprscr:
 		bsr.w	sprscractcnt
 		bsr.w	scrcnt
@@ -34640,12 +34567,6 @@ sprscrset:
 ?end:
 		move.b	#0,-5(a2)
 		rts
-; End of function sprscr
-
-
-
-
-
 sprscractcnt:
 		lea	$FF400C,a1
 		moveq	#0,d0
@@ -36104,6 +36025,8 @@ edit2tbl:
 		dcblw	dai3_act,dai3pat,$43e6,0,$01		;12:
 		dcblw	dai3_act,dai3pat,$43e6,1,$13		;13:
 		dcblw	dai3_act,dai3pat,$43e6,0,$05		;14:
+		; The line below contains an oversight, the VRAM
+		; should be using $42e9 instead of $443e.
 		dcblw	kazari_act,kazaripat,$443e,0,$00	;15:
 		dcblw	dai3_act,dai3pat,$43e6,2,$27		;16:
 		dcblw	dai3_act,dai3pat,$43e6,3,$30		;17:
@@ -36131,7 +36054,11 @@ edit3tbl:
 		dcblw	box_act,boxpat,$42b8,0,$00		;10:
 		dcblw	yado_act,yadopat,$247b,0,$00		;11:
 		dcblw	bryuka_act,bryukapat,$42b8,0,$00	;12:
+		; The line below contains an oversight, the palette
+		; should be using $42b8 instead of $02b8.
 		dcblw	dai_act,daipat,$02b8,0,$00		;13:
+		; The line below contains an oversight, the palette
+		; should be using $42b8 instead of $62b8.
 		dcblw	break2_act,break2pat,$62b8,0,$00	;14:
 		dcblw	yoganc_act,yogancpat,$8680,0,$00	;15:
 		dcblw	bat_act,batpat,$04b8,0,$00		;16:
@@ -36210,6 +36137,8 @@ edit7tbl:
 		dc.w	13
 		dcblw	ring_act,ringpat,$27b2,0,$00		;1:
 		dcblw	bobin_act,bobinpat,$0380,0,$00		;2:
+		; The 3 lines below contain an oversight, the
+		; VRAM should be using $05a5 instead of $05a0.
 		dcblw	usagi_act,flicpat,$05a0,0,$0a		;3
 		dcblw	usagi_act,flicpat,$05a0,0,$0b		;4
 		dcblw	usagi_act,flicpat,$05a0,0,$0c		;5
